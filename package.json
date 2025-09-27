@@ -4,6 +4,7 @@
     "dev": "bun run --hot server/index.ts"
   },
   "dependencies": {
+    "better-auth": "^1.3.18",
     "drizzle-orm": "^0.44.5",
     "hono": "^4.9.9",
     "pg": "^8.16.3"
