@@ -4,11 +4,15 @@
     "dev": "bun run --hot server/index.ts"
   },
   "dependencies": {
-    "hono": "^4.9.9"
+    "drizzle-orm": "^0.44.5",
+    "hono": "^4.9.9",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@types/bun": "latest",
+    "@types/pg": "^8.15.5",
+    "drizzle-kit": "^0.31.5",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^16.4.0",
