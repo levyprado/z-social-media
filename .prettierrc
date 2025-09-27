@@ -4,6 +4,6 @@
   "semi": false,
   "singleQuote": true,
   "jsxSingleQuote": true,
-  "arrowParens": "avoid",
+  "arrowParens": "always",
   "plugins": ["prettier-plugin-organize-imports"]
 }
