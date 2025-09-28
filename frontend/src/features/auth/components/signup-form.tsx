@@ -1,3 +1,4 @@
+import FieldError from '@/components/form/field-error'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -82,6 +83,7 @@ export default function SignupForm() {
                 placeholder='Elon Musk'
                 required
               />
+              <FieldError field={field} />
             </div>
           )}
         />
@@ -102,6 +104,7 @@ export default function SignupForm() {
                 placeholder='elonmusk'
                 required
               />
+              <FieldError field={field} />
             </div>
           )}
         />
@@ -122,6 +125,7 @@ export default function SignupForm() {
                 placeholder='elon@mail.com'
                 required
               />
+              <FieldError field={field} />
             </div>
           )}
         />
@@ -160,6 +164,7 @@ export default function SignupForm() {
                   )}
                 </button>
               </div>
+              <FieldError field={field} />
             </div>
           )}
         />
@@ -198,6 +203,7 @@ export default function SignupForm() {
                   )}
                 </button>
               </div>
+              <FieldError field={field} />
             </div>
           )}
         />

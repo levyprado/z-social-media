@@ -1,3 +1,4 @@
+import FieldError from '@/components/form/field-error'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -78,6 +79,7 @@ export default function LoginForm() {
                 type='text'
                 required
               />
+              <FieldError field={field} />
             </div>
           )}
         />
@@ -116,6 +118,7 @@ export default function LoginForm() {
                   )}
                 </button>
               </div>
+              <FieldError field={field} />
             </div>
           )}
         />
