@@ -1,3 +1,4 @@
+import AuthCard from '@/features/auth/components/auth-card'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/(auth)/login')({
@@ -5,5 +6,13 @@ export const Route = createFileRoute('/(auth)/login')({
 })
 
 function RouteComponent() {
-  return <></>
+  return (
+    <>
+      <div className='from-primary/15 via-background to-background/15 fixed inset-0 z-0 bg-gradient-to-br' />
+
+      <AuthCard title='Welcome back' description='Sign in to Z' isLogin>
+        <div>LoginForm</div>
+      </AuthCard>
+    </>
+  )
 }
