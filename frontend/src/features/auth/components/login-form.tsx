@@ -1,10 +1,25 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { LoginSchema } from '@/shared/types'
+import { useForm } from '@tanstack/react-form'
+import { EyeIcon, EyeOffIcon, Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 
 export default function LoginForm() {
+  const form = useForm({
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+    validators: {
+      onChange: LoginSchema,
+    },
+    onSubmit: async ({ value }) => {
+      console.log(value)
+    },
+  })
+  const [errorMessage, setErrorMessage] = useState('')
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
   const togglePasswordVisibility = () =>
@@ -39,48 +54,96 @@ export default function LoginForm() {
         <div className='bg-border h-0.5 grow rounded-full' />
       </div>
 
-      <form className='flex flex-col gap-6'>
-        <div className='flex flex-col gap-2'>
-          <Label>
-            Username <span className='text-destructive'>*</span>
-          </Label>
-          <Input type='text' required />
-        </div>
-        <div className='flex flex-col gap-2'>
-          <Label>
-            Password <span className='text-destructive'>*</span>
-          </Label>
-          <div className='relative'>
-            <Input
-              type={isPasswordVisible ? 'text' : 'password'}
-              className='pe-9'
-              required
-            />
-            <button
-              className='text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md outline-none transition-[color,box-shadow] focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'
-              type='button'
-              onClick={togglePasswordVisibility}
-              aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
-              aria-pressed={isPasswordVisible}
-              aria-controls='password'
-            >
-              {isPasswordVisible ? (
-                <EyeOffIcon size={16} aria-hidden='true' />
-              ) : (
-                <EyeIcon size={16} aria-hidden='true' />
-              )}
-            </button>
-          </div>
-        </div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          form.handleSubmit()
+        }}
+        className='flex flex-col gap-6'
+      >
+        <form.Field
+          name='username'
+          children={(field) => (
+            <div className='flex flex-col gap-2'>
+              <Label htmlFor={field.name}>
+                Username <span className='text-destructive'>*</span>
+              </Label>
+              <Input
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                type='text'
+                required
+              />
+            </div>
+          )}
+        />
+        <form.Field
+          name='password'
+          children={(field) => (
+            <div className='flex flex-col gap-2'>
+              <Label htmlFor={field.name}>
+                Password <span className='text-destructive'>*</span>
+              </Label>
+              <div className='relative'>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  type={isPasswordVisible ? 'text' : 'password'}
+                  className='pe-9'
+                  required
+                />
+                <button
+                  className='text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md outline-none transition-[color,box-shadow] focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'
+                  type='button'
+                  onClick={togglePasswordVisibility}
+                  aria-label={
+                    isPasswordVisible ? 'Hide password' : 'Show password'
+                  }
+                  aria-pressed={isPasswordVisible}
+                  aria-controls='password'
+                >
+                  {isPasswordVisible ? (
+                    <EyeOffIcon size={16} aria-hidden='true' />
+                  ) : (
+                    <EyeIcon size={16} aria-hidden='true' />
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+        />
 
         <div className='flex flex-col gap-2'>
-          <span className='text-destructive text-xs font-medium'>
-            An error occurred
-          </span>
+          {errorMessage && (
+            <span className='text-destructive text-xs font-medium'>
+              {errorMessage}
+            </span>
+          )}
 
-          <Button type='submit' size='lg' className='font-semibold'>
-            Sign In
-          </Button>
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+            children={([canSubmit, isSubmitting]) => (
+              <Button
+                type='submit'
+                disabled={!canSubmit}
+                size='lg'
+                className='font-semibold'
+              >
+                {isSubmitting ? (
+                  <Loader2Icon className='animate-spin' />
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+            )}
+          />
         </div>
       </form>
     </>
