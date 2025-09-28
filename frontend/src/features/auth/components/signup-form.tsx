@@ -1,10 +1,10 @@
-import FieldError from '@/components/form/field-error'
+import { Form } from '@/components/form/form'
+import { FormField } from '@/components/form/form-field'
+import { PasswordField } from '@/components/form/password-field'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { SignupSchema } from '@/shared/types'
 import { useForm } from '@tanstack/react-form'
-import { EyeIcon, EyeOffIcon, Loader2Icon } from 'lucide-react'
+import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 
 export default function SignupForm() {
@@ -24,10 +24,6 @@ export default function SignupForm() {
     },
   })
   const [errorMessage, setErrorMessage] = useState('')
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-
-  const togglePasswordVisibility = () =>
-    setIsPasswordVisible((prevState) => !prevState)
 
   return (
     <>
@@ -58,153 +54,51 @@ export default function SignupForm() {
         <div className='bg-border h-0.5 grow rounded-full' />
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          form.handleSubmit()
-        }}
-        className='flex flex-col gap-6'
-      >
+      <Form form={form}>
         <form.Field
           name='name'
           children={(field) => (
-            <div className='flex flex-col gap-2'>
-              <Label htmlFor={field.name}>
-                Name <span className='text-destructive'>*</span>
-              </Label>
-              <Input
-                id={field.name}
-                name={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                type='text'
-                placeholder='Elon Musk'
-                required
-              />
-              <FieldError field={field} />
-            </div>
+            <FormField
+              field={field}
+              label='Name'
+              placeholder='Elon Musk'
+              required
+            />
           )}
         />
         <form.Field
           name='username'
           children={(field) => (
-            <div className='flex flex-col gap-2'>
-              <Label htmlFor={field.name}>
-                Username <span className='text-destructive'>*</span>
-              </Label>
-              <Input
-                id={field.name}
-                name={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                type='text'
-                placeholder='elonmusk'
-                required
-              />
-              <FieldError field={field} />
-            </div>
+            <FormField
+              field={field}
+              label='Username'
+              placeholder='elonmusk'
+              required
+            />
           )}
         />
         <form.Field
           name='email'
           children={(field) => (
-            <div className='flex flex-col gap-2'>
-              <Label htmlFor={field.name}>
-                Email <span className='text-destructive'>*</span>
-              </Label>
-              <Input
-                id={field.name}
-                name={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                type='email'
-                placeholder='elon@mail.com'
-                required
-              />
-              <FieldError field={field} />
-            </div>
+            <FormField
+              field={field}
+              label='Email'
+              type='email'
+              placeholder='elon@mail.com'
+              required
+            />
           )}
         />
         <form.Field
           name='password'
           children={(field) => (
-            <div className='flex flex-col gap-2'>
-              <Label htmlFor={field.name}>
-                Password <span className='text-destructive'>*</span>
-              </Label>
-              <div className='relative'>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  type={isPasswordVisible ? 'text' : 'password'}
-                  className='pe-9'
-                  required
-                />
-                <button
-                  className='text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md outline-none transition-[color,box-shadow] focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'
-                  type='button'
-                  onClick={togglePasswordVisibility}
-                  aria-label={
-                    isPasswordVisible ? 'Hide password' : 'Show password'
-                  }
-                  aria-pressed={isPasswordVisible}
-                  aria-controls='password'
-                >
-                  {isPasswordVisible ? (
-                    <EyeOffIcon size={16} aria-hidden='true' />
-                  ) : (
-                    <EyeIcon size={16} aria-hidden='true' />
-                  )}
-                </button>
-              </div>
-              <FieldError field={field} />
-            </div>
+            <PasswordField field={field} label='Password' required />
           )}
         />
         <form.Field
           name='confirmPassword'
           children={(field) => (
-            <div className='flex flex-col gap-2'>
-              <Label htmlFor={field.name}>
-                Confirm password <span className='text-destructive'>*</span>
-              </Label>
-              <div className='relative'>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  type={isPasswordVisible ? 'text' : 'password'}
-                  className='pe-9'
-                  required
-                />
-                <button
-                  className='text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md outline-none transition-[color,box-shadow] focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'
-                  type='button'
-                  onClick={togglePasswordVisibility}
-                  aria-label={
-                    isPasswordVisible ? 'Hide password' : 'Show password'
-                  }
-                  aria-pressed={isPasswordVisible}
-                  aria-controls='password'
-                >
-                  {isPasswordVisible ? (
-                    <EyeOffIcon size={16} aria-hidden='true' />
-                  ) : (
-                    <EyeIcon size={16} aria-hidden='true' />
-                  )}
-                </button>
-              </div>
-              <FieldError field={field} />
-            </div>
+            <PasswordField field={field} label='Confirm password' required />
           )}
         />
 
@@ -233,7 +127,7 @@ export default function SignupForm() {
             )}
           />
         </div>
-      </form>
+      </Form>
     </>
   )
 }
