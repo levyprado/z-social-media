@@ -1,5 +1,5 @@
 type AvatarProps = {
-  img: string | null
+  img: string | null | undefined
 }
 
 export default function Avatar({ img }: AvatarProps) {

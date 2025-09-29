@@ -8,6 +8,7 @@ export const Route = createFileRoute('/(authenticated)')({
     if (!user) {
       throw redirect({ to: '/login' })
     }
+    return { user }
   },
   component: RouteComponent,
 })

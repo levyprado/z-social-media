@@ -1,6 +1,9 @@
-import { Outlet, createRootRoute } from '@tanstack/react-router'
+import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
+import type { User } from 'better-auth'
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  user: User
+}>()({
   component: RootComponent,
 })
 
