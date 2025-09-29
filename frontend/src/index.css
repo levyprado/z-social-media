@@ -2,7 +2,7 @@
 @import 'tw-animate-css';
 
 @theme {
-  --font-sans: 'Nunito';
+  --font-sans: 'Noto Sans';
 }
 
 @custom-variant dark (&:is(.dark *));
