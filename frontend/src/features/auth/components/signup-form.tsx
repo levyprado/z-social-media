@@ -4,10 +4,13 @@ import { PasswordField } from '@/components/form/password-field'
 import { Button } from '@/components/ui/button'
 import { SignupSchema } from '@/shared/types'
 import { useForm } from '@tanstack/react-form'
+import { redirect } from '@tanstack/react-router'
 import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
+import { authClient } from '../auth-client'
 
 export default function SignupForm() {
+  const [errorMessage, setErrorMessage] = useState('')
   const form = useForm({
     defaultValues: {
       name: '',
@@ -20,10 +23,18 @@ export default function SignupForm() {
       onChange: SignupSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value)
+      const { confirmPassword: _, ...data } = value
+
+      await authClient.signUp.email(data, {
+        onSuccess: () => {
+          redirect({ to: '/' })
+        },
+        onError: (ctx) => {
+          setErrorMessage(ctx.error.message || 'An unexpected error occurred')
+        },
+      })
     },
   })
-  const [errorMessage, setErrorMessage] = useState('')
 
   return (
     <>
