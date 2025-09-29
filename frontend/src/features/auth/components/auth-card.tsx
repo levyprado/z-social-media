@@ -22,7 +22,7 @@ export default function AuthCard({
   isLogin = false,
 }: AuthCardProps) {
   return (
-    <Card className='bg-card/40 relative z-10 mx-auto w-full max-w-lg border-0 shadow-md'>
+    <Card className='bg-card/70 relative z-10 mx-auto w-full max-w-lg border-0 shadow-md'>
       <CardHeader className='gap-0'>
         <CardTitle className='text-2xl'>{title}</CardTitle>
         <CardDescription className='text-base'>{description}</CardDescription>

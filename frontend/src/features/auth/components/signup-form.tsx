@@ -123,12 +123,7 @@ export default function SignupForm() {
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
-              <Button
-                type='submit'
-                disabled={!canSubmit}
-                size='lg'
-                className='font-semibold'
-              >
+              <Button type='submit' disabled={!canSubmit} size='lg'>
                 {isSubmitting ? (
                   <Loader2Icon className='animate-spin' />
                 ) : (
