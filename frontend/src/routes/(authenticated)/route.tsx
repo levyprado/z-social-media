@@ -1,7 +1,14 @@
 import Sidebar from '@/components/sidebar/sidebar'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { getUser } from '@/features/auth/queries'
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/(authenticated)')({
+  beforeLoad: async () => {
+    const user = await getUser()
+    if (!user) {
+      throw redirect({ to: '/login' })
+    }
+  },
   component: RouteComponent,
 })
 
