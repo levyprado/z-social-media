@@ -3,13 +3,20 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { authClient } from '@/features/auth/auth-client'
 import { userQueryOptions } from '@/features/auth/queries'
 import { useQueryClient } from '@tanstack/react-query'
-import { useNavigate, useRouteContext } from '@tanstack/react-router'
-import { EllipsisIcon, Loader2Icon, LogOutIcon, User2Icon } from 'lucide-react'
+import { Link, useNavigate, useRouteContext } from '@tanstack/react-router'
+import {
+  EllipsisIcon,
+  ExternalLinkIcon,
+  Loader2Icon,
+  LogOutIcon,
+  User2Icon,
+} from 'lucide-react'
 import { useState } from 'react'
 
 export default function UserAccountButton() {
@@ -66,10 +73,23 @@ export default function UserAccountButton() {
         align='start'
         className='md:w-72'
       >
-        <DropdownMenuItem>
-          <User2Icon />
-          Profile
-        </DropdownMenuItem>
+        <DropdownMenuItem
+          render={(props) => (
+            <Link
+              to='/user/$username'
+              params={{
+                username: user.username!,
+              }}
+              {...props}
+            >
+              <User2Icon />
+              Profile
+              <DropdownMenuShortcut>
+                <ExternalLinkIcon />
+              </DropdownMenuShortcut>
+            </Link>
+          )}
+        ></DropdownMenuItem>
         <DropdownMenuItem closeOnClick={false} onClick={signOut}>
           {isLoading ? (
             <Loader2Icon className='animate-spin' />

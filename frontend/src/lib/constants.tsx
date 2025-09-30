@@ -12,9 +12,10 @@ export type NavItem = {
   icon: LucideIcon
   label: string
   link: LinkProps['to']
+  params?: LinkProps['params']
 }
 
-export const navbarItems: NavItem[] = [
+export const getNavbarItems = (username: string): NavItem[] => [
   {
     icon: HomeIcon,
     label: 'Home',
@@ -38,6 +39,7 @@ export const navbarItems: NavItem[] = [
   {
     icon: User2Icon,
     label: 'Profile',
-    link: '/',
+    link: '/user/$username',
+    params: { username },
   },
 ]

@@ -1,9 +1,13 @@
-import { navbarItems } from '@/lib/constants'
-import { Link } from '@tanstack/react-router'
+import { getNavbarItems } from '@/lib/constants'
+import { Link, useRouteContext } from '@tanstack/react-router'
 import NavItem from './nav-item'
 import UserAccountButton from './user-account-button'
 
 export default function Sidebar() {
+  const { user } = useRouteContext({ from: '/_authenticated' })
+
+  const navbarItems = getNavbarItems(user.username!)
+
   return (
     <div className='bg-background sticky left-0 top-0 flex h-dvh flex-col items-center justify-between border-r px-1 py-3 md:w-[min(30%,275px)] md:items-start md:px-3'>
       <Link
