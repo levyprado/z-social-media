@@ -1,32 +1,80 @@
+import Avatar from '@/components/ui/avatar'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { authClient } from '@/features/auth/auth-client'
-import { useRouteContext } from '@tanstack/react-router'
-import { EllipsisIcon } from 'lucide-react'
-import Avatar from '../ui/avatar'
+import { useRouteContext, useRouter } from '@tanstack/react-router'
+import { EllipsisIcon, Loader2Icon, LogOutIcon, User2Icon } from 'lucide-react'
+import { useState } from 'react'
 
 export default function UserAccountButton() {
   const { user } = useRouteContext({ from: '/(authenticated)' })
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+
+  const signOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onRequest: () => {
+          setIsLoading(true)
+        },
+        onSuccess: () => {
+          router.invalidate()
+        },
+        onResponse: () => {
+          setIsLoading(false)
+        },
+      },
+    })
+  }
 
   return (
-    <button
-      onClick={async () => {
-        await authClient.signOut()
-      }}
-      className='hover:bg-accent/80 cursor-pointer rounded-full p-2 transition-[background-color] md:flex md:w-full md:gap-3 md:p-2.5'
-    >
-      <Avatar img={user.image} />
-      <div className='hidden grow items-center justify-between md:flex md:min-w-0 md:gap-2'>
-        <div className='flex min-w-0 flex-col items-start'>
-          <span className='max-w-full truncate font-medium leading-tight'>
-            {user.name}
-          </span>
-          <span className='text-muted-foreground max-w-full truncate text-sm leading-tight'>
-            @{user.username}
-          </span>
-        </div>
-        <div>
-          <EllipsisIcon className='size-5' />
-        </div>
-      </div>
-    </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={(props) => (
+          <button
+            className='hover:bg-accent/80 data-[popup-open]:bg-accent/80 focus-visible:bg-accent/80 cursor-pointer rounded-full p-2 transition-[background-color] md:flex md:w-full md:gap-3 md:p-2.5'
+            {...props}
+          >
+            <Avatar img={user.image} />
+            <div className='hidden grow items-center justify-between md:flex md:min-w-0 md:gap-2'>
+              <div className='flex min-w-0 flex-col items-start'>
+                <span className='max-w-full truncate font-medium leading-tight'>
+                  {user.name}
+                </span>
+                <span className='text-muted-foreground max-w-full truncate text-sm leading-tight'>
+                  @{user.username}
+                </span>
+              </div>
+              <div>
+                <EllipsisIcon className='size-5' />
+              </div>
+            </div>
+          </button>
+        )}
+      ></DropdownMenuTrigger>
+      <DropdownMenuContent
+        alignOffset={4}
+        sideOffset={8}
+        align='start'
+        className='md:w-72'
+      >
+        <DropdownMenuItem>
+          <User2Icon />
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem closeOnClick={false} onClick={signOut}>
+          {isLoading ? (
+            <Loader2Icon className='animate-spin' />
+          ) : (
+            <LogOutIcon />
+          )}
+          Log out of @{user.username}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
