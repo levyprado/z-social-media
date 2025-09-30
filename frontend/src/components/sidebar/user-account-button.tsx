@@ -13,7 +13,7 @@ import { EllipsisIcon, Loader2Icon, LogOutIcon, User2Icon } from 'lucide-react'
 import { useState } from 'react'
 
 export default function UserAccountButton() {
-  const { user } = useRouteContext({ from: '/(authenticated)' })
+  const { user } = useRouteContext({ from: '/_authenticated' })
   const queryClient = useQueryClient()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()

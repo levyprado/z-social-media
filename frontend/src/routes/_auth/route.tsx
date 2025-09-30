@@ -1,27 +1,21 @@
-import Sidebar from '@/components/sidebar/sidebar'
 import { userQueryOptions } from '@/features/auth/queries'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/(authenticated)')({
+export const Route = createFileRoute('/_auth')({
   beforeLoad: async ({ context: { queryClient } }) => {
     const user = await queryClient.ensureQueryData(userQueryOptions)
 
-    if (!user) {
-      throw redirect({ to: '/login' })
+    if (user) {
+      throw redirect({ to: '/' })
     }
-
-    return { user }
   },
   component: RouteComponent,
 })
 
 function RouteComponent() {
   return (
-    <div className='flex min-h-dvh justify-center'>
-      <Sidebar />
-      <div className='min-w-0 max-w-[600px] grow'>
-        <Outlet />
-      </div>
+    <div className='grid min-h-dvh place-items-center px-4'>
+      <Outlet />
     </div>
   )
 }
