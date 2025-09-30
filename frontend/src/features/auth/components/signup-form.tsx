@@ -2,8 +2,10 @@ import { Form } from '@/components/form/form'
 import { FormField } from '@/components/form/form-field'
 import { PasswordField } from '@/components/form/password-field'
 import { Button } from '@/components/ui/button'
+import { userQueryOptions } from '@/features/auth/queries'
 import { SignupSchema } from '@/shared/types'
 import { useForm } from '@tanstack/react-form'
+import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
@@ -11,7 +13,8 @@ import { authClient } from '../auth-client'
 
 export default function SignupForm() {
   const [errorMessage, setErrorMessage] = useState('')
-  const navigate = useNavigate({ from: '/signup' })
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const form = useForm({
     defaultValues: {
       name: '',
@@ -29,6 +32,9 @@ export default function SignupForm() {
 
       await authClient.signUp.email(data, {
         onSuccess: () => {
+          queryClient.removeQueries({
+            queryKey: userQueryOptions.queryKey,
+          })
           navigate({ to: '/' })
         },
         onError: (ctx) => {

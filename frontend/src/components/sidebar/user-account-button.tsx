@@ -6,14 +6,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { authClient } from '@/features/auth/auth-client'
-import { useRouteContext, useRouter } from '@tanstack/react-router'
+import { userQueryOptions } from '@/features/auth/queries'
+import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useRouteContext } from '@tanstack/react-router'
 import { EllipsisIcon, Loader2Icon, LogOutIcon, User2Icon } from 'lucide-react'
 import { useState } from 'react'
 
 export default function UserAccountButton() {
   const { user } = useRouteContext({ from: '/(authenticated)' })
+  const queryClient = useQueryClient()
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const signOut = async () => {
     await authClient.signOut({
@@ -22,7 +25,8 @@ export default function UserAccountButton() {
           setIsLoading(true)
         },
         onSuccess: () => {
-          router.invalidate()
+          queryClient.setQueryData(userQueryOptions.queryKey, null)
+          navigate({ to: '/login' })
         },
         onResponse: () => {
           setIsLoading(false)

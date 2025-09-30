@@ -4,14 +4,17 @@ import { PasswordField } from '@/components/form/password-field'
 import { Button } from '@/components/ui/button'
 import { LoginSchema } from '@/shared/types'
 import { useForm } from '@tanstack/react-form'
+import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { authClient } from '../auth-client'
+import { userQueryOptions } from '../queries'
 
 export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState('')
-  const navigate = useNavigate({ from: '/login' })
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const form = useForm({
     defaultValues: {
       username: '',
@@ -23,6 +26,9 @@ export default function LoginForm() {
     onSubmit: async ({ value: data }) => {
       await authClient.signIn.username(data, {
         onSuccess: () => {
+          queryClient.removeQueries({
+            queryKey: userQueryOptions.queryKey,
+          })
           navigate({ to: '/' })
         },
         onError: (ctx) => {
