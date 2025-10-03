@@ -1,12 +1,13 @@
+import { auth } from '@/server/auth'
+import userRouter from '@/server/routes/user'
 import { Hono } from 'hono'
-import { auth } from './auth'
 
-const app = new Hono()
+const app = new Hono().basePath('/api')
 
-app.on(['POST', 'GET'], '/api/auth/*', (c) => auth.handler(c.req.raw))
+app.on(['POST', 'GET'], '/auth/*', (c) => auth.handler(c.req.raw))
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const routes = app.route('/user', userRouter)
 
 export default app
+export type AppType = typeof routes

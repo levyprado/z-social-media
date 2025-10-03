@@ -1,4 +1,26 @@
+import type { AppType } from '@/server/index'
 import z from 'zod'
+
+export { type AppType }
+
+export type SuccessResponse<TData = unknown> = {
+  success: true
+  message: string
+} & (unknown extends TData ? { data?: TData } : { data: TData })
+
+export type ErrorResponse = {
+  success: false
+  error: string
+  details?: any
+}
+
+export type UserProfile = {
+  id: string
+  name: string
+  username: string
+  image: string | null
+  createdAt: string
+}
 
 export const SignupSchema = z
   .object({

@@ -8,14 +8,13 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthenticatedUserUsernameRouteRouteImport } from './routes/_authenticated/user/$username/route'
 import { Route as AuthenticatedUserUsernameProfileRelationshipsRouteRouteImport } from './routes/_authenticated/user/$username/_profileRelationships/route'
 import { Route as AuthenticatedUserUsernameProfileContentRouteRouteImport } from './routes/_authenticated/user/$username/_profileContent/route'
 import { Route as AuthenticatedUserUsernameProfileContentIndexRouteImport } from './routes/_authenticated/user/$username/_profileContent/index'
@@ -23,10 +22,6 @@ import { Route as AuthenticatedUserUsernameProfileRelationshipsFollowingRouteImp
 import { Route as AuthenticatedUserUsernameProfileRelationshipsFollowersRouteImport } from './routes/_authenticated/user/$username/_profileRelationships/followers'
 import { Route as AuthenticatedUserUsernameProfileContentRepliesRouteImport } from './routes/_authenticated/user/$username/_profileContent/replies'
 import { Route as AuthenticatedUserUsernameProfileContentLikesRouteImport } from './routes/_authenticated/user/$username/_profileContent/likes'
-
-const AuthenticatedUserUsernameRouteImport = createFileRoute(
-  '/_authenticated/user/$username',
-)()
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -51,8 +46,8 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthenticatedUserUsernameRoute =
-  AuthenticatedUserUsernameRouteImport.update({
+const AuthenticatedUserUsernameRouteRoute =
+  AuthenticatedUserUsernameRouteRouteImport.update({
     id: '/user/$username',
     path: '/user/$username',
     getParentRoute: () => AuthenticatedRouteRoute,
@@ -60,12 +55,12 @@ const AuthenticatedUserUsernameRoute =
 const AuthenticatedUserUsernameProfileRelationshipsRouteRoute =
   AuthenticatedUserUsernameProfileRelationshipsRouteRouteImport.update({
     id: '/_profileRelationships',
-    getParentRoute: () => AuthenticatedUserUsernameRoute,
+    getParentRoute: () => AuthenticatedUserUsernameRouteRoute,
   } as any)
 const AuthenticatedUserUsernameProfileContentRouteRoute =
   AuthenticatedUserUsernameProfileContentRouteRouteImport.update({
     id: '/_profileContent',
-    getParentRoute: () => AuthenticatedUserUsernameRoute,
+    getParentRoute: () => AuthenticatedUserUsernameRouteRoute,
   } as any)
 const AuthenticatedUserUsernameProfileContentIndexRoute =
   AuthenticatedUserUsernameProfileContentIndexRouteImport.update({
@@ -128,7 +123,7 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/user/$username': typeof AuthenticatedUserUsernameRouteWithChildren
+  '/_authenticated/user/$username': typeof AuthenticatedUserUsernameRouteRouteWithChildren
   '/_authenticated/user/$username/_profileContent': typeof AuthenticatedUserUsernameProfileContentRouteRouteWithChildren
   '/_authenticated/user/$username/_profileRelationships': typeof AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren
   '/_authenticated/user/$username/_profileContent/likes': typeof AuthenticatedUserUsernameProfileContentLikesRoute
@@ -222,7 +217,7 @@ declare module '@tanstack/react-router' {
       id: '/_authenticated/user/$username'
       path: '/user/$username'
       fullPath: '/user/$username'
-      preLoaderRoute: typeof AuthenticatedUserUsernameRouteImport
+      preLoaderRoute: typeof AuthenticatedUserUsernameRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/user/$username/_profileRelationships': {
@@ -230,14 +225,14 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/user/$username'
       preLoaderRoute: typeof AuthenticatedUserUsernameProfileRelationshipsRouteRouteImport
-      parentRoute: typeof AuthenticatedUserUsernameRoute
+      parentRoute: typeof AuthenticatedUserUsernameRouteRoute
     }
     '/_authenticated/user/$username/_profileContent': {
       id: '/_authenticated/user/$username/_profileContent'
-      path: '/user/$username'
+      path: ''
       fullPath: '/user/$username'
       preLoaderRoute: typeof AuthenticatedUserUsernameProfileContentRouteRouteImport
-      parentRoute: typeof AuthenticatedUserUsernameRoute
+      parentRoute: typeof AuthenticatedUserUsernameRouteRoute
     }
     '/_authenticated/user/$username/_profileContent/': {
       id: '/_authenticated/user/$username/_profileContent/'
@@ -330,12 +325,12 @@ const AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren =
     AuthenticatedUserUsernameProfileRelationshipsRouteRouteChildren,
   )
 
-interface AuthenticatedUserUsernameRouteChildren {
+interface AuthenticatedUserUsernameRouteRouteChildren {
   AuthenticatedUserUsernameProfileContentRouteRoute: typeof AuthenticatedUserUsernameProfileContentRouteRouteWithChildren
   AuthenticatedUserUsernameProfileRelationshipsRouteRoute: typeof AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren
 }
 
-const AuthenticatedUserUsernameRouteChildren: AuthenticatedUserUsernameRouteChildren =
+const AuthenticatedUserUsernameRouteRouteChildren: AuthenticatedUserUsernameRouteRouteChildren =
   {
     AuthenticatedUserUsernameProfileContentRouteRoute:
       AuthenticatedUserUsernameProfileContentRouteRouteWithChildren,
@@ -343,19 +338,20 @@ const AuthenticatedUserUsernameRouteChildren: AuthenticatedUserUsernameRouteChil
       AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren,
   }
 
-const AuthenticatedUserUsernameRouteWithChildren =
-  AuthenticatedUserUsernameRoute._addFileChildren(
-    AuthenticatedUserUsernameRouteChildren,
+const AuthenticatedUserUsernameRouteRouteWithChildren =
+  AuthenticatedUserUsernameRouteRoute._addFileChildren(
+    AuthenticatedUserUsernameRouteRouteChildren,
   )
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedUserUsernameRoute: typeof AuthenticatedUserUsernameRouteWithChildren
+  AuthenticatedUserUsernameRouteRoute: typeof AuthenticatedUserUsernameRouteRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedUserUsernameRoute: AuthenticatedUserUsernameRouteWithChildren,
+  AuthenticatedUserUsernameRouteRoute:
+    AuthenticatedUserUsernameRouteRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
