@@ -8,13 +8,25 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as AuthenticatedUserUsernameRouteImport } from './routes/_authenticated/user/$username'
+import { Route as AuthenticatedUserUsernameProfileRelationshipsRouteRouteImport } from './routes/_authenticated/user/$username/_profileRelationships/route'
+import { Route as AuthenticatedUserUsernameProfileContentRouteRouteImport } from './routes/_authenticated/user/$username/_profileContent/route'
+import { Route as AuthenticatedUserUsernameProfileContentIndexRouteImport } from './routes/_authenticated/user/$username/_profileContent/index'
+import { Route as AuthenticatedUserUsernameProfileRelationshipsFollowingRouteImport } from './routes/_authenticated/user/$username/_profileRelationships/following'
+import { Route as AuthenticatedUserUsernameProfileRelationshipsFollowersRouteImport } from './routes/_authenticated/user/$username/_profileRelationships/followers'
+import { Route as AuthenticatedUserUsernameProfileContentRepliesRouteImport } from './routes/_authenticated/user/$username/_profileContent/replies'
+import { Route as AuthenticatedUserUsernameProfileContentLikesRouteImport } from './routes/_authenticated/user/$username/_profileContent/likes'
+
+const AuthenticatedUserUsernameRouteImport = createFileRoute(
+  '/_authenticated/user/$username',
+)()
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -45,18 +57,69 @@ const AuthenticatedUserUsernameRoute =
     path: '/user/$username',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedUserUsernameProfileRelationshipsRouteRoute =
+  AuthenticatedUserUsernameProfileRelationshipsRouteRouteImport.update({
+    id: '/_profileRelationships',
+    getParentRoute: () => AuthenticatedUserUsernameRoute,
+  } as any)
+const AuthenticatedUserUsernameProfileContentRouteRoute =
+  AuthenticatedUserUsernameProfileContentRouteRouteImport.update({
+    id: '/_profileContent',
+    getParentRoute: () => AuthenticatedUserUsernameRoute,
+  } as any)
+const AuthenticatedUserUsernameProfileContentIndexRoute =
+  AuthenticatedUserUsernameProfileContentIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedUserUsernameProfileContentRouteRoute,
+  } as any)
+const AuthenticatedUserUsernameProfileRelationshipsFollowingRoute =
+  AuthenticatedUserUsernameProfileRelationshipsFollowingRouteImport.update({
+    id: '/following',
+    path: '/following',
+    getParentRoute: () =>
+      AuthenticatedUserUsernameProfileRelationshipsRouteRoute,
+  } as any)
+const AuthenticatedUserUsernameProfileRelationshipsFollowersRoute =
+  AuthenticatedUserUsernameProfileRelationshipsFollowersRouteImport.update({
+    id: '/followers',
+    path: '/followers',
+    getParentRoute: () =>
+      AuthenticatedUserUsernameProfileRelationshipsRouteRoute,
+  } as any)
+const AuthenticatedUserUsernameProfileContentRepliesRoute =
+  AuthenticatedUserUsernameProfileContentRepliesRouteImport.update({
+    id: '/replies',
+    path: '/replies',
+    getParentRoute: () => AuthenticatedUserUsernameProfileContentRouteRoute,
+  } as any)
+const AuthenticatedUserUsernameProfileContentLikesRoute =
+  AuthenticatedUserUsernameProfileContentLikesRouteImport.update({
+    id: '/likes',
+    path: '/likes',
+    getParentRoute: () => AuthenticatedUserUsernameProfileContentRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/': typeof AuthenticatedIndexRoute
-  '/user/$username': typeof AuthenticatedUserUsernameRoute
+  '/user/$username': typeof AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren
+  '/user/$username/likes': typeof AuthenticatedUserUsernameProfileContentLikesRoute
+  '/user/$username/replies': typeof AuthenticatedUserUsernameProfileContentRepliesRoute
+  '/user/$username/followers': typeof AuthenticatedUserUsernameProfileRelationshipsFollowersRoute
+  '/user/$username/following': typeof AuthenticatedUserUsernameProfileRelationshipsFollowingRoute
+  '/user/$username/': typeof AuthenticatedUserUsernameProfileContentIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/': typeof AuthenticatedIndexRoute
-  '/user/$username': typeof AuthenticatedUserUsernameRoute
+  '/user/$username': typeof AuthenticatedUserUsernameProfileContentIndexRoute
+  '/user/$username/likes': typeof AuthenticatedUserUsernameProfileContentLikesRoute
+  '/user/$username/replies': typeof AuthenticatedUserUsernameProfileContentRepliesRoute
+  '/user/$username/followers': typeof AuthenticatedUserUsernameProfileRelationshipsFollowersRoute
+  '/user/$username/following': typeof AuthenticatedUserUsernameProfileRelationshipsFollowingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -65,13 +128,37 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/user/$username': typeof AuthenticatedUserUsernameRoute
+  '/_authenticated/user/$username': typeof AuthenticatedUserUsernameRouteWithChildren
+  '/_authenticated/user/$username/_profileContent': typeof AuthenticatedUserUsernameProfileContentRouteRouteWithChildren
+  '/_authenticated/user/$username/_profileRelationships': typeof AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren
+  '/_authenticated/user/$username/_profileContent/likes': typeof AuthenticatedUserUsernameProfileContentLikesRoute
+  '/_authenticated/user/$username/_profileContent/replies': typeof AuthenticatedUserUsernameProfileContentRepliesRoute
+  '/_authenticated/user/$username/_profileRelationships/followers': typeof AuthenticatedUserUsernameProfileRelationshipsFollowersRoute
+  '/_authenticated/user/$username/_profileRelationships/following': typeof AuthenticatedUserUsernameProfileRelationshipsFollowingRoute
+  '/_authenticated/user/$username/_profileContent/': typeof AuthenticatedUserUsernameProfileContentIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/signup' | '/' | '/user/$username'
+  fullPaths:
+    | '/login'
+    | '/signup'
+    | '/'
+    | '/user/$username'
+    | '/user/$username/likes'
+    | '/user/$username/replies'
+    | '/user/$username/followers'
+    | '/user/$username/following'
+    | '/user/$username/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/signup' | '/' | '/user/$username'
+  to:
+    | '/login'
+    | '/signup'
+    | '/'
+    | '/user/$username'
+    | '/user/$username/likes'
+    | '/user/$username/replies'
+    | '/user/$username/followers'
+    | '/user/$username/following'
   id:
     | '__root__'
     | '/_auth'
@@ -80,6 +167,13 @@ export interface FileRouteTypes {
     | '/_auth/signup'
     | '/_authenticated/'
     | '/_authenticated/user/$username'
+    | '/_authenticated/user/$username/_profileContent'
+    | '/_authenticated/user/$username/_profileRelationships'
+    | '/_authenticated/user/$username/_profileContent/likes'
+    | '/_authenticated/user/$username/_profileContent/replies'
+    | '/_authenticated/user/$username/_profileRelationships/followers'
+    | '/_authenticated/user/$username/_profileRelationships/following'
+    | '/_authenticated/user/$username/_profileContent/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -131,6 +225,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUserUsernameRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/user/$username/_profileRelationships': {
+      id: '/_authenticated/user/$username/_profileRelationships'
+      path: ''
+      fullPath: '/user/$username'
+      preLoaderRoute: typeof AuthenticatedUserUsernameProfileRelationshipsRouteRouteImport
+      parentRoute: typeof AuthenticatedUserUsernameRoute
+    }
+    '/_authenticated/user/$username/_profileContent': {
+      id: '/_authenticated/user/$username/_profileContent'
+      path: '/user/$username'
+      fullPath: '/user/$username'
+      preLoaderRoute: typeof AuthenticatedUserUsernameProfileContentRouteRouteImport
+      parentRoute: typeof AuthenticatedUserUsernameRoute
+    }
+    '/_authenticated/user/$username/_profileContent/': {
+      id: '/_authenticated/user/$username/_profileContent/'
+      path: '/'
+      fullPath: '/user/$username/'
+      preLoaderRoute: typeof AuthenticatedUserUsernameProfileContentIndexRouteImport
+      parentRoute: typeof AuthenticatedUserUsernameProfileContentRouteRoute
+    }
+    '/_authenticated/user/$username/_profileRelationships/following': {
+      id: '/_authenticated/user/$username/_profileRelationships/following'
+      path: '/following'
+      fullPath: '/user/$username/following'
+      preLoaderRoute: typeof AuthenticatedUserUsernameProfileRelationshipsFollowingRouteImport
+      parentRoute: typeof AuthenticatedUserUsernameProfileRelationshipsRouteRoute
+    }
+    '/_authenticated/user/$username/_profileRelationships/followers': {
+      id: '/_authenticated/user/$username/_profileRelationships/followers'
+      path: '/followers'
+      fullPath: '/user/$username/followers'
+      preLoaderRoute: typeof AuthenticatedUserUsernameProfileRelationshipsFollowersRouteImport
+      parentRoute: typeof AuthenticatedUserUsernameProfileRelationshipsRouteRoute
+    }
+    '/_authenticated/user/$username/_profileContent/replies': {
+      id: '/_authenticated/user/$username/_profileContent/replies'
+      path: '/replies'
+      fullPath: '/user/$username/replies'
+      preLoaderRoute: typeof AuthenticatedUserUsernameProfileContentRepliesRouteImport
+      parentRoute: typeof AuthenticatedUserUsernameProfileContentRouteRoute
+    }
+    '/_authenticated/user/$username/_profileContent/likes': {
+      id: '/_authenticated/user/$username/_profileContent/likes'
+      path: '/likes'
+      fullPath: '/user/$username/likes'
+      preLoaderRoute: typeof AuthenticatedUserUsernameProfileContentLikesRouteImport
+      parentRoute: typeof AuthenticatedUserUsernameProfileContentRouteRoute
+    }
   }
 }
 
@@ -148,14 +291,71 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface AuthenticatedUserUsernameProfileContentRouteRouteChildren {
+  AuthenticatedUserUsernameProfileContentLikesRoute: typeof AuthenticatedUserUsernameProfileContentLikesRoute
+  AuthenticatedUserUsernameProfileContentRepliesRoute: typeof AuthenticatedUserUsernameProfileContentRepliesRoute
+  AuthenticatedUserUsernameProfileContentIndexRoute: typeof AuthenticatedUserUsernameProfileContentIndexRoute
+}
+
+const AuthenticatedUserUsernameProfileContentRouteRouteChildren: AuthenticatedUserUsernameProfileContentRouteRouteChildren =
+  {
+    AuthenticatedUserUsernameProfileContentLikesRoute:
+      AuthenticatedUserUsernameProfileContentLikesRoute,
+    AuthenticatedUserUsernameProfileContentRepliesRoute:
+      AuthenticatedUserUsernameProfileContentRepliesRoute,
+    AuthenticatedUserUsernameProfileContentIndexRoute:
+      AuthenticatedUserUsernameProfileContentIndexRoute,
+  }
+
+const AuthenticatedUserUsernameProfileContentRouteRouteWithChildren =
+  AuthenticatedUserUsernameProfileContentRouteRoute._addFileChildren(
+    AuthenticatedUserUsernameProfileContentRouteRouteChildren,
+  )
+
+interface AuthenticatedUserUsernameProfileRelationshipsRouteRouteChildren {
+  AuthenticatedUserUsernameProfileRelationshipsFollowersRoute: typeof AuthenticatedUserUsernameProfileRelationshipsFollowersRoute
+  AuthenticatedUserUsernameProfileRelationshipsFollowingRoute: typeof AuthenticatedUserUsernameProfileRelationshipsFollowingRoute
+}
+
+const AuthenticatedUserUsernameProfileRelationshipsRouteRouteChildren: AuthenticatedUserUsernameProfileRelationshipsRouteRouteChildren =
+  {
+    AuthenticatedUserUsernameProfileRelationshipsFollowersRoute:
+      AuthenticatedUserUsernameProfileRelationshipsFollowersRoute,
+    AuthenticatedUserUsernameProfileRelationshipsFollowingRoute:
+      AuthenticatedUserUsernameProfileRelationshipsFollowingRoute,
+  }
+
+const AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren =
+  AuthenticatedUserUsernameProfileRelationshipsRouteRoute._addFileChildren(
+    AuthenticatedUserUsernameProfileRelationshipsRouteRouteChildren,
+  )
+
+interface AuthenticatedUserUsernameRouteChildren {
+  AuthenticatedUserUsernameProfileContentRouteRoute: typeof AuthenticatedUserUsernameProfileContentRouteRouteWithChildren
+  AuthenticatedUserUsernameProfileRelationshipsRouteRoute: typeof AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren
+}
+
+const AuthenticatedUserUsernameRouteChildren: AuthenticatedUserUsernameRouteChildren =
+  {
+    AuthenticatedUserUsernameProfileContentRouteRoute:
+      AuthenticatedUserUsernameProfileContentRouteRouteWithChildren,
+    AuthenticatedUserUsernameProfileRelationshipsRouteRoute:
+      AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren,
+  }
+
+const AuthenticatedUserUsernameRouteWithChildren =
+  AuthenticatedUserUsernameRoute._addFileChildren(
+    AuthenticatedUserUsernameRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedUserUsernameRoute: typeof AuthenticatedUserUsernameRoute
+  AuthenticatedUserUsernameRoute: typeof AuthenticatedUserUsernameRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedUserUsernameRoute: AuthenticatedUserUsernameRoute,
+  AuthenticatedUserUsernameRoute: AuthenticatedUserUsernameRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
