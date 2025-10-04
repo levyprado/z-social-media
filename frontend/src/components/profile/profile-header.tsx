@@ -3,7 +3,7 @@ import { ChevronLeftIcon } from 'lucide-react'
 
 type ProfileHeaderProps = {
   title: string
-  description: string
+  description?: string
 }
 
 export default function ProfileHeader({
@@ -15,9 +15,11 @@ export default function ProfileHeader({
       <IconButton icon={ChevronLeftIcon} size='lg' />
       <div className='flex flex-col'>
         <span className='text-xl font-bold leading-tight'>{title}</span>
-        <span className='text-muted-foreground text-sm leading-tight'>
-          {description}
-        </span>
+        {description && (
+          <span className='text-muted-foreground text-sm leading-tight'>
+            {description}
+          </span>
+        )}
       </div>
     </div>
   )

@@ -1,5 +1,8 @@
+import ProfileHeader from '@/components/profile/profile-header'
+import { Button } from '@/components/ui/button'
 import { getUserByUsername } from '@/features/user/queries'
 import { createFileRoute, Link, notFound, Outlet } from '@tanstack/react-router'
+import { User2Icon } from 'lucide-react'
 
 export const Route = createFileRoute('/_authenticated/user/$username')({
   loader: async ({ params: { username } }) => {
@@ -19,17 +22,24 @@ function RouteComponent() {
 
 function NotFoundComponent() {
   return (
-    <div className='flex min-h-screen flex-col items-center justify-center'>
-      <h1 className='mb-4 text-4xl font-bold'>User Not Found</h1>
-      <p className='mb-8 text-gray-600'>
-        The user you're looking for doesn't exist.
-      </p>
-      <Link
-        to='/'
-        className='rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700'
-      >
-        Go Home
-      </Link>
-    </div>
+    <>
+      <ProfileHeader title='Profile' />
+
+      <div className='mt-20 flex flex-col items-center justify-center gap-5 px-4'>
+        <User2Icon className='text-muted-foreground size-14' />
+        <h1 className='text-center text-3xl font-semibold'>
+          This user doesn't exist
+        </h1>
+        <Button
+          variant='secondary'
+          className='size-fit'
+          render={(props) => (
+            <Link to='/' {...props}>
+              Go back
+            </Link>
+          )}
+        ></Button>
+      </div>
+    </>
   )
 }

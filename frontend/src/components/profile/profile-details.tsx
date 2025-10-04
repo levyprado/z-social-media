@@ -1,9 +1,13 @@
 import Avatar from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { formatMonthYear } from '@/lib/utils'
+import { useLoaderData } from '@tanstack/react-router'
 import { CalendarDaysIcon } from 'lucide-react'
 import FollowStats from './follow-stats'
 
 export default function ProfileDetails() {
+  const { user } = useLoaderData({ from: '/_authenticated/user/$username' })
+
   return (
     <div>
       {/* User banner */}
@@ -16,7 +20,7 @@ export default function ProfileDetails() {
         {/* Avatar and Action Button row */}
         <div className='flex items-start justify-between'>
           <Avatar
-            img={null}
+            img={user.image}
             className='border-background -mt-[calc(12.5%+12px)] h-auto w-[25%] min-w-12 border-4'
           />
           <div>
@@ -26,8 +30,10 @@ export default function ProfileDetails() {
 
         {/* User name/username & Bio */}
         <div className='mt-2 flex flex-col'>
-          <span className='text-xl font-bold leading-tight'>Elon Musk</span>
-          <span className='text-muted-foreground leading-tight'>@elonmusk</span>
+          <span className='text-xl font-bold leading-tight'>{user.name}</span>
+          <span className='text-muted-foreground leading-tight'>
+            @{user.username}
+          </span>
           <p className='mt-2'>
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsa, nisi
             beatae. Ducimus earum rerum sunt.
@@ -38,7 +44,9 @@ export default function ProfileDetails() {
         <div className='text-muted-foreground flex flex-col py-4'>
           <div className='flex items-center gap-2'>
             <CalendarDaysIcon className='size-4' />
-            <span className='text-sm'>Joined September 2025</span>
+            <span className='text-sm'>
+              Joined {formatMonthYear(user.createdAt)}
+            </span>
           </div>
         </div>
 
