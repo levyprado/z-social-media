@@ -44,9 +44,20 @@ export default function SignupForm() {
     },
   })
 
+  const handleGithubSignUp = async () => {
+    await authClient.signIn.social({
+      provider: 'github',
+    })
+  }
+
   return (
     <>
-      <Button size='lg' variant='outline' className='w-full'>
+      <Button
+        onClick={handleGithubSignUp}
+        size='lg'
+        variant='outline'
+        className='w-full'
+      >
         <svg
           className='fill-foreground'
           width={24}

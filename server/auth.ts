@@ -20,6 +20,22 @@ export const auth = betterAuth({
       maxAge: 5 * 60, // 5 minutes
     },
   },
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      mapProfileToUser: (profile) => {
+        return {
+          email: profile.email,
+          name: profile.name,
+          image: profile.avatar_url,
+          username: profile.login.toLowerCase(),
+          displayUsername: profile.login,
+          emailVerified: true,
+        }
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
   },

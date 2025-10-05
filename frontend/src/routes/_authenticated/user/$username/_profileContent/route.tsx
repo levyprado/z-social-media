@@ -1,7 +1,7 @@
 import ProfileDetails from '@/components/profile/profile-details'
 import ProfileHeader from '@/components/profile/profile-header'
 import ProfileTabs from '@/components/profile/profile-tabs'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet, useLoaderData } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
   '/_authenticated/user/$username/_profileContent',
@@ -10,9 +10,11 @@ export const Route = createFileRoute(
 })
 
 function RouteComponent() {
+  const { user } = useLoaderData({ from: '/_authenticated/user/$username' })
+
   return (
     <>
-      <ProfileHeader title='Elon Musk' description='5 posts' />
+      <ProfileHeader title={user.name} />
 
       <ProfileDetails />
 
