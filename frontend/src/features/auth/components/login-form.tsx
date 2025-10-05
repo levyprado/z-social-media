@@ -41,6 +41,7 @@ export default function LoginForm() {
   const handleGithubSignIn = async () => {
     await authClient.signIn.social({
       provider: 'github',
+      callbackURL: 'http://localhost:5173/',
     })
   }
 
