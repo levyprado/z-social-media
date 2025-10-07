@@ -52,3 +52,11 @@ export const LoginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
   password: z.string().min(1, 'Password is required'),
 })
+
+export const createPostSchema = z.object({
+  content: z
+    .string()
+    .min(1, 'Content is required')
+    .max(280, 'Content must be 280 characters or less'),
+  parentPostId: z.int().optional(),
+})
