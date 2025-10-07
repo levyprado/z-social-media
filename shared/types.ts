@@ -1,5 +1,5 @@
-import type { AppType } from '@/server/index'
 import z from 'zod'
+import type { AppType } from '../server'
 
 export { type AppType }
 
@@ -52,6 +52,16 @@ export const LoginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
   password: z.string().min(1, 'Password is required'),
 })
+
+export type Post = {
+  id: number
+  content: string
+  userId: string
+  parentPostId: number | null
+  replyCount: number
+  createdAt: string
+  user: UserProfile
+}
 
 export const createPostSchema = z.object({
   content: z

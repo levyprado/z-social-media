@@ -1,7 +1,7 @@
-import { auth } from '@/server/auth'
-import postsRouter from '@/server/routes/posts'
-import userRouter from '@/server/routes/user'
 import { Hono } from 'hono'
+import { auth } from './auth'
+import postsRouter from './routes/posts'
+import userRouter from './routes/user'
 
 declare module 'hono' {
   interface ContextVariableMap {

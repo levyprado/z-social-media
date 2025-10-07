@@ -1,8 +1,8 @@
-import db from '@/server/db'
-import { user as usersTable } from '@/server/db/schema/auth'
 import type { ErrorResponse, SuccessResponse } from '@/shared/types'
 import { eq } from 'drizzle-orm'
 import { Hono } from 'hono'
+import db from 'server/db'
+import { user as usersTable } from 'server/db/schema/auth'
 
 const userRouter = new Hono().get('/:username', async (c) => {
   const { username } = c.req.param()

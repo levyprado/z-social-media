@@ -1,7 +1,3 @@
-import db from '@/server/db/index'
-import { user } from '@/server/db/schema/auth'
-import { posts } from '@/server/db/schema/posts'
-import { loggedIn } from '@/server/middleware/logged-in'
 import {
   createPostSchema,
   type ErrorResponse,
@@ -10,6 +6,10 @@ import {
 import { desc, eq, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { validator } from 'hono/validator'
+import db from 'server/db'
+import { user } from 'server/db/schema/auth'
+import { posts } from 'server/db/schema/posts'
+import { loggedIn } from 'server/middleware/logged-in'
 import { flattenError } from 'zod'
 
 const postsRouter = new Hono()
@@ -67,7 +67,7 @@ const postsRouter = new Hono()
   )
   .get('/', async (c) => {
     try {
-      const [feedPosts] = await db
+      const feedPosts = await db
         .select({
           id: posts.id,
           content: posts.content,
