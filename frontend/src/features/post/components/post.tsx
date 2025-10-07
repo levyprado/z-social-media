@@ -1,6 +1,7 @@
 import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
 import { PostMetrics } from '@/features/post/components/post-metrics'
+import { formatPostDate } from '@/lib/utils'
 import type { Post } from '@/shared/types'
 import { EllipsisIcon } from 'lucide-react'
 
@@ -27,7 +28,9 @@ export default function Post({ post }: PostProps) {
                 @{post.user.username}
               </span>
               <span>·</span>
-              <span className='leading-tight'>20h</span>
+              <span className='leading-tight'>
+                {formatPostDate(post.createdAt)}
+              </span>
             </div>
           </div>
 
