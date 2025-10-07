@@ -6,26 +6,36 @@ import {
   ShareIcon,
 } from 'lucide-react'
 
-export function PostMetrics() {
+type PostMetricsProps = {
+  replyCount: number
+  repostCount: number
+  likeCount: number
+}
+
+export function PostMetrics({
+  replyCount,
+  repostCount,
+  likeCount,
+}: PostMetricsProps) {
   const postMetricsItems = [
     {
       icon: MessageCircleIcon,
-      count: 11,
+      count: replyCount,
     },
     {
       icon: RepeatIcon,
-      count: 15,
+      count: repostCount,
     },
     {
       icon: HeartIcon,
-      count: 364,
+      count: likeCount,
     },
   ]
 
   return (
     <div className='mt-2 flex justify-between'>
-      {postMetricsItems.map((item) => (
-        <PostMetricsButton key={item.count} item={item} />
+      {postMetricsItems.map((item, i) => (
+        <PostMetricsButton key={i} item={item} />
       ))}
 
       {/* Share button */}
@@ -35,7 +45,10 @@ export function PostMetrics() {
 }
 
 type PostMetricsButton = {
-  item: any
+  item: {
+    icon: React.ComponentType<{ size?: number; className?: string }>
+    count: number
+  }
 }
 
 export function PostMetricsButton({ item }: PostMetricsButton) {

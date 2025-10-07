@@ -44,7 +44,7 @@ export default function Post({ post }: PostProps) {
         {/* Replying to */}
 
         {/* Post metrics */}
-        <PostMetrics />
+        <PostMetrics replyCount={0} repostCount={0} likeCount={0} />
       </div>
     </article>
   )
