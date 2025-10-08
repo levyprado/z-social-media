@@ -3,6 +3,7 @@ import Avatar from '@/components/ui/avatar'
 import { PostMetrics } from '@/features/post/components/post-metrics'
 import { formatPostDate } from '@/lib/utils'
 import type { Post } from '@/shared/types'
+import { Link } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
 
 type PostProps = {
@@ -13,20 +14,30 @@ export default function Post({ post }: PostProps) {
   return (
     <article className='flex gap-2 py-3 pl-3 pr-4'>
       <div>
-        <Avatar img={post.user.image} />
+        <Link to='/user/$username' params={{ username: post.user.username }}>
+          <Avatar img={post.user.image} />
+        </Link>
       </div>
 
       <div className='flex w-full min-w-0 flex-col gap-1'>
         <div className='flex items-start justify-between gap-2'>
           {/* User data */}
-          <div className='flex min-w-0 flex-col'>
-            <span className='truncate text-sm font-semibold leading-tight'>
+          <div className='flex min-w-0 flex-col sm:flex-row'>
+            <Link
+              to='/user/$username'
+              params={{ username: post.user.username }}
+              className='truncate text-sm font-semibold leading-tight sm:mr-1'
+            >
               {post.user.name}
-            </span>
+            </Link>
             <div className='text-muted-foreground flex items-baseline gap-1 text-sm'>
-              <span className='truncate leading-tight'>
+              <Link
+                to='/user/$username'
+                params={{ username: post.user.username }}
+                className='truncate leading-tight'
+              >
                 @{post.user.username}
-              </span>
+              </Link>
               <span>·</span>
               <span className='leading-tight'>
                 {formatPostDate(post.createdAt)}
