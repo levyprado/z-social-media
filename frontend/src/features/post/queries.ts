@@ -1,5 +1,10 @@
 import { client } from '@/lib/api'
-import type { ErrorResponse, Post, SuccessResponse } from '@/shared/types'
+import type {
+  CreatePostInput,
+  ErrorResponse,
+  Post,
+  SuccessResponse,
+} from '@/shared/types'
 
 export type GetFeedPostsResponse = SuccessResponse<Post[]> | ErrorResponse
 
@@ -12,4 +17,19 @@ export const getFeedPosts = async () => {
   }
 
   return data.data
+}
+
+export const createPost = async (input: CreatePostInput) => {
+  const { parentPostId, ...rest } = input
+  const res = await client.posts.$post({
+    form: {
+      ...rest,
+      ...(parentPostId !== undefined && {
+        parentPostId: String(parentPostId),
+      }),
+    },
+  })
+
+  const data = await res.json()
+  return data
 }

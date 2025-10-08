@@ -68,5 +68,7 @@ export const createPostSchema = z.object({
     .string()
     .min(1, 'Content is required')
     .max(280, 'Content must be 280 characters or less'),
-  parentPostId: z.int().optional(),
+  parentPostId: z.coerce.number().optional(),
 })
+
+export type CreatePostInput = z.infer<typeof createPostSchema>
