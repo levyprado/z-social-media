@@ -21,7 +21,7 @@ export default function ProfileDetails() {
         <div className='flex items-start justify-between'>
           <Avatar
             img={user.image}
-            className='border-background -mt-[calc(12.5%+12px)] h-auto w-[25%] min-w-12 border-4'
+            className='outline-background -mt-[calc(12.5%+12px)] h-auto w-[25%] min-w-12 outline-4'
           />
           <div>
             <Button variant='outline'>Edit profile</Button>
