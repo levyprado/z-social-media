@@ -10,11 +10,14 @@ import { ImageIcon, Loader2Icon } from 'lucide-react'
 import { createPost } from '../queries'
 
 type CreatePostProps = {
-  isReply?: boolean
+  parentPostUsername?: string
   parentPostId?: string
 }
 
-export default function CreatePost({ isReply, parentPostId }: CreatePostProps) {
+export default function CreatePost({
+  parentPostUsername,
+  parentPostId,
+}: CreatePostProps) {
   const { user } = useRouteContext({ from: '/_authenticated' })
   const router = useRouter()
   const form = useForm({
@@ -41,9 +44,10 @@ export default function CreatePost({ isReply, parentPostId }: CreatePostProps) {
 
   return (
     <div className='flex flex-col gap-2.5 border-b p-3'>
-      {isReply && (
+      {parentPostUsername && (
         <div className='text-muted-foreground mr-2 text-sm'>
-          Replying to <span className='text-primary'>@elonmusk</span>
+          Replying to{' '}
+          <span className='text-primary'>@{parentPostUsername}</span>
         </div>
       )}
 
@@ -77,7 +81,9 @@ export default function CreatePost({ isReply, parentPostId }: CreatePostProps) {
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                   placeholder={
-                    isReply ? 'Post your reply...' : 'What are you thinking...?'
+                    parentPostUsername
+                      ? 'Post your reply...'
+                      : 'What are you thinking...?'
                   }
                 />
                 <FieldError field={field} />

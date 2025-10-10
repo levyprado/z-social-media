@@ -72,7 +72,11 @@ export default function Post({ post }: PostProps) {
 
         {/* Post metrics */}
         <div className='mt-2'>
-          <PostMetrics replyCount={0} repostCount={0} likeCount={0} />
+          <PostMetrics
+            replyCount={post.replyCount}
+            repostCount={0}
+            likeCount={0}
+          />
         </div>
       </div>
     </article>

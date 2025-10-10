@@ -1,12 +1,12 @@
 import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
-import { useParams } from '@tanstack/react-router'
+import { Link, useLoaderData } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
 import CreatePost from './create-post'
 import { PostMetrics } from './post-metrics'
 
 export default function PostDetail() {
-  const { postId } = useParams({ from: '/_authenticated/post/$postId' })
+  const { post } = useLoaderData({ from: '/_authenticated/post/$postId' })
 
   return (
     <section>
@@ -14,33 +14,33 @@ export default function PostDetail() {
         <article className='px-4 pt-3'>
           {/* Header */}
           <div className='flex items-center gap-2'>
-            <Avatar img={null} />
+            <Link
+              to='/user/$username'
+              params={{ username: post.user.username }}
+              className='transition-[filter] hover:brightness-[.85]'
+            >
+              <Avatar img={post.user.image} />
+            </Link>
             <div className='flex w-full min-w-0 items-baseline justify-between'>
-              <div className='flex min-w-0 flex-col'>
-                <span className='mr-2 truncate font-bold leading-tight'>
-                  Elon Musk
+              <Link
+                to='/user/$username'
+                params={{ username: post.user.username }}
+                className='flex min-w-0 flex-col'
+              >
+                <span className='mr-2 truncate font-bold leading-tight hover:underline'>
+                  {post.user.name}
                 </span>
-                <span className='text-muted-foreground truncate leading-tight'>
-                  @elonmusk
+                <span className='text-muted-foreground truncate leading-tight hover:underline'>
+                  @{post.user.username}
                 </span>
-              </div>
+              </Link>
 
               <IconButton size='md' icon={EllipsisIcon} />
             </div>
           </div>
           {/* Content */}
           <div>
-            <p className='pt-3'>
-              I was surprised by how many students liked the .mdc file in the
-              course (works great with tools like Cursor).
-              <br />
-              <br />
-              Each lesson now also has a markdown version.
-              <br />
-              <br />
-              Feed it to an LLM, ask about something you’ve already read or
-              request clarification.
-            </p>
+            <p className='whitespace-pre-wrap pt-3'>{post.content}</p>
             <div className='py-4'>
               <time dateTime='1' className='text-muted-foreground'>
                 9:20 AM · Oct 9, 2025
@@ -51,7 +51,7 @@ export default function PostDetail() {
           <div className='border-y px-1 py-3'>
             <PostMetrics
               isDetail
-              replyCount={0}
+              replyCount={post.replyCount}
               repostCount={0}
               likeCount={0}
             />
@@ -60,7 +60,10 @@ export default function PostDetail() {
 
         {/* Create reply */}
         <div>
-          <CreatePost isReply parentPostId={postId} />
+          <CreatePost
+            parentPostUsername={post.user.username}
+            parentPostId={String(post.id)}
+          />
         </div>
       </div>
 

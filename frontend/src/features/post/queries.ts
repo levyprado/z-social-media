@@ -27,3 +27,14 @@ export const createPost = async (input: CreatePostInput) => {
   const data = await res.json()
   return data
 }
+
+type GetPostResponse = SuccessResponse<Post> | ErrorResponse
+
+export const getPost = async (postId: string) => {
+  const res = await client.posts[':postId'].$get({
+    param: { postId },
+  })
+
+  const data = (await res.json()) as GetPostResponse
+  return data
+}

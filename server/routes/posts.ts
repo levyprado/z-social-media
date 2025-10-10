@@ -19,11 +19,14 @@ const postsRouter = new Hono()
     validator('form', (value, c) => {
       const parsed = createPostSchema.safeParse(value)
       if (!parsed.success) {
-        return c.json<ErrorResponse>({
-          success: false,
-          error: 'Validation failed',
-          details: flattenError(parsed.error),
-        })
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Validation failed',
+            details: flattenError(parsed.error),
+          },
+          500,
+        )
       }
       return parsed.data
     }),
@@ -58,11 +61,14 @@ const postsRouter = new Hono()
           data: newPost,
         })
       } catch (error) {
-        return c.json<ErrorResponse>({
-          success: false,
-          error: 'Something went wrong',
-          details: error instanceof Error ? error.message : null,
-        })
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Something went wrong',
+            details: error instanceof Error ? error.message : null,
+          },
+          500,
+        )
       }
     },
   )
@@ -94,11 +100,76 @@ const postsRouter = new Hono()
         data: feedPosts,
       })
     } catch (error) {
-      return c.json<ErrorResponse>({
-        success: false,
-        error: 'Something went wrong',
-        details: error instanceof Error ? error.message : null,
+      return c.json<ErrorResponse>(
+        {
+          success: false,
+          error: 'Something went wrong',
+          details: error instanceof Error ? error.message : null,
+        },
+        500,
+      )
+    }
+  })
+  .get('/:postId', async (c) => {
+    const { postId } = c.req.param()
+    const postIdValue = Number(postId)
+
+    if (isNaN(postIdValue)) {
+      return c.json<ErrorResponse>(
+        {
+          success: false,
+          error: 'Invalid post ID',
+        },
+        400,
+      )
+    }
+
+    try {
+      const [post] = await db
+        .select({
+          id: posts.id,
+          content: posts.content,
+          userId: posts.userId,
+          parentPostId: posts.parentPostId,
+          replyCount: posts.replyCount,
+          createdAt: posts.createdAt,
+          user: {
+            id: user.id,
+            name: user.username,
+            username: user.username,
+            image: user.image,
+            createdAt: user.createdAt,
+          },
+        })
+        .from(posts)
+        .leftJoin(user, eq(posts.userId, user.id))
+        .where(eq(posts.id, postIdValue))
+        .limit(1)
+
+      if (!post) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Post not found',
+          },
+          404,
+        )
+      }
+
+      return c.json<SuccessResponse>({
+        success: true,
+        message: 'Post fetched successfully',
+        data: post,
       })
+    } catch (error) {
+      return c.json<ErrorResponse>(
+        {
+          success: false,
+          error: 'Something went wrong',
+          details: error instanceof Error ? error.message : null,
+        },
+        500,
+      )
     }
   })
 
