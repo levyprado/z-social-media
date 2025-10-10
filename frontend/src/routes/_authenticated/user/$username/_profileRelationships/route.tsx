@@ -1,4 +1,4 @@
-import ProfileHeader from '@/components/profile/profile-header'
+import PageHeader from '@/components/page-header'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
@@ -10,7 +10,7 @@ export const Route = createFileRoute(
 function RouteComponent() {
   return (
     <>
-      <ProfileHeader title='Elon Musk' description='@elonmusk' />
+      <PageHeader title='Elon Musk' description='@elonmusk' />
       <Outlet />
     </>
   )

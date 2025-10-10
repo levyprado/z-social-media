@@ -1,4 +1,4 @@
-import ProfileHeader from '@/components/profile/profile-header'
+import PageHeader from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { getUserByUsername } from '@/features/user/queries'
 import { createFileRoute, Link, notFound, Outlet } from '@tanstack/react-router'
@@ -23,7 +23,7 @@ function RouteComponent() {
 function NotFoundComponent() {
   return (
     <>
-      <ProfileHeader title='Profile' />
+      <PageHeader title='Profile' />
 
       <div className='mt-20 flex flex-col items-center justify-center gap-5 px-4'>
         <User2Icon className='text-muted-foreground size-14' />

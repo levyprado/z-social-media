@@ -19,7 +19,7 @@ function RouteComponent() {
   return (
     <div className='flex min-h-dvh justify-center'>
       <Sidebar />
-      <main className='min-w-0 max-w-[600px] grow'>
+      <main className='min-h-[150vh] min-w-0 max-w-[600px] grow'>
         <Outlet />
       </main>
     </div>

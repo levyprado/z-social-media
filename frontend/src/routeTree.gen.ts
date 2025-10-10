@@ -14,6 +14,7 @@ import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthenticatedPostPostIdRouteImport } from './routes/_authenticated/post/$postId'
 import { Route as AuthenticatedUserUsernameRouteRouteImport } from './routes/_authenticated/user/$username/route'
 import { Route as AuthenticatedUserUsernameProfileRelationshipsRouteRouteImport } from './routes/_authenticated/user/$username/_profileRelationships/route'
 import { Route as AuthenticatedUserUsernameProfileContentRouteRouteImport } from './routes/_authenticated/user/$username/_profileContent/route'
@@ -45,6 +46,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthenticatedPostPostIdRoute = AuthenticatedPostPostIdRouteImport.update({
+  id: '/post/$postId',
+  path: '/post/$postId',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedUserUsernameRouteRoute =
   AuthenticatedUserUsernameRouteRouteImport.update({
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof AuthSignupRoute
   '/': typeof AuthenticatedIndexRoute
   '/user/$username': typeof AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren
+  '/post/$postId': typeof AuthenticatedPostPostIdRoute
   '/user/$username/likes': typeof AuthenticatedUserUsernameProfileContentLikesRoute
   '/user/$username/replies': typeof AuthenticatedUserUsernameProfileContentRepliesRoute
   '/user/$username/followers': typeof AuthenticatedUserUsernameProfileRelationshipsFollowersRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByTo {
   '/signup': typeof AuthSignupRoute
   '/': typeof AuthenticatedIndexRoute
   '/user/$username': typeof AuthenticatedUserUsernameProfileContentIndexRoute
+  '/post/$postId': typeof AuthenticatedPostPostIdRoute
   '/user/$username/likes': typeof AuthenticatedUserUsernameProfileContentLikesRoute
   '/user/$username/replies': typeof AuthenticatedUserUsernameProfileContentRepliesRoute
   '/user/$username/followers': typeof AuthenticatedUserUsernameProfileRelationshipsFollowersRoute
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/_auth/signup': typeof AuthSignupRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/user/$username': typeof AuthenticatedUserUsernameRouteRouteWithChildren
+  '/_authenticated/post/$postId': typeof AuthenticatedPostPostIdRoute
   '/_authenticated/user/$username/_profileContent': typeof AuthenticatedUserUsernameProfileContentRouteRouteWithChildren
   '/_authenticated/user/$username/_profileRelationships': typeof AuthenticatedUserUsernameProfileRelationshipsRouteRouteWithChildren
   '/_authenticated/user/$username/_profileContent/likes': typeof AuthenticatedUserUsernameProfileContentLikesRoute
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/'
     | '/user/$username'
+    | '/post/$postId'
     | '/user/$username/likes'
     | '/user/$username/replies'
     | '/user/$username/followers'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/'
     | '/user/$username'
+    | '/post/$postId'
     | '/user/$username/likes'
     | '/user/$username/replies'
     | '/user/$username/followers'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/_auth/signup'
     | '/_authenticated/'
     | '/_authenticated/user/$username'
+    | '/_authenticated/post/$postId'
     | '/_authenticated/user/$username/_profileContent'
     | '/_authenticated/user/$username/_profileRelationships'
     | '/_authenticated/user/$username/_profileContent/likes'
@@ -212,6 +224,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
+    }
+    '/_authenticated/post/$postId': {
+      id: '/_authenticated/post/$postId'
+      path: '/post/$postId'
+      fullPath: '/post/$postId'
+      preLoaderRoute: typeof AuthenticatedPostPostIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/user/$username': {
       id: '/_authenticated/user/$username'
@@ -346,12 +365,14 @@ const AuthenticatedUserUsernameRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedUserUsernameRouteRoute: typeof AuthenticatedUserUsernameRouteRouteWithChildren
+  AuthenticatedPostPostIdRoute: typeof AuthenticatedPostPostIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedUserUsernameRouteRoute:
     AuthenticatedUserUsernameRouteRouteWithChildren,
+  AuthenticatedPostPostIdRoute: AuthenticatedPostPostIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

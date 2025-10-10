@@ -3,7 +3,7 @@ import Avatar from '@/components/ui/avatar'
 import { PostMetrics } from '@/features/post/components/post-metrics'
 import { formatPostDate } from '@/lib/utils'
 import type { Post } from '@/shared/types'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
 
 type PostProps = {
@@ -11,10 +11,24 @@ type PostProps = {
 }
 
 export default function Post({ post }: PostProps) {
+  const navigate = useNavigate()
+
+  const handlePostClick = () => {
+    navigate({ to: '/post/$postId', params: { postId: post.id.toString() } })
+  }
+
   return (
-    <article className='flex gap-2 py-3 pl-3 pr-4'>
+    <article
+      onClick={handlePostClick}
+      className='hover:bg-card flex cursor-pointer gap-2 py-3 pl-3 pr-4'
+    >
       <div>
-        <Link to='/user/$username' params={{ username: post.user.username }}>
+        <Link
+          onClick={(e) => e.stopPropagation()}
+          to='/user/$username'
+          params={{ username: post.user.username }}
+          className='transition-[filter] hover:brightness-[.85]'
+        >
           <Avatar img={post.user.image} />
         </Link>
       </div>
@@ -24,17 +38,19 @@ export default function Post({ post }: PostProps) {
           {/* User data */}
           <div className='flex min-w-0 flex-col sm:flex-row'>
             <Link
+              onClick={(e) => e.stopPropagation()}
               to='/user/$username'
               params={{ username: post.user.username }}
-              className='truncate text-sm font-semibold leading-tight sm:mr-1'
+              className='w-fit truncate text-sm font-semibold leading-tight hover:underline sm:mr-1'
             >
               {post.user.name}
             </Link>
             <div className='text-muted-foreground flex items-baseline gap-1 text-sm'>
               <Link
+                onClick={(e) => e.stopPropagation()}
                 to='/user/$username'
                 params={{ username: post.user.username }}
-                className='truncate leading-tight'
+                className='truncate leading-tight hover:underline'
               >
                 @{post.user.username}
               </Link>
@@ -55,7 +71,9 @@ export default function Post({ post }: PostProps) {
         {/* Replying to */}
 
         {/* Post metrics */}
-        <PostMetrics replyCount={0} repostCount={0} likeCount={0} />
+        <div className='mt-2'>
+          <PostMetrics replyCount={0} repostCount={0} likeCount={0} />
+        </div>
       </div>
     </article>
   )

@@ -1,5 +1,5 @@
+import PageHeader from '@/components/page-header'
 import ProfileDetails from '@/components/profile/profile-details'
-import ProfileHeader from '@/components/profile/profile-header'
 import ProfileTabs from '@/components/profile/profile-tabs'
 import { createFileRoute, Outlet, useLoaderData } from '@tanstack/react-router'
 
@@ -14,13 +14,13 @@ function RouteComponent() {
 
   return (
     <>
-      <ProfileHeader title={user.name} />
+      <PageHeader title={user.name} />
 
       <ProfileDetails />
 
       <ProfileTabs />
 
-      <section className='min-h-[150vh]'>
+      <section>
         <Outlet />
       </section>
     </>

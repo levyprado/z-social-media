@@ -2,15 +2,12 @@ import IconButton from '@/components/icon-button'
 import { useRouter } from '@tanstack/react-router'
 import { ChevronLeftIcon } from 'lucide-react'
 
-type ProfileHeaderProps = {
+type PageHeaderProps = {
   title: string
   description?: string
 }
 
-export default function ProfileHeader({
-  title,
-  description,
-}: ProfileHeaderProps) {
+export default function PageHeader({ title, description }: PageHeaderProps) {
   const router = useRouter()
 
   const handleGoBack = () => {
