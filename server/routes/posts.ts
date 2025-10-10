@@ -30,25 +30,26 @@ const postsRouter = new Hono()
     async (c) => {
       const user = c.get('user')
       const { content, parentPostId } = c.req.valid('form')
+      const parentPostIdValue =
+        !parentPostId || parentPostId === 'undefined'
+          ? null
+          : parseInt(parentPostId)
 
       try {
-        const [newPost] = await db
-          .insert(posts)
-          .values({
-            content,
-            userId: user.id,
-            parentPostId: parentPostId || null,
-          })
-          .returning()
+        const newPost = await db.insert(posts).values({
+          content,
+          userId: user.id,
+          parentPostId: parentPostIdValue,
+        })
 
         // Increase reply count
-        if (parentPostId) {
+        if (parentPostIdValue) {
           await db
             .update(posts)
             .set({
               replyCount: sql`${posts.replyCount} + 1`,
             })
-            .where(eq(posts.id, parentPostId))
+            .where(eq(posts.id, parentPostIdValue))
         }
 
         return c.json<SuccessResponse>({

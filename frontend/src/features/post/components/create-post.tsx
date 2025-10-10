@@ -11,7 +11,7 @@ import { createPost } from '../queries'
 
 type CreatePostProps = {
   isReply?: boolean
-  parentPostId?: number
+  parentPostId?: string
 }
 
 export default function CreatePost({ isReply, parentPostId }: CreatePostProps) {
@@ -20,16 +20,20 @@ export default function CreatePost({ isReply, parentPostId }: CreatePostProps) {
   const form = useForm({
     defaultValues: {
       content: '',
-      parentPostId,
     },
     validators: {
-      onChange: createPostSchema,
+      onChange: createPostSchema.pick({ content: true }),
     },
     onSubmit: async ({ value, formApi }) => {
-      const res = await createPost(value)
+      const data = {
+        ...value,
+        parentPostId,
+      }
+      const res = await createPost(data)
       if (!res.success) {
         formApi.fieldInfo.content.instance?.setErrorMap({ onSubmit: res.error })
       }
+
       formApi.reset()
       router.invalidate()
     },
@@ -51,7 +55,7 @@ export default function CreatePost({ isReply, parentPostId }: CreatePostProps) {
           }}
           className='transition-[filter] hover:brightness-[.85]'
         >
-          <Avatar img={null} />
+          <Avatar img={user.image} />
         </Link>
 
         <form

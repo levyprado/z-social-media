@@ -20,14 +20,8 @@ export const getFeedPosts = async () => {
 }
 
 export const createPost = async (input: CreatePostInput) => {
-  const { parentPostId, ...rest } = input
   const res = await client.posts.$post({
-    form: {
-      ...rest,
-      ...(parentPostId !== undefined && {
-        parentPostId: String(parentPostId),
-      }),
-    },
+    form: input,
   })
 
   const data = await res.json()

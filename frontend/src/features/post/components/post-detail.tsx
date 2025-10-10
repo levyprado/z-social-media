@@ -1,10 +1,13 @@
 import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
+import { useParams } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
 import CreatePost from './create-post'
 import { PostMetrics } from './post-metrics'
 
 export default function PostDetail() {
+  const { postId } = useParams({ from: '/_authenticated/post/$postId' })
+
   return (
     <section>
       <div>
@@ -57,7 +60,7 @@ export default function PostDetail() {
 
         {/* Create reply */}
         <div>
-          <CreatePost isReply />
+          <CreatePost isReply parentPostId={postId} />
         </div>
       </div>
 
