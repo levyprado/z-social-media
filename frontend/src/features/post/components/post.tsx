@@ -8,9 +8,10 @@ import { EllipsisIcon } from 'lucide-react'
 
 type PostProps = {
   post: Post
+  isParentPost?: boolean
 }
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, isParentPost }: PostProps) {
   const navigate = useNavigate()
 
   const handlePostClick = () => {
@@ -20,9 +21,9 @@ export default function Post({ post }: PostProps) {
   return (
     <article
       onClick={handlePostClick}
-      className='hover:bg-card flex cursor-pointer gap-2 py-3 pl-3 pr-4'
+      className='hover:bg-card flex cursor-pointer gap-2 px-4 pt-3'
     >
-      <div>
+      <div className='flex flex-col items-center'>
         <Link
           onClick={(e) => e.stopPropagation()}
           to='/user/$username'
@@ -31,9 +32,12 @@ export default function Post({ post }: PostProps) {
         >
           <Avatar img={post.user.image} />
         </Link>
+        {isParentPost && (
+          <div className='bg-muted -mb-2 mt-1.5 w-0.5 grow rounded-full' />
+        )}
       </div>
 
-      <div className='flex w-full min-w-0 flex-col gap-1'>
+      <div className='flex w-full min-w-0 flex-col gap-1 pb-3'>
         <div className='flex items-start justify-between gap-2'>
           {/* User data */}
           <div className='flex min-w-0 flex-col sm:flex-row'>

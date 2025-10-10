@@ -9,6 +9,7 @@ import { validator } from 'hono/validator'
 import db from 'server/db'
 import { user } from 'server/db/schema/auth'
 import { posts } from 'server/db/schema/posts'
+import { MAX_PARENT_DEPTH } from 'server/lib/constants'
 import { loggedIn } from 'server/middleware/logged-in'
 import { flattenError } from 'zod'
 
@@ -156,10 +157,43 @@ const postsRouter = new Hono()
         )
       }
 
+      const parentPosts = []
+      let currentParentId = post.parentPostId
+      let depth = 0
+
+      while (currentParentId && depth < MAX_PARENT_DEPTH) {
+        const [parentPost] = await db
+          .select({
+            id: posts.id,
+            content: posts.content,
+            userId: posts.userId,
+            parentPostId: posts.parentPostId,
+            replyCount: posts.replyCount,
+            createdAt: posts.createdAt,
+            user: {
+              id: user.id,
+              name: user.name,
+              username: user.username,
+              image: user.image,
+              createdAt: user.createdAt,
+            },
+          })
+          .from(posts)
+          .leftJoin(user, eq(posts.userId, user.id))
+          .where(eq(posts.id, currentParentId))
+          .limit(1)
+
+        if (!parentPost) break
+
+        parentPosts.unshift(parentPost)
+        currentParentId = parentPost.parentPostId
+        depth++
+      }
+
       return c.json<SuccessResponse>({
         success: true,
         message: 'Post fetched successfully',
-        data: post,
+        data: { post, parentPosts },
       })
     } catch (error) {
       return c.json<ErrorResponse>(

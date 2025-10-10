@@ -10,7 +10,7 @@ export const Route = createFileRoute('/_authenticated/post/$postId')({
     const res = await getPost(postId)
     if (!res.success) throw notFound()
 
-    return { post: res.data }
+    return res.data
   },
   component: RouteComponent,
 })

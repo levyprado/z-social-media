@@ -63,6 +63,11 @@ export type Post = {
   user: UserProfile
 }
 
+export type PostWithParents = {
+  post: Post
+  parentPosts: Post[]
+}
+
 export const createPostSchema = z.object({
   content: z
     .string()

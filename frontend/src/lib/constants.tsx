@@ -8,6 +8,8 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
+export const PAGE_HEADER_HEIGHT = 56
+
 export type NavItem = {
   icon: LucideIcon
   label: string

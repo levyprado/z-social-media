@@ -3,6 +3,7 @@ import type {
   CreatePostInput,
   ErrorResponse,
   Post,
+  PostWithParents,
   SuccessResponse,
 } from '@/shared/types'
 
@@ -28,7 +29,7 @@ export const createPost = async (input: CreatePostInput) => {
   return data
 }
 
-type GetPostResponse = SuccessResponse<Post> | ErrorResponse
+type GetPostResponse = SuccessResponse<PostWithParents> | ErrorResponse
 
 export const getPost = async (postId: string) => {
   const res = await client.posts[':postId'].$get({
