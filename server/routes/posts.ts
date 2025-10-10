@@ -135,7 +135,7 @@ const postsRouter = new Hono()
           createdAt: posts.createdAt,
           user: {
             id: user.id,
-            name: user.username,
+            name: user.name,
             username: user.username,
             image: user.image,
             createdAt: user.createdAt,

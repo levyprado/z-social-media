@@ -47,7 +47,13 @@ export default function CreatePost({
       {parentPostUsername && (
         <div className='text-muted-foreground mr-2 text-sm'>
           Replying to{' '}
-          <span className='text-primary'>@{parentPostUsername}</span>
+          <Link
+            to='/user/$username'
+            params={{ username: parentPostUsername }}
+            className='text-primary hover:underline'
+          >
+            @{parentPostUsername}
+          </Link>
         </div>
       )}
 

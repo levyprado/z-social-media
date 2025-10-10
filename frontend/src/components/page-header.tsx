@@ -19,7 +19,7 @@ export default function PageHeader({ title, description }: PageHeaderProps) {
   }
 
   return (
-    <div className='bg-background/85 shadow-xs dark:bg-background/65 sticky left-0 top-0 z-10 flex h-14 w-full items-center gap-4 px-4 backdrop-blur-md'>
+    <div className='bg-background/85 dark:bg-background/65 sticky left-0 top-0 z-10 flex h-14 w-full items-center gap-4 px-4 backdrop-blur-md'>
       <IconButton onClick={handleGoBack} icon={ChevronLeftIcon} size='lg' />
       <div className='flex flex-col'>
         <span className='text-xl font-bold leading-tight'>{title}</span>
