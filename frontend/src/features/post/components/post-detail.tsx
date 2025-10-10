@@ -1,6 +1,7 @@
 import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
 import { PAGE_HEADER_HEIGHT } from '@/lib/constants'
+import { formatPostDetailDate } from '@/lib/utils'
 import { Link, useLoaderData } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
@@ -64,8 +65,8 @@ export default function PostDetail() {
         <div>
           <p className='whitespace-pre-wrap pt-3'>{post.content}</p>
           <div className='py-4'>
-            <time dateTime='1' className='text-muted-foreground'>
-              9:20 AM · Oct 9, 2025
+            <time dateTime={post.createdAt} className='text-muted-foreground'>
+              {formatPostDetailDate(post.createdAt)}
             </time>
           </div>
         </div>

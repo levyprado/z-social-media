@@ -59,7 +59,7 @@ export default function Post({ post, isParentPost }: PostProps) {
                 @{post.user.username}
               </Link>
               <span>·</span>
-              <span className='leading-tight'>
+              <span className='whitespace-nowrap leading-tight'>
                 {formatPostDate(post.createdAt)}
               </span>
             </div>
