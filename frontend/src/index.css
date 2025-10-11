@@ -137,6 +137,7 @@
   }
   html {
     @apply scroll-smooth antialiased;
+    scrollbar-gutter: stable;
   }
   html[data-base-ui-scroll-locked] {
     @apply scroll-auto;
