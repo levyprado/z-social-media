@@ -17,7 +17,7 @@ export const Route = createFileRoute('/_authenticated/post/$postId')({
 
 function RouteComponent() {
   return (
-    <div>
+    <div className='min-h-[150vh]'>
       <PageHeader title='Post' />
 
       <PostDetail />
