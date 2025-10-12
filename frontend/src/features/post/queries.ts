@@ -6,6 +6,7 @@ import type {
   PostWithParents,
   SuccessResponse,
 } from '@/shared/types'
+import { queryOptions, useQuery } from '@tanstack/react-query'
 
 export type GetFeedPostsResponse = SuccessResponse<Post[]> | ErrorResponse
 
@@ -39,3 +40,35 @@ export const getPost = async (postId: string) => {
   const data = (await res.json()) as GetPostResponse
   return data
 }
+
+type GetRepliesResponse = SuccessResponse<Post[]> | ErrorResponse
+
+export const getReplies = async (postId: string, limit = 20, offset = 0) => {
+  const res = await client.posts[':postId'].replies.$get({
+    param: { postId },
+    query: { limit: limit.toString(), offset: offset.toString() },
+  })
+
+  const data = (await res.json()) as GetRepliesResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
+
+export const repliesQueryOptions = (
+  postId: string,
+  limit: number = 20,
+  offset: number = 0,
+) =>
+  queryOptions({
+    queryKey: ['replies', postId, limit, offset],
+    queryFn: () => getReplies(postId, limit, offset),
+  })
+
+export const useReplies = (
+  postId: string,
+  limit: number = 20,
+  offset: number = 0,
+) => useQuery(repliesQueryOptions(postId, limit, offset))

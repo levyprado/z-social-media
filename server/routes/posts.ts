@@ -1,5 +1,6 @@
 import {
   createPostSchema,
+  getRepliesQuerySchema,
   type ErrorResponse,
   type SuccessResponse,
 } from '@/shared/types'
@@ -190,7 +191,9 @@ const postsRouter = new Hono()
         depth++
       }
 
-      return c.json<SuccessResponse>({
+      return c.json<
+        SuccessResponse<{ post: typeof post; parentPosts: typeof parentPosts }>
+      >({
         success: true,
         message: 'Post fetched successfully',
         data: { post, parentPosts },
@@ -206,5 +209,82 @@ const postsRouter = new Hono()
       )
     }
   })
+  .get(
+    '/:postId/replies',
+    validator('query', (value, c) => {
+      const parsed = getRepliesQuerySchema.safeParse(value)
+
+      if (!parsed.success) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Invalid query parameters',
+            details: flattenError(parsed.error),
+          },
+          400,
+        )
+      }
+
+      return parsed.data
+    }),
+    async (c) => {
+      const { postId } = c.req.param()
+      const postIdValue = Number(postId)
+
+      if (isNaN(postIdValue)) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Invalid post ID',
+          },
+          400,
+        )
+      }
+
+      const { limit, offset } = c.req.valid('query')
+      const limitNum = Number(limit)
+      const offsetNum = Number(offset)
+
+      try {
+        const replies = await db
+          .select({
+            id: posts.id,
+            content: posts.content,
+            userId: posts.userId,
+            parentPostId: posts.parentPostId,
+            replyCount: posts.replyCount,
+            createdAt: posts.createdAt,
+            user: {
+              id: user.id,
+              name: user.name,
+              username: user.username,
+              image: user.image,
+              createdAt: user.createdAt,
+            },
+          })
+          .from(posts)
+          .leftJoin(user, eq(posts.userId, user.id))
+          .where(eq(posts.parentPostId, postIdValue))
+          .orderBy(desc(posts.createdAt))
+          .limit(limitNum)
+          .offset(offsetNum)
+
+        return c.json<SuccessResponse<typeof replies>>({
+          success: true,
+          message: 'Replies fetched successfully',
+          data: replies,
+        })
+      } catch (error) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Something went wrong',
+            details: error instanceof Error ? error.message : null,
+          },
+          500,
+        )
+      }
+    },
+  )
 
 export default postsRouter

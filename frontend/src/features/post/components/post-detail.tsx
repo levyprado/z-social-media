@@ -2,14 +2,16 @@ import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
 import { PAGE_HEADER_HEIGHT } from '@/lib/constants'
 import { formatPostDetailDate } from '@/lib/utils'
-import { Link, useLoaderData } from '@tanstack/react-router'
-import { EllipsisIcon } from 'lucide-react'
+import { Link, useLoaderData, useParams } from '@tanstack/react-router'
+import { EllipsisIcon, LoaderIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
+import { useReplies } from '../queries'
 import CreatePost from './create-post'
 import Post from './post'
 import { PostMetrics } from './post-metrics'
 
 export default function PostDetail() {
+  const { postId } = useParams({ from: '/_authenticated/post/$postId' })
   const { post, parentPosts } = useLoaderData({
     from: '/_authenticated/post/$postId',
   })
@@ -27,6 +29,12 @@ export default function PostDetail() {
       })
     }
   }, [parentPosts.length])
+
+  const {
+    data: replies,
+    isLoading: isLoadingReplies,
+    error: repliesError,
+  } = useReplies(postId)
 
   return (
     <section>
@@ -87,7 +95,24 @@ export default function PostDetail() {
       />
 
       {/* Replies */}
-      <div className='divide-border flex flex-col divide-y'></div>
+      <div className='divide-border flex flex-col divide-y'>
+        {isLoadingReplies && (
+          <div className='flex items-center justify-center py-10'>
+            <LoaderIcon className='text-primary size-6 animate-spin' />
+          </div>
+        )}
+
+        {!isLoadingReplies &&
+          !repliesError &&
+          replies &&
+          replies.length > 0 && (
+            <>
+              {replies?.map((reply) => (
+                <Post key={reply.id} post={reply} />
+              ))}
+            </>
+          )}
+      </div>
     </section>
   )
 }

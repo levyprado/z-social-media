@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { createPostSchema } from '@/shared/types'
 import { useForm } from '@tanstack/react-form'
+import { useQueryClient } from '@tanstack/react-query'
 import { Link, useRouteContext, useRouter } from '@tanstack/react-router'
 import { ImageIcon, Loader2Icon } from 'lucide-react'
-import { createPost } from '../queries'
+import { createPost, repliesQueryOptions } from '../queries'
 
 type CreatePostProps = {
   parentPostUsername?: string
@@ -20,6 +21,8 @@ export default function CreatePost({
 }: CreatePostProps) {
   const { user } = useRouteContext({ from: '/_authenticated' })
   const router = useRouter()
+  const queryClient = useQueryClient()
+
   const form = useForm({
     defaultValues: {
       content: '',
@@ -38,6 +41,11 @@ export default function CreatePost({
       }
 
       formApi.reset()
+      if (parentPostId) {
+        queryClient.invalidateQueries({
+          queryKey: repliesQueryOptions(parentPostId).queryKey,
+        })
+      }
       router.invalidate()
     },
   })
