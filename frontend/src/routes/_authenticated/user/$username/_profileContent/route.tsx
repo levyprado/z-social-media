@@ -1,6 +1,6 @@
 import PageHeader from '@/components/page-header'
-import ProfileDetails from '@/components/profile/profile-details'
-import ProfileTabs from '@/components/profile/profile-tabs'
+import ProfileDetails from '@/features/user/components/profile-details'
+import ProfileTabs from '@/features/user/components/profile-tabs'
 import { createFileRoute, Outlet, useLoaderData } from '@tanstack/react-router'
 
 export const Route = createFileRoute(

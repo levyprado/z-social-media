@@ -2,7 +2,7 @@ import { Form } from '@/components/form/form'
 import { FormField } from '@/components/form/form-field'
 import { PasswordField } from '@/components/form/password-field'
 import { Button } from '@/components/ui/button'
-import { userQueryOptions } from '@/features/auth/queries'
+import { authUserQueryOptions } from '@/features/auth/queries'
 import { SignupSchema } from '@/shared/types'
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
@@ -39,7 +39,7 @@ export default function SignupForm() {
       await authClient.signUp.email(data, {
         onSuccess: () => {
           queryClient.removeQueries({
-            queryKey: userQueryOptions.queryKey,
+            queryKey: authUserQueryOptions.queryKey,
           })
           navigate({ to: '/' })
         },

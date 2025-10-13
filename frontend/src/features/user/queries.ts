@@ -6,9 +6,9 @@ import type {
 } from '@/shared/types'
 import { queryOptions } from '@tanstack/react-query'
 
-export const userProfileQueryOptions = (username: string) =>
+export const userByUsernameQueryOptions = (username: string) =>
   queryOptions({
-    queryKey: ['user', username],
+    queryKey: ['users', username],
     queryFn: () => getUserByUsername(username),
     staleTime: 1000 * 60 * 10, // 10 minutes
   })

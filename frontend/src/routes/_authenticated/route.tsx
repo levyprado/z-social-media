@@ -1,10 +1,10 @@
 import Sidebar from '@/components/sidebar/sidebar'
-import { userQueryOptions } from '@/features/auth/queries'
+import { authUserQueryOptions } from '@/features/auth/queries'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async ({ context: { queryClient } }) => {
-    const user = await queryClient.ensureQueryData(userQueryOptions)
+    const user = await queryClient.ensureQueryData(authUserQueryOptions)
 
     if (!user) {
       throw redirect({ to: '/login' })

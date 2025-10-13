@@ -1,8 +1,8 @@
 import { queryOptions } from '@tanstack/react-query'
 import { authClient } from './auth-client'
 
-export const userQueryOptions = queryOptions({
-  queryKey: ['user'],
+export const authUserQueryOptions = queryOptions({
+  queryKey: ['auth', 'user'],
   queryFn: () => getUser(),
   staleTime: 1000 * 60 * 5, // 5 minutes
 })
