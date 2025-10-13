@@ -4,7 +4,7 @@ import { authClient } from './auth-client'
 export const userQueryOptions = queryOptions({
   queryKey: ['user'],
   queryFn: () => getUser(),
-  staleTime: 1000 * 60 * 2,
+  staleTime: 1000 * 60 * 5, // 5 minutes
 })
 
 export const getUser = async () => {

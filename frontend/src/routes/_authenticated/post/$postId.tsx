@@ -1,14 +1,16 @@
 import PageHeader from '@/components/page-header'
 import PostDetail from '@/features/post/components/post-detail'
-import { getPost } from '@/features/post/queries'
+import { postQueryOptions, repliesQueryOptions } from '@/features/post/queries'
 import { createFileRoute, notFound } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/post/$postId')({
-  loader: async ({ params }) => {
+  loader: async ({ params, context: { queryClient } }) => {
     const { postId } = params
 
-    const res = await getPost(postId)
+    const res = await queryClient.ensureQueryData(postQueryOptions(postId))
     if (!res.success) throw notFound()
+
+    queryClient.prefetchQuery(repliesQueryOptions(postId))
 
     return res.data
   },

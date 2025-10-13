@@ -21,6 +21,12 @@ export const getFeedPosts = async () => {
   return data.data
 }
 
+export const feedPostsQueryOptions = queryOptions({
+  queryKey: ['posts'],
+  queryFn: () => getFeedPosts(),
+  staleTime: 1000 * 60, // 1 minute
+})
+
 export const createPost = async (input: CreatePostInput) => {
   const res = await client.posts.$post({
     form: input,
@@ -40,6 +46,13 @@ export const getPost = async (postId: string) => {
   const data = (await res.json()) as GetPostResponse
   return data
 }
+
+export const postQueryOptions = (postId: string) =>
+  queryOptions({
+    queryKey: ['post', postId],
+    queryFn: () => getPost(postId),
+    staleTime: 1000 * 60 * 2, // 2 minutes
+  })
 
 type GetRepliesResponse = SuccessResponse<Post[]> | ErrorResponse
 
@@ -65,6 +78,7 @@ export const repliesQueryOptions = (
   queryOptions({
     queryKey: ['replies', postId, limit, offset],
     queryFn: () => getReplies(postId, limit, offset),
+    staleTime: 1000 * 60 * 1, // 1 minute
   })
 
 export const useReplies = (

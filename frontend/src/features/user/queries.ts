@@ -4,6 +4,14 @@ import type {
   SuccessResponse,
   UserProfile,
 } from '@/shared/types'
+import { queryOptions } from '@tanstack/react-query'
+
+export const userProfileQueryOptions = (username: string) =>
+  queryOptions({
+    queryKey: ['user', username],
+    queryFn: () => getUserByUsername(username),
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  })
 
 export type GetUserResponse =
   | SuccessResponse<{ user: UserProfile }>

@@ -1,13 +1,14 @@
 import PageHeader from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import { getUserByUsername } from '@/features/user/queries'
+import { userProfileQueryOptions } from '@/features/user/queries'
 import { createFileRoute, Link, notFound, Outlet } from '@tanstack/react-router'
 import { LoaderIcon, User2Icon } from 'lucide-react'
 
 export const Route = createFileRoute('/_authenticated/user/$username')({
-  loader: async ({ params: { username } }) => {
-    const response = await getUserByUsername(username)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+  loader: async ({ context: { queryClient }, params: { username } }) => {
+    const response = await queryClient.ensureQueryData(
+      userProfileQueryOptions(username),
+    )
 
     if (!response.success) throw notFound()
 
