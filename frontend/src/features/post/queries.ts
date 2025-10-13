@@ -1,4 +1,5 @@
 import { client } from '@/lib/api'
+import { POSTS_PER_PAGE } from '@/shared/constants'
 import type {
   CreatePostInput,
   ErrorResponse,
@@ -6,12 +7,19 @@ import type {
   PostWithParents,
   SuccessResponse,
 } from '@/shared/types'
-import { queryOptions, useQuery } from '@tanstack/react-query'
+import {
+  infiniteQueryOptions,
+  queryOptions,
+  useInfiniteQuery,
+  useQuery,
+} from '@tanstack/react-query'
 
 export type GetFeedPostsResponse = SuccessResponse<Post[]> | ErrorResponse
 
-export const getFeedPosts = async () => {
-  const res = await client.posts.$get()
+export const getFeedPosts = async (offset = 0) => {
+  const res = await client.posts.$get({
+    query: { offset: offset.toString() },
+  })
 
   const data = (await res.json()) as GetFeedPostsResponse
   if (!data.success) {
@@ -21,11 +29,21 @@ export const getFeedPosts = async () => {
   return data.data
 }
 
-export const feedPostsQueryOptions = queryOptions({
+export const feedPostsInfiniteQueryOptions = infiniteQueryOptions({
   queryKey: ['posts'],
-  queryFn: () => getFeedPosts(),
+  queryFn: async ({ pageParam }) => getFeedPosts(pageParam),
+  initialPageParam: 0,
+  getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+    if (lastPage.length < POSTS_PER_PAGE) {
+      return undefined
+    }
+    return lastPageParam + POSTS_PER_PAGE
+  },
   staleTime: 1000 * 60, // 1 minute
 })
+
+export const useFeedPostsInfinite = () =>
+  useInfiniteQuery(feedPostsInfiniteQueryOptions)
 
 export const createPost = async (input: CreatePostInput) => {
   const res = await client.posts.$post({
@@ -56,10 +74,10 @@ export const postQueryOptions = (postId: string) =>
 
 type GetRepliesResponse = SuccessResponse<Post[]> | ErrorResponse
 
-export const getReplies = async (postId: string, limit = 20, offset = 0) => {
+export const getReplies = async (postId: string, offset = 0) => {
   const res = await client.posts[':postId'].replies.$get({
     param: { postId },
-    query: { limit: limit.toString(), offset: offset.toString() },
+    query: { offset: offset.toString() },
   })
 
   const data = (await res.json()) as GetRepliesResponse
@@ -70,19 +88,12 @@ export const getReplies = async (postId: string, limit = 20, offset = 0) => {
   return data.data
 }
 
-export const repliesQueryOptions = (
-  postId: string,
-  limit: number = 20,
-  offset: number = 0,
-) =>
+export const repliesQueryOptions = (postId: string, offset: number = 0) =>
   queryOptions({
-    queryKey: ['replies', postId, limit, offset],
-    queryFn: () => getReplies(postId, limit, offset),
+    queryKey: ['replies', postId, offset],
+    queryFn: () => getReplies(postId, offset),
     staleTime: 1000 * 60 * 1, // 1 minute
   })
 
-export const useReplies = (
-  postId: string,
-  limit: number = 20,
-  offset: number = 0,
-) => useQuery(repliesQueryOptions(postId, limit, offset))
+export const useReplies = (postId: string, offset: number = 0) =>
+  useQuery(repliesQueryOptions(postId, offset))

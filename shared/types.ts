@@ -78,7 +78,6 @@ export const createPostSchema = z.object({
 
 export type CreatePostInput = z.infer<typeof createPostSchema>
 
-export const getRepliesQuerySchema = z.object({
-  limit: z.string().optional().default('20'),
-  offset: z.string().optional().default('0'),
+export const postsPaginationSchema = z.object({
+  offset: z.coerce.number().optional().default(0),
 })

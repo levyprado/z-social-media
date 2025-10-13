@@ -18,7 +18,7 @@ export const Route = createFileRoute('/_authenticated/user/$username')({
   notFoundComponent: NotFoundComponent,
   pendingComponent: () => (
     <div className='mt-32 flex items-center justify-center'>
-      <LoaderIcon className='text-primary size-8 animate-spin' />
+      <LoaderIcon className='text-primary size-6 animate-spin' />
     </div>
   ),
 })

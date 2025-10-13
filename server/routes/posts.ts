@@ -1,6 +1,7 @@
+import { POSTS_PER_PAGE } from '@/shared/constants'
 import {
   createPostSchema,
-  getRepliesQuerySchema,
+  postsPaginationSchema,
   type ErrorResponse,
   type SuccessResponse,
 } from '@/shared/types'
@@ -74,44 +75,62 @@ const postsRouter = new Hono()
       }
     },
   )
-  .get('/', async (c) => {
-    try {
-      const feedPosts = await db
-        .select({
-          id: posts.id,
-          content: posts.content,
-          userId: posts.userId,
-          parentPostId: posts.parentPostId,
-          replyCount: posts.replyCount,
-          createdAt: posts.createdAt,
-          user: {
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            image: user.image,
-            createdAt: user.createdAt,
-          },
-        })
-        .from(posts)
-        .leftJoin(user, eq(posts.userId, user.id))
-        .orderBy(desc(posts.createdAt))
-
-      return c.json<SuccessResponse>({
-        success: true,
-        message: 'Feed posts fetched successfully',
-        data: feedPosts,
-      })
-    } catch (error) {
-      return c.json<ErrorResponse>(
-        {
+  .get(
+    '/',
+    validator('query', (value, c) => {
+      const parsed = postsPaginationSchema.safeParse(value)
+      if (!parsed.success) {
+        return c.json<ErrorResponse>({
           success: false,
-          error: 'Something went wrong',
-          details: error instanceof Error ? error.message : null,
-        },
-        500,
-      )
-    }
-  })
+          error: 'Invalid query parameters',
+          details: flattenError(parsed.error),
+        })
+      }
+      return parsed.data
+    }),
+    async (c) => {
+      const { offset } = c.req.valid('query')
+
+      try {
+        const feedPosts = await db
+          .select({
+            id: posts.id,
+            content: posts.content,
+            userId: posts.userId,
+            parentPostId: posts.parentPostId,
+            replyCount: posts.replyCount,
+            createdAt: posts.createdAt,
+            user: {
+              id: user.id,
+              name: user.name,
+              username: user.username,
+              image: user.image,
+              createdAt: user.createdAt,
+            },
+          })
+          .from(posts)
+          .leftJoin(user, eq(posts.userId, user.id))
+          .orderBy(desc(posts.createdAt))
+          .limit(POSTS_PER_PAGE)
+          .offset(offset)
+
+        return c.json<SuccessResponse>({
+          success: true,
+          message: 'Feed posts fetched successfully',
+          data: feedPosts,
+        })
+      } catch (error) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Something went wrong',
+            details: error instanceof Error ? error.message : null,
+          },
+          500,
+        )
+      }
+    },
+  )
   .get('/:postId', async (c) => {
     const { postId } = c.req.param()
     const postIdValue = Number(postId)
@@ -212,7 +231,7 @@ const postsRouter = new Hono()
   .get(
     '/:postId/replies',
     validator('query', (value, c) => {
-      const parsed = getRepliesQuerySchema.safeParse(value)
+      const parsed = postsPaginationSchema.safeParse(value)
 
       if (!parsed.success) {
         return c.json<ErrorResponse>(
@@ -241,9 +260,7 @@ const postsRouter = new Hono()
         )
       }
 
-      const { limit, offset } = c.req.valid('query')
-      const limitNum = Number(limit)
-      const offsetNum = Number(offset)
+      const { offset } = c.req.valid('query')
 
       try {
         const replies = await db
@@ -266,8 +283,8 @@ const postsRouter = new Hono()
           .leftJoin(user, eq(posts.userId, user.id))
           .where(eq(posts.parentPostId, postIdValue))
           .orderBy(desc(posts.createdAt))
-          .limit(limitNum)
-          .offset(offsetNum)
+          .limit(POSTS_PER_PAGE)
+          .offset(offset)
 
         return c.json<SuccessResponse<typeof replies>>({
           success: true,
