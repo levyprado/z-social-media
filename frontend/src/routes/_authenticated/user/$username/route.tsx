@@ -1,8 +1,9 @@
 import PageHeader from '@/components/page-header'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import { userByUsernameQueryOptions } from '@/features/user/queries'
 import { createFileRoute, Link, notFound, Outlet } from '@tanstack/react-router'
-import { LoaderIcon, User2Icon } from 'lucide-react'
+import { User2Icon } from 'lucide-react'
 
 export const Route = createFileRoute('/_authenticated/user/$username')({
   loader: async ({ context: { queryClient }, params: { username } }) => {
@@ -18,7 +19,7 @@ export const Route = createFileRoute('/_authenticated/user/$username')({
   notFoundComponent: NotFoundComponent,
   pendingComponent: () => (
     <div className='mt-32 flex items-center justify-center'>
-      <LoaderIcon className='text-primary size-6 animate-spin' />
+      <Spinner />
     </div>
   ),
 })

@@ -1,5 +1,5 @@
+import { Spinner } from '@/components/ui/spinner'
 import Post from '@/features/post/components/post'
-import { LoaderIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { useFeedPosts } from '../queries'
 
@@ -49,9 +49,7 @@ export default function PostList() {
       {hasNextPage && (
         <div ref={observerRef}>
           <div className='flex items-center justify-center py-12'>
-            {isFetchingNextPage && (
-              <LoaderIcon className='text-primary size-6 animate-spin' />
-            )}
+            {isFetchingNextPage && <Spinner />}
           </div>
         </div>
       )}
