@@ -11,7 +11,7 @@ import { ImageIcon, Loader2Icon } from 'lucide-react'
 import {
   createPost,
   feedPostsInfiniteQueryOptions,
-  repliesQueryOptions,
+  repliesInfiniteQueryOptions,
 } from '../queries'
 
 type CreatePostProps = {
@@ -46,7 +46,7 @@ export default function CreatePost({
       formApi.reset()
       if (parentPostId) {
         queryClient.invalidateQueries({
-          queryKey: repliesQueryOptions(parentPostId).queryKey,
+          queryKey: repliesInfiniteQueryOptions(parentPostId).queryKey,
         })
       }
       queryClient.invalidateQueries({

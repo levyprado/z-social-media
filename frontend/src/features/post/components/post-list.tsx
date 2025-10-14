@@ -1,7 +1,7 @@
 import Post from '@/features/post/components/post'
 import { LoaderIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
-import { useFeedPostsInfinite } from '../queries'
+import { useFeedPosts } from '../queries'
 
 export default function PostList() {
   const observerRef = useRef<HTMLDivElement>(null)
@@ -12,7 +12,7 @@ export default function PostList() {
     isFetchingNextPage,
     isError,
     error,
-  } = useFeedPostsInfinite()
+  } = useFeedPosts()
 
   useEffect(() => {
     if (!observerRef.current) return

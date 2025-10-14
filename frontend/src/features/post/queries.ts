@@ -11,7 +11,6 @@ import {
   infiniteQueryOptions,
   queryOptions,
   useInfiniteQuery,
-  useQuery,
 } from '@tanstack/react-query'
 
 export type GetFeedPostsResponse = SuccessResponse<Post[]> | ErrorResponse
@@ -42,7 +41,7 @@ export const feedPostsInfiniteQueryOptions = infiniteQueryOptions({
   staleTime: 1000 * 60, // 1 minute
 })
 
-export const useFeedPostsInfinite = () =>
+export const useFeedPosts = () =>
   useInfiniteQuery(feedPostsInfiniteQueryOptions)
 
 export const createPost = async (input: CreatePostInput) => {
@@ -88,12 +87,19 @@ export const getReplies = async (postId: string, offset = 0) => {
   return data.data
 }
 
-export const repliesQueryOptions = (postId: string, offset: number = 0) =>
-  queryOptions({
-    queryKey: ['replies', postId, offset],
-    queryFn: () => getReplies(postId, offset),
+export const repliesInfiniteQueryOptions = (postId: string) =>
+  infiniteQueryOptions({
+    queryKey: ['replies', postId],
+    queryFn: ({ pageParam }) => getReplies(postId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (lastPage.length < POSTS_PER_PAGE) {
+        return undefined
+      }
+      return lastPageParam + POSTS_PER_PAGE
+    },
     staleTime: 1000 * 60 * 1, // 1 minute
   })
 
-export const useReplies = (postId: string, offset: number = 0) =>
-  useQuery(repliesQueryOptions(postId, offset))
+export const useReplies = (postId: string) =>
+  useInfiniteQuery(repliesInfiniteQueryOptions(postId))

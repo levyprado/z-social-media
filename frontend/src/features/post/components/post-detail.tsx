@@ -11,6 +11,7 @@ import Post from './post'
 import { PostMetrics } from './post-metrics'
 
 export default function PostDetail() {
+  const observerRef = useRef<HTMLDivElement>(null)
   const { postId } = useParams({ from: '/_authenticated/post/$postId' })
   const { post, parentPosts } = useLoaderData({
     from: '/_authenticated/post/$postId',
@@ -31,10 +32,32 @@ export default function PostDetail() {
   }, [parentPosts.length])
 
   const {
-    data: replies,
+    data,
     isLoading: isLoadingReplies,
-    error: repliesError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError: repliesError,
+    error,
   } = useReplies(postId)
+
+  useEffect(() => {
+    if (!observerRef.current) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      },
+      { threshold: 0.1 },
+    )
+    observer.observe(observerRef.current)
+
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  const replies = data?.pages.flatMap((page) => page) ?? []
 
   return (
     <section>
@@ -94,6 +117,12 @@ export default function PostDetail() {
         parentPostId={String(post.id)}
       />
 
+      {repliesError && (
+        <div className='text-destructive p-4 text-center text-sm'>
+          Error loading replies: {error.message}
+        </div>
+      )}
+
       {/* Replies */}
       <div className='divide-border flex flex-col divide-y'>
         {isLoadingReplies && (
@@ -102,16 +131,19 @@ export default function PostDetail() {
           </div>
         )}
 
-        {!isLoadingReplies &&
-          !repliesError &&
-          replies &&
-          replies.length > 0 && (
-            <>
-              {replies?.map((reply) => (
-                <Post key={reply.id} post={reply} />
-              ))}
-            </>
-          )}
+        {replies.map((reply) => (
+          <Post key={reply.id} post={reply} />
+        ))}
+
+        {hasNextPage && (
+          <div ref={observerRef}>
+            <div className='flex items-center justify-center py-12'>
+              {isFetchingNextPage && (
+                <LoaderIcon className='text-primary size-6 animate-spin' />
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )
