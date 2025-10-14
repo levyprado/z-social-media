@@ -1,10 +1,9 @@
 import { Spinner } from '@/components/ui/spinner'
 import Post from '@/features/post/components/post'
-import { useEffect, useRef } from 'react'
+import useInfiniteScroll from '../hooks/use-infinite-scroll'
 import { useFeedPosts } from '../queries'
 
 export default function PostList() {
-  const observerRef = useRef<HTMLDivElement>(null)
   const {
     data,
     fetchNextPage,
@@ -14,21 +13,11 @@ export default function PostList() {
     error,
   } = useFeedPosts()
 
-  useEffect(() => {
-    if (!observerRef.current) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage()
-        }
-      },
-      { threshold: 0.1 },
-    )
-
-    observer.observe(observerRef.current)
-    return () => observer.disconnect()
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+  const observerRef = useInfiniteScroll({
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  })
 
   const posts = data?.pages.flatMap((page) => page) ?? []
 

@@ -6,13 +6,13 @@ import { formatPostDetailDate } from '@/lib/utils'
 import { Link, useLoaderData, useParams } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
+import useInfiniteScroll from '../hooks/use-infinite-scroll'
 import { useReplies } from '../queries'
 import CreatePost from './create-post'
 import Post from './post'
 import { PostMetrics } from './post-metrics'
 
 export default function PostDetail() {
-  const observerRef = useRef<HTMLDivElement>(null)
   const { postId } = useParams({ from: '/_authenticated/post/$postId' })
   const { post, parentPosts } = useLoaderData({
     from: '/_authenticated/post/$postId',
@@ -42,21 +42,11 @@ export default function PostDetail() {
     error,
   } = useReplies(postId)
 
-  useEffect(() => {
-    if (!observerRef.current) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage()
-        }
-      },
-      { threshold: 0.1 },
-    )
-    observer.observe(observerRef.current)
-
-    return () => observer.disconnect()
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+  const observerRef = useInfiniteScroll({
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  })
 
   const replies = data?.pages.flatMap((page) => page) ?? []
 
