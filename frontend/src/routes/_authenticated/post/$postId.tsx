@@ -1,5 +1,6 @@
 import PageHeader from '@/components/page-header'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import PostDetail from '@/features/post/components/post-detail'
 import {
   postQueryOptions,
@@ -19,6 +20,7 @@ export const Route = createFileRoute('/_authenticated/post/$postId')({
     return res.data
   },
   component: RouteComponent,
+  pendingComponent: PendingComponent,
   notFoundComponent: NotFoundComponent,
 })
 
@@ -28,6 +30,18 @@ function RouteComponent() {
       <PageHeader title='Post' />
 
       <PostDetail />
+    </div>
+  )
+}
+
+function PendingComponent() {
+  return (
+    <div>
+      <PageHeader title='Post' />
+
+      <div className='mt-16 flex items-center justify-center'>
+        <Spinner />
+      </div>
     </div>
   )
 }
