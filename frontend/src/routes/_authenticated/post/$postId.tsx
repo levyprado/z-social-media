@@ -1,10 +1,11 @@
 import PageHeader from '@/components/page-header'
+import { Button } from '@/components/ui/button'
 import PostDetail from '@/features/post/components/post-detail'
 import {
   postQueryOptions,
   repliesInfiniteQueryOptions,
 } from '@/features/post/queries'
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/post/$postId')({
   loader: async ({ params, context: { queryClient } }) => {
@@ -18,6 +19,7 @@ export const Route = createFileRoute('/_authenticated/post/$postId')({
     return res.data
   },
   component: RouteComponent,
+  notFoundComponent: NotFoundComponent,
 })
 
 function RouteComponent() {
@@ -27,5 +29,26 @@ function RouteComponent() {
 
       <PostDetail />
     </div>
+  )
+}
+
+function NotFoundComponent() {
+  return (
+    <>
+      <PageHeader title='Post' />
+
+      <div className='mt-20 flex flex-col items-center justify-center gap-5 px-4'>
+        <h1 className='text-center text-3xl font-semibold'>Post not found</h1>
+        <Button
+          variant='secondary'
+          className='size-fit'
+          render={(props) => (
+            <Link to='/' {...props}>
+              Go back
+            </Link>
+          )}
+        ></Button>
+      </div>
+    </>
   )
 }
