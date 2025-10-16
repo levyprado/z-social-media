@@ -1,19 +1,39 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useParams } from '@tanstack/react-router'
 
 export default function ProfileTabs() {
+  const { username } = useParams({ from: '/_authenticated/user/$username' })
+  const tabs = [
+    {
+      label: 'Posts',
+      link: '/user/$username',
+    },
+    {
+      label: 'Replies',
+      link: '/user/$username/replies',
+    },
+    {
+      label: 'Likes',
+      link: '/user/$username/likes',
+    },
+  ]
+
   return (
-    <nav className='bg-background/95 sticky top-14 z-10 mt-3 border-b backdrop-blur-sm'>
-      <div className='flex'>
-        {['Posts', 'Replies', 'Likes'].map((label) => (
+    <div className='border-b'>
+      <nav className='flex w-full gap-2 rounded-lg px-2 py-1.5'>
+        {tabs.map((tab) => (
           <Link
-            key={label}
-            to='/'
-            className='text-muted-foreground hover:bg-accent/80 grow px-4 py-2 text-center font-medium'
+            to={tab.link}
+            params={{ username }}
+            className='text-muted-foreground hover:bg-input grow rounded-md p-1.5 text-center transition-all'
+            activeOptions={{ exact: true }}
+            activeProps={{
+              className: 'bg-input text-primary font-semibold',
+            }}
           >
-            {label}
+            {tab.label}
           </Link>
         ))}
-      </div>
-    </nav>
+      </nav>
+    </div>
   )
 }
