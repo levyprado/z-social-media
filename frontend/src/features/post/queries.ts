@@ -103,3 +103,34 @@ export const repliesInfiniteQueryOptions = (postId: string) =>
 
 export const useReplies = (postId: string) =>
   useInfiniteQuery(repliesInfiniteQueryOptions(postId))
+
+export const getUserPosts = async (userId: string, offset = 0) => {
+  const res = await client.posts.user[':userId'].$get({
+    param: { userId },
+    query: { offset: offset.toString() },
+  })
+
+  const data = (await res.json()) as GetFeedPostsResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
+
+export const userPostsInfiniteQueryOptions = (userId: string) =>
+  infiniteQueryOptions({
+    queryKey: ['posts', userId],
+    queryFn: ({ pageParam }) => getUserPosts(userId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (lastPage.length < POSTS_PER_PAGE) {
+        return undefined
+      }
+      return lastPageParam + POSTS_PER_PAGE
+    },
+    staleTime: 1000 * 60 * 1, // 1 minute
+  })
+
+export const useUserPosts = (userId: string) =>
+  useInfiniteQuery(userPostsInfiniteQueryOptions(userId))

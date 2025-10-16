@@ -1,17 +1,26 @@
 import { Spinner } from '@/components/ui/spinner'
 import Post from '@/features/post/components/post'
+import type { Post as TPost } from '@/shared/types'
+import type {
+  InfiniteData,
+  UseInfiniteQueryResult,
+} from '@tanstack/react-query'
 import useInfiniteScroll from '../hooks/use-infinite-scroll'
-import { useFeedPosts } from '../queries'
 
-export default function PostList() {
+type PostListProps = {
+  query: UseInfiniteQueryResult<InfiniteData<TPost[]>>
+}
+
+export default function PostList({ query }: PostListProps) {
   const {
     data,
+    isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isError,
     error,
-  } = useFeedPosts()
+  } = query
 
   const observerRef = useInfiniteScroll({
     hasNextPage,
@@ -20,6 +29,14 @@ export default function PostList() {
   })
 
   const posts = data?.pages.flatMap((page) => page) ?? []
+
+  if (isLoading) {
+    return (
+      <div className='mt-16 flex items-center justify-center'>
+        <Spinner />
+      </div>
+    )
+  }
 
   return (
     <>

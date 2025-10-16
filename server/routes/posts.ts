@@ -303,5 +303,71 @@ const postsRouter = new Hono()
       }
     },
   )
+  .get(
+    '/user/:userId',
+    validator('query', (value, c) => {
+      const parsed = postsPaginationSchema.safeParse(value)
+
+      if (!parsed.success) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Invalid query parameters',
+            details: flattenError(parsed.error),
+          },
+          400,
+        )
+      }
+
+      return parsed.data
+    }),
+    async (c) => {
+      const { userId } = c.req.param()
+      const { offset } = c.req.valid('query')
+
+      try {
+        const userPosts = await db
+          .select({
+            id: posts.id,
+            content: posts.content,
+            userId: posts.userId,
+            parentPostId: posts.parentPostId,
+            replyCount: posts.replyCount,
+            createdAt: posts.createdAt,
+            user: {
+              id: user.id,
+              name: user.name,
+              username: user.username,
+              image: user.image,
+              createdAt: user.createdAt,
+            },
+          })
+          .from(posts)
+          .leftJoin(user, eq(posts.userId, user.id))
+          .where(eq(posts.userId, userId))
+          .orderBy(desc(posts.createdAt))
+          .limit(POSTS_PER_PAGE)
+          .offset(offset)
+
+        return c.json<SuccessResponse<typeof userPosts>>(
+          {
+            success: true,
+            message: 'User posts fetched successfully',
+            data: userPosts,
+          },
+          200,
+        )
+      } catch (error) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Something went wrong',
+            details: error instanceof Error ? error.message : null,
+          },
+          500,
+        )
+      }
+    },
+  )
 
 export default postsRouter
