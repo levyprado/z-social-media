@@ -15,7 +15,7 @@ export default function Sidebar() {
         to='/'
         className='hover:bg-hover flex size-12 items-center justify-center rounded-full transition-[background-color]'
       >
-        <span className='text-4xl font-black'>Z</span>
+        <span className='text-primary text-4xl font-black'>Z</span>
       </Link>
 
       <div>
