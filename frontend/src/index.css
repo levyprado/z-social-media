@@ -25,6 +25,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --color-background: var(--background);
+  --color-hover: var(--hover);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -61,6 +62,7 @@
 :root {
   --radius: 0.875rem;
   --background: oklch(98.5% 0 0);
+  --hover: oklch(94% 0 0);
   --foreground: oklch(14.5% 0 0);
   --card: oklch(97% 0 0);
   --card-foreground: oklch(14.5% 0 0);
@@ -96,6 +98,7 @@
 
 .dark {
   --background: oklch(14.5% 0 0);
+  --hover: oklch(22% 0 0);
   --foreground: oklch(98.5% 0 0);
   --card: oklch(20.5% 0 0);
   --card-foreground: oklch(98.5% 0 0);

@@ -24,10 +24,10 @@ export default function ProfileTabs() {
           <Link
             to={tab.link}
             params={{ username }}
-            className='text-muted-foreground hover:bg-input grow rounded-md p-1.5 text-center transition-all'
+            className='text-muted-foreground hover:bg-hover grow rounded-md p-1.5 text-center transition-all'
             activeOptions={{ exact: true }}
             activeProps={{
-              className: 'bg-input text-primary font-semibold',
+              className: 'bg-hover text-primary font-semibold',
             }}
           >
             {tab.label}

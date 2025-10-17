@@ -47,7 +47,7 @@ export default function UserAccountButton() {
       <DropdownMenuTrigger
         render={(props) => (
           <button
-            className='hover:bg-accent/80 data-[popup-open]:bg-accent/80 focus-visible:bg-accent/80 cursor-pointer rounded-full p-2 transition-[background-color] md:flex md:w-full md:gap-3 md:p-2.5'
+            className='hover:bg-hover data-[popup-open]:bg-hover focus-visible:bg-hover cursor-pointer rounded-full p-2 transition-[background-color] md:flex md:w-full md:gap-3 md:p-2.5'
             {...props}
           >
             <Avatar img={user.image} />
