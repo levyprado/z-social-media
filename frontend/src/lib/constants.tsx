@@ -45,3 +45,27 @@ export const getNavbarItems = (username: string): NavItem[] => [
     params: { username },
   },
 ]
+
+export type ProfileTab = {
+  label: string
+  link: LinkProps['to']
+  params: LinkProps['params']
+}
+
+export const getProfileTabs = (username: string): ProfileTab[] => [
+  {
+    label: 'Posts',
+    link: '/user/$username',
+    params: { username },
+  },
+  {
+    label: 'Replies',
+    link: '/user/$username/replies',
+    params: { username },
+  },
+  {
+    label: 'Likes',
+    link: '/user/$username/likes',
+    params: { username },
+  },
+]
