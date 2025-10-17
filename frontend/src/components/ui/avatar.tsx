@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { User2Icon } from 'lucide-react'
 
 type AvatarProps = {
   img: string | null | undefined
@@ -16,7 +17,9 @@ export default function Avatar({ img, className }: AvatarProps) {
       {img ? (
         <img src={img} className='size-full object-cover' />
       ) : (
-        <div className='bg-primary size-full' />
+        <div className='bg-background flex size-full items-end justify-center'>
+          <User2Icon className='text-primary size-[85%]' />
+        </div>
       )}
     </div>
   )
