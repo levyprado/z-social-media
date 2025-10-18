@@ -5,6 +5,7 @@ import type {
   UserProfile,
 } from '@/shared/types'
 import { queryOptions } from '@tanstack/react-query'
+import { notFound } from '@tanstack/react-router'
 
 export const userByUsernameQueryOptions = (username: string) =>
   queryOptions({
@@ -21,6 +22,9 @@ export const getUserByUsername = async (username: string) => {
   const res = await client.user[':username'].$get({
     param: { username },
   })
-
-  return (await res.json()) as GetUserResponse
+  const data = (await res.json()) as GetUserResponse
+  if (!data.success) {
+    throw notFound()
+  }
+  return data.data.user
 }

@@ -55,4 +55,16 @@ export const auth = betterAuth({
   },
   plugins: [username()],
   trustedOrigins: ['http://localhost:5173'],
+  user: {
+    additionalFields: {
+      bio: {
+        type: 'string',
+        required: false,
+      },
+      website: {
+        type: 'string',
+        required: false,
+      },
+    },
+  },
 })

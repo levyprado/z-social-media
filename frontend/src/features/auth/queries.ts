@@ -10,5 +10,5 @@ export const authUserQueryOptions = queryOptions({
 export const getUser = async () => {
   const { data: session } = await authClient.getSession()
 
-  return session?.user || null
+  return session ? session.user : null
 }

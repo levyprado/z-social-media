@@ -13,6 +13,8 @@ export const user = pgTable('user', {
     .notNull(),
   username: text('username').unique(),
   displayUsername: text('display_username'),
+  bio: text('bio'),
+  website: text('website'),
 })
 
 export const session = pgTable('session', {

@@ -1,7 +1,8 @@
 import * as z from 'zod'
 import type { AppType } from '../server'
+import type { auth } from '../server/auth'
 
-export { type AppType }
+export { type AppType, type auth }
 
 export type SuccessResponse<TData = unknown> = {
   success: true
@@ -20,6 +21,8 @@ export type UserProfile = {
   username: string
   image: string | null
   createdAt: string
+  bio: string | null
+  website: string | null
 }
 
 export const SignupSchema = z
@@ -80,4 +83,12 @@ export type CreatePostInput = z.infer<typeof createPostSchema>
 
 export const postsPaginationSchema = z.object({
   offset: z.coerce.number().optional().default(0),
+})
+
+export const userEditSchema = SignupSchema.pick({ name: true }).extend({
+  bio: z.string().max(150, 'Bio must be 150 characters or less'),
+  website: z.union([
+    z.literal(''),
+    z.url('Invalid URL').max(50, 'URL must be 50 characters or less'),
+  ]),
 })

@@ -1,12 +1,15 @@
 import Avatar from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { formatMonthYear } from '@/lib/utils'
-import { useLoaderData } from '@tanstack/react-router'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { useParams } from '@tanstack/react-router'
 import { CalendarDaysIcon } from 'lucide-react'
+import { userByUsernameQueryOptions } from '../queries'
+import EditProfileDialog from './edit-profile-dialog'
 import FollowStats from './follow-stats'
 
 export default function ProfileDetails() {
-  const { user } = useLoaderData({ from: '/_authenticated/user/$username' })
+  const { username } = useParams({ from: '/_authenticated/user/$username' })
+  const { data: user } = useSuspenseQuery(userByUsernameQueryOptions(username))
 
   return (
     <div>
@@ -23,8 +26,9 @@ export default function ProfileDetails() {
             img={user.image}
             className='outline-background -mt-[calc(12.5%+12px)] h-auto w-[25%] min-w-12 outline-4'
           />
+
           <div>
-            <Button variant='outline'>Edit profile</Button>
+            <EditProfileDialog />
           </div>
         </div>
 
@@ -35,8 +39,9 @@ export default function ProfileDetails() {
             @{user.username}
           </span>
           <p className='mt-2'>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsa, nisi
-            beatae. Ducimus earum rerum sunt.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+            aliquam lacus vitae arcu mattis, eu iaculis felis cursus.
+            Suspendisse ut tortor eget l
           </p>
         </div>
 

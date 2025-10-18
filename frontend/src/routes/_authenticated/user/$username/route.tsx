@@ -2,18 +2,12 @@ import PageHeader from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { userByUsernameQueryOptions } from '@/features/user/queries'
-import { createFileRoute, Link, notFound, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
 import { User2Icon } from 'lucide-react'
 
 export const Route = createFileRoute('/_authenticated/user/$username')({
   loader: async ({ context: { queryClient }, params: { username } }) => {
-    const response = await queryClient.ensureQueryData(
-      userByUsernameQueryOptions(username),
-    )
-
-    if (!response.success) throw notFound()
-
-    return { user: response.data.user }
+    await queryClient.ensureQueryData(userByUsernameQueryOptions(username))
   },
   component: RouteComponent,
   notFoundComponent: NotFoundComponent,
