@@ -20,9 +20,9 @@ export type UserProfile = {
   name: string
   username: string
   image: string | null
-  createdAt: string
   bio: string | null
   website: string | null
+  createdAt: string
 }
 
 export const SignupSchema = z

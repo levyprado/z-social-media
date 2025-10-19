@@ -2,7 +2,7 @@ import Avatar from '@/components/ui/avatar'
 import { formatMonthYear } from '@/lib/utils'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
-import { CalendarDaysIcon } from 'lucide-react'
+import { CalendarDaysIcon, ExternalLinkIcon } from 'lucide-react'
 import { userByUsernameQueryOptions } from '../queries'
 import EditProfileDialog from './edit-profile-dialog'
 import FollowStats from './follow-stats'
@@ -38,11 +38,18 @@ export default function ProfileDetails() {
           <span className='text-muted-foreground leading-tight'>
             @{user.username}
           </span>
-          <p className='mt-2'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-            aliquam lacus vitae arcu mattis, eu iaculis felis cursus.
-            Suspendisse ut tortor eget l
-          </p>
+          {user.bio && <p className='mt-2 whitespace-pre-wrap'>{user.bio}</p>}
+          {user.website && (
+            <a
+              href={user.website}
+              className='text-primary mt-2 flex w-fit items-center gap-1.5 text-sm hover:underline'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              {user.website}
+              <ExternalLinkIcon className='size-3' />
+            </a>
+          )}
         </div>
 
         {/* User metadata */}

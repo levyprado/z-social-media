@@ -14,6 +14,8 @@ const userRouter = new Hono().get('/:username', async (c) => {
         name: usersTable.name,
         username: usersTable.username,
         image: usersTable.image,
+        bio: usersTable.bio,
+        website: usersTable.website,
         createdAt: usersTable.createdAt,
       })
       .from(usersTable)
