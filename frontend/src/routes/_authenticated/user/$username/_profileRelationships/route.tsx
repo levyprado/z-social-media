@@ -1,5 +1,7 @@
 import PageHeader from '@/components/page-header'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { userByUsernameQueryOptions } from '@/features/user/queries'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
   '/_authenticated/user/$username/_profileRelationships',
@@ -8,9 +10,12 @@ export const Route = createFileRoute(
 })
 
 function RouteComponent() {
+  const { username } = useParams({ from: '/_authenticated/user/$username' })
+  const { data: user } = useSuspenseQuery(userByUsernameQueryOptions(username))
+
   return (
     <>
-      <PageHeader title='Elon Musk' description='@elonmusk' />
+      <PageHeader title={user.name} description={`@${user.username}`} />
       <Outlet />
     </>
   )
