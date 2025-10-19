@@ -5,7 +5,7 @@ import {
   type ErrorResponse,
   type SuccessResponse,
 } from '@/shared/types'
-import { desc, eq, sql } from 'drizzle-orm'
+import { and, desc, eq, isNull, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { validator } from 'hono/validator'
 import db from 'server/db'
@@ -344,7 +344,7 @@ const postsRouter = new Hono()
           })
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
-          .where(eq(posts.userId, userId))
+          .where(and(eq(posts.userId, userId), isNull(posts.parentPostId)))
           .orderBy(desc(posts.createdAt))
           .limit(POSTS_PER_PAGE)
           .offset(offset)
@@ -354,6 +354,72 @@ const postsRouter = new Hono()
             success: true,
             message: 'User posts fetched successfully',
             data: userPosts,
+          },
+          200,
+        )
+      } catch (error) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Something went wrong',
+            details: error instanceof Error ? error.message : null,
+          },
+          500,
+        )
+      }
+    },
+  )
+  .get(
+    '/user/:userId/with-replies',
+    validator('query', (value, c) => {
+      const parsed = postsPaginationSchema.safeParse(value)
+
+      if (!parsed.success) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Invalid query parameters',
+            details: flattenError(parsed.error),
+          },
+          400,
+        )
+      }
+
+      return parsed.data
+    }),
+    async (c) => {
+      const { userId } = c.req.param()
+      const { offset } = c.req.valid('query')
+
+      try {
+        const userPostsWithReplies = await db
+          .select({
+            id: posts.id,
+            content: posts.content,
+            userId: posts.userId,
+            parentPostId: posts.parentPostId,
+            replyCount: posts.replyCount,
+            createdAt: posts.createdAt,
+            user: {
+              id: user.id,
+              name: user.name,
+              username: user.username,
+              image: user.image,
+              createdAt: user.createdAt,
+            },
+          })
+          .from(posts)
+          .leftJoin(user, eq(posts.userId, user.id))
+          .where(eq(posts.userId, userId))
+          .orderBy(desc(posts.createdAt))
+          .limit(POSTS_PER_PAGE)
+          .offset(offset)
+
+        return c.json<SuccessResponse<typeof userPostsWithReplies>>(
+          {
+            success: true,
+            message: 'User posts with replies fetched successfully',
+            data: userPostsWithReplies,
           },
           200,
         )

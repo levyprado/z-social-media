@@ -13,14 +13,14 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-export type GetFeedPostsResponse = SuccessResponse<Post[]> | ErrorResponse
+export type GetPostsResponse = SuccessResponse<Post[]> | ErrorResponse
 
 export const getFeedPosts = async (offset = 0) => {
   const res = await client.posts.$get({
     query: { offset: offset.toString() },
   })
 
-  const data = (await res.json()) as GetFeedPostsResponse
+  const data = (await res.json()) as GetPostsResponse
   if (!data.success) {
     throw new Error(data.error)
   }
@@ -110,7 +110,7 @@ export const getUserPosts = async (userId: string, offset = 0) => {
     query: { offset: offset.toString() },
   })
 
-  const data = (await res.json()) as GetFeedPostsResponse
+  const data = (await res.json()) as GetPostsResponse
   if (!data.success) {
     throw new Error(data.error)
   }
@@ -134,3 +134,34 @@ export const userPostsInfiniteQueryOptions = (userId: string) =>
 
 export const useUserPosts = (userId: string) =>
   useInfiniteQuery(userPostsInfiniteQueryOptions(userId))
+
+export const getUserPostsWithReplies = async (userId: string, offset = 0) => {
+  const res = await client.posts.user[':userId']['with-replies'].$get({
+    param: { userId },
+    query: { offset: offset.toString() },
+  })
+
+  const data = (await res.json()) as GetPostsResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
+
+export const userPostsWithRepliesInfiniteQueryOptions = (userId: string) =>
+  infiniteQueryOptions({
+    queryKey: ['posts', userId, 'with-replies'],
+    queryFn: ({ pageParam }) => getUserPostsWithReplies(userId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (lastPage.length < POSTS_PER_PAGE) {
+        return undefined
+      }
+      return lastPageParam + POSTS_PER_PAGE
+    },
+    staleTime: 1000 * 60 * 1, // 1 minute
+  })
+
+export const useUserPostsWithReplies = (userId: string) =>
+  useInfiniteQuery(userPostsWithRepliesInfiniteQueryOptions(userId))
