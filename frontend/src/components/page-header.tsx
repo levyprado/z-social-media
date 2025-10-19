@@ -26,7 +26,9 @@ export default function PageHeader({ title, description }: PageHeaderProps) {
     >
       <IconButton onClick={handleGoBack} icon={ChevronLeftIcon} size='lg' />
       <div className='flex flex-col'>
-        <span className='text-xl font-bold leading-tight'>{title}</span>
+        <span className='line-clamp-1 text-xl font-bold leading-tight'>
+          {title}
+        </span>
         {description && (
           <span className='text-muted-foreground text-sm leading-tight'>
             {description}
