@@ -14,9 +14,6 @@ export default function useSocialAuth(provider: Provider) {
       provider,
       callbackURL: 'http://localhost:5173',
       fetchOptions: {
-        onResponse: () => {
-          setIsLoading(false)
-        },
         onError: (ctx) => {
           setIsLoading(false)
           setErrorMessage(ctx.error.message || 'An unexpected error occurred')
