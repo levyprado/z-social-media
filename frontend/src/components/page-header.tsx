@@ -21,7 +21,7 @@ export default function PageHeader({ title, description }: PageHeaderProps) {
 
   return (
     <div
-      className='bg-background/85 dark:bg-background/65 sticky left-0 top-0 flex w-full items-center gap-4 px-4 backdrop-blur-md'
+      className='bg-background/85 dark:bg-background/65 sticky left-0 top-0 z-10 flex w-full items-center gap-4 px-4 backdrop-blur-md'
       style={{ height: PAGE_HEADER_HEIGHT }}
     >
       <IconButton onClick={handleGoBack} icon={ChevronLeftIcon} size='lg' />
