@@ -6,6 +6,7 @@ import { CalendarDaysIcon, ExternalLinkIcon } from 'lucide-react'
 import { userByUsernameQueryOptions } from '../queries'
 import EditProfileDialog from './edit-profile-dialog'
 import FollowStats from './follow-stats'
+import UserBanner from './user-banner'
 
 export default function ProfileDetails() {
   const { username } = useParams({ from: '/_authenticated/user/$username' })
@@ -13,11 +14,7 @@ export default function ProfileDetails() {
 
   return (
     <div>
-      {/* User banner */}
-      <div className='aspect-[3/1] w-full'>
-        {/* Placeholder banner */}
-        <div className='bg-accent size-full object-cover'></div>
-      </div>
+      <UserBanner />
 
       <div className='px-4 py-3'>
         {/* Avatar and Action Button row */}

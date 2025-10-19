@@ -12,6 +12,7 @@ import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { userByUsernameQueryOptions } from '../queries'
+import UserBanner from './user-banner'
 
 type ProfileFormProps = {
   onClose: () => void
@@ -58,9 +59,7 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
   return (
     <Form form={form}>
       <div>
-        <div className='aspect-[3/1] w-full'>
-          <div className='bg-accent size-full rounded-sm object-cover' />
-        </div>
+        <UserBanner />
         <div className='px-4'>
           <Avatar
             img={user.image}
