@@ -1,7 +1,8 @@
 import Avatar from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { formatMonthYear } from '@/lib/utils'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { useParams } from '@tanstack/react-router'
+import { useParams, useRouteContext } from '@tanstack/react-router'
 import { CalendarDaysIcon, ExternalLinkIcon } from 'lucide-react'
 import { userByUsernameQueryOptions } from '../queries'
 import EditProfileDialog from './edit-profile-dialog'
@@ -10,7 +11,11 @@ import UserBanner from './user-banner'
 
 export default function ProfileDetails() {
   const { username } = useParams({ from: '/_authenticated/user/$username' })
-  const { data: user } = useSuspenseQuery(userByUsernameQueryOptions(username))
+  const { user: authUser } = useRouteContext({ from: '/_authenticated' })
+  const { data: profileUser } = useSuspenseQuery(
+    userByUsernameQueryOptions(username),
+  )
+  const isOwnProfile = authUser.id === profileUser.id
 
   return (
     <div>
@@ -20,30 +25,34 @@ export default function ProfileDetails() {
         {/* Avatar and Action Button row */}
         <div className='flex items-start justify-between'>
           <Avatar
-            img={user.image}
+            img={profileUser.image}
             className='outline-background -mt-[calc(12.5%+12px)] h-auto w-[25%] min-w-12 outline-4'
           />
 
           <div>
-            <EditProfileDialog />
+            {isOwnProfile ? <EditProfileDialog /> : <Button>Follow</Button>}
           </div>
         </div>
 
         {/* User name/username & Bio */}
         <div className='mt-2 flex flex-col'>
-          <span className='text-xl font-bold leading-tight'>{user.name}</span>
-          <span className='text-muted-foreground leading-tight'>
-            @{user.username}
+          <span className='text-xl font-bold leading-tight'>
+            {profileUser.name}
           </span>
-          {user.bio && <p className='mt-2 whitespace-pre-wrap'>{user.bio}</p>}
-          {user.website && (
+          <span className='text-muted-foreground leading-tight'>
+            @{profileUser.username}
+          </span>
+          {profileUser.bio && (
+            <p className='mt-2 whitespace-pre-wrap'>{profileUser.bio}</p>
+          )}
+          {profileUser.website && (
             <a
-              href={user.website}
+              href={profileUser.website}
               className='text-primary mt-2 flex w-fit items-center gap-1.5 text-sm hover:underline'
               target='_blank'
               rel='noopener noreferrer'
             >
-              {user.website}
+              {profileUser.website}
               <ExternalLinkIcon className='size-3' />
             </a>
           )}
@@ -54,7 +63,7 @@ export default function ProfileDetails() {
           <div className='flex items-center gap-2'>
             <CalendarDaysIcon className='size-4' />
             <span className='text-sm'>
-              Joined {formatMonthYear(user.createdAt)}
+              Joined {formatMonthYear(profileUser.createdAt)}
             </span>
           </div>
         </div>
