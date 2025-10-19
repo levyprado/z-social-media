@@ -45,7 +45,7 @@ export default function Post({ post, isParentPost }: PostProps) {
               onClick={(e) => e.stopPropagation()}
               to='/user/$username'
               params={{ username: post.user.username }}
-              className='w-fit truncate text-sm font-semibold leading-tight hover:underline sm:mr-1'
+              className='truncate text-sm font-semibold leading-tight hover:underline sm:mr-1'
             >
               {post.user.name}
             </Link>
