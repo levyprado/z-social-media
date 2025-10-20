@@ -2,13 +2,13 @@ import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
 import { PostMetrics } from '@/features/post/components/post-metrics'
 import { formatPostDate } from '@/lib/utils'
-import type { PostWithParent } from '@/shared/types'
+import type { Post } from '@/shared/types'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
 import ParentPost from './parent-post'
 
 type PostProps = {
-  post: PostWithParent
+  post: Post & { parentPost?: Post | null }
   isParentPost?: boolean
 }
 
