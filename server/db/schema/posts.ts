@@ -1,4 +1,5 @@
 import {
+  alias,
   integer,
   pgTable,
   text,
@@ -23,3 +24,6 @@ export const posts = pgTable('posts', {
     .$onUpdate(() => new Date())
     .notNull(),
 })
+
+export const parentPost = alias(posts, 'parentPost')
+export const parentPostUser = alias(user, 'parentPostUser')

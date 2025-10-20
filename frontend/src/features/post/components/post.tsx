@@ -2,12 +2,13 @@ import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
 import { PostMetrics } from '@/features/post/components/post-metrics'
 import { formatPostDate } from '@/lib/utils'
-import type { Post } from '@/shared/types'
+import type { PostWithParent } from '@/shared/types'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
+import ParentPost from './parent-post'
 
 type PostProps = {
-  post: Post
+  post: PostWithParent
   isParentPost?: boolean
 }
 
@@ -16,6 +17,15 @@ export default function Post({ post, isParentPost }: PostProps) {
 
   const handlePostClick = () => {
     navigate({ to: '/post/$postId', params: { postId: post.id.toString() } })
+  }
+
+  const handleParentPostClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!post.parentPost) return
+    navigate({
+      to: '/post/$postId',
+      params: { postId: post.parentPost.id.toString() },
+    })
   }
 
   return (
@@ -73,6 +83,9 @@ export default function Post({ post, isParentPost }: PostProps) {
         <div className='whitespace-pre-wrap text-sm'>{post.content}</div>
 
         {/* Replying to */}
+        {post.parentPost && (
+          <ParentPost onClick={handleParentPostClick} post={post.parentPost} />
+        )}
 
         {/* Post metrics */}
         <div className='mt-2'>

@@ -4,6 +4,7 @@ import type {
   CreatePostInput,
   ErrorResponse,
   Post,
+  PostWithParent,
   PostWithParents,
   SuccessResponse,
 } from '@/shared/types'
@@ -13,7 +14,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-export type GetPostsResponse = SuccessResponse<Post[]> | ErrorResponse
+export type GetPostsResponse = SuccessResponse<PostWithParent[]> | ErrorResponse
 
 export const getFeedPosts = async (offset = 0) => {
   const res = await client.posts.$get({

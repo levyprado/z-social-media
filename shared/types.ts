@@ -66,6 +66,10 @@ export type Post = {
   user: UserProfile
 }
 
+export type PostWithParent = Post & {
+  parentPost: Post | null
+}
+
 export type PostWithParents = {
   post: Post
   parentPosts: Post[]

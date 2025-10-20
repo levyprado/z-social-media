@@ -5,12 +5,12 @@ import {
   type ErrorResponse,
   type SuccessResponse,
 } from '@/shared/types'
-import { and, desc, eq, isNull, sql } from 'drizzle-orm'
+import { and, desc, eq, isNull, SQL, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { validator } from 'hono/validator'
 import db from 'server/db'
 import { user } from 'server/db/schema/auth'
-import { posts } from 'server/db/schema/posts'
+import { parentPost, parentPostUser, posts } from 'server/db/schema/posts'
 import { MAX_PARENT_DEPTH } from 'server/lib/constants'
 import { loggedIn } from 'server/middleware/logged-in'
 import { flattenError } from 'zod'
@@ -107,9 +107,32 @@ const postsRouter = new Hono()
               image: user.image,
               createdAt: user.createdAt,
             },
+            parentPost: {
+              id: parentPost.id,
+              content: parentPost.content,
+              userId: parentPost.userId,
+              parentPostId: parentPost.parentPostId,
+              replyCount: parentPost.replyCount,
+              createdAt: parentPost.createdAt,
+              user: {
+                id: parentPostUser.id,
+                name: parentPostUser.name,
+                username: parentPostUser.username,
+                image: parentPostUser.image,
+                createdAt: parentPostUser.createdAt,
+              } as unknown as SQL<{
+                id: string
+                name: string
+                username: string
+                image: string | null
+                createdAt: string
+              } | null>,
+            },
           })
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
+          .leftJoin(parentPost, eq(posts.parentPostId, parentPost.id))
+          .leftJoin(parentPostUser, eq(parentPost.userId, parentPostUser.id))
           .orderBy(desc(posts.createdAt))
           .limit(POSTS_PER_PAGE)
           .offset(offset)
@@ -407,9 +430,32 @@ const postsRouter = new Hono()
               image: user.image,
               createdAt: user.createdAt,
             },
+            parentPost: {
+              id: parentPost.id,
+              content: parentPost.content,
+              userId: parentPost.userId,
+              parentPostId: parentPost.parentPostId,
+              replyCount: parentPost.replyCount,
+              createdAt: parentPost.createdAt,
+              user: {
+                id: parentPostUser.id,
+                name: parentPostUser.name,
+                username: parentPostUser.username,
+                image: parentPostUser.image,
+                createdAt: parentPostUser.createdAt,
+              } as unknown as SQL<{
+                id: string
+                name: string
+                username: string
+                image: string | null
+                createdAt: string
+              } | null>,
+            },
           })
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
+          .leftJoin(parentPost, eq(posts.parentPostId, parentPost.id))
+          .leftJoin(parentPostUser, eq(parentPost.userId, parentPostUser.id))
           .where(eq(posts.userId, userId))
           .orderBy(desc(posts.createdAt))
           .limit(POSTS_PER_PAGE)
