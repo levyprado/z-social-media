@@ -38,7 +38,7 @@ export function FormField({
         {label} {required && <span className='text-destructive'>*</span>}
       </Label>
       {as === 'textarea' ? (
-        <Textarea {...commonProps} className='max-h-[200px]' />
+        <Textarea {...commonProps} className='border-border max-h-[200px]' />
       ) : (
         <Input {...commonProps} type={type} />
       )}
