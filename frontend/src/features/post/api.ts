@@ -1,0 +1,92 @@
+import { client } from '@/lib/api'
+import type {
+  CreatePostInput,
+  ErrorResponse,
+  Post,
+  PostWithParent,
+  PostWithParents,
+  SuccessResponse,
+} from '@/shared/types'
+
+type PostsResponse = SuccessResponse<Post[]> | ErrorResponse
+type PostsWithParentResponse = SuccessResponse<PostWithParent[]> | ErrorResponse
+type PostDetailResponse = SuccessResponse<PostWithParents> | ErrorResponse
+
+// Create post
+export const createPost = async (input: CreatePostInput) => {
+  const res = await client.posts.$post({
+    form: input,
+  })
+
+  const data = await res.json()
+  return data
+}
+
+// Feed posts
+export const fetchFeedPosts = async (offset = 0) => {
+  const res = await client.posts.$get({
+    query: { offset: offset.toString() },
+  })
+
+  const data = (await res.json()) as PostsWithParentResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
+
+// Single post
+export const fetchPostById = async (postId: string) => {
+  const res = await client.posts[':postId'].$get({
+    param: { postId },
+  })
+
+  const data = (await res.json()) as PostDetailResponse
+  return data
+}
+
+// Post replies
+export const fetchPostReplies = async (postId: string, offset = 0) => {
+  const res = await client.posts[':postId'].replies.$get({
+    param: { postId },
+    query: { offset: offset.toString() },
+  })
+
+  const data = (await res.json()) as PostsResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
+
+// User posts (top-level only)
+export const fetchUserPosts = async (userId: string, offset = 0) => {
+  const res = await client.posts.user[':userId'].$get({
+    param: { userId },
+    query: { offset: offset.toString() },
+  })
+
+  const data = (await res.json()) as PostsResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
+
+// User posts (include replies)
+export const fetchUserPostsWithReplies = async (userId: string, offset = 0) => {
+  const res = await client.posts.user[':userId']['with-replies'].$get({
+    param: { userId },
+    query: { offset: offset.toString() },
+  })
+
+  const data = (await res.json()) as PostsWithParentResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}

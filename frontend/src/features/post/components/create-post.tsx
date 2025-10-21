@@ -8,11 +8,8 @@ import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, useRouteContext } from '@tanstack/react-router'
 import { ImageIcon, Loader2Icon } from 'lucide-react'
-import {
-  createPost,
-  feedPostsInfiniteQueryOptions,
-  repliesInfiniteQueryOptions,
-} from '../queries'
+import { createPost } from '../api'
+import { feedPostsQueryOptions, postRepliesQueryOptions } from '../queries'
 
 type CreatePostProps = {
   parentPostUsername?: string
@@ -46,11 +43,11 @@ export default function CreatePost({
       formApi.reset()
       if (parentPostId) {
         queryClient.invalidateQueries({
-          queryKey: repliesInfiniteQueryOptions(parentPostId).queryKey,
+          queryKey: postRepliesQueryOptions(parentPostId).queryKey,
         })
       }
       queryClient.invalidateQueries({
-        queryKey: feedPostsInfiniteQueryOptions.queryKey,
+        queryKey: feedPostsQueryOptions.queryKey,
       })
     },
   })

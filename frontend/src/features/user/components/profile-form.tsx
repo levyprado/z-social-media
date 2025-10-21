@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import { authClient } from '@/features/auth/auth-client'
 import { authUserQueryOptions } from '@/features/auth/queries'
-import { userPostsInfiniteQueryOptions } from '@/features/post/queries'
+import { userPostsQueryOptions } from '@/features/post/queries'
 import { userEditSchema } from '@/shared/types'
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
@@ -44,7 +44,7 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
               queryKey: authUserQueryOptions.queryKey,
             }),
             queryClient.invalidateQueries({
-              queryKey: userPostsInfiniteQueryOptions(user.id).queryKey,
+              queryKey: userPostsQueryOptions(user.id).queryKey,
             }),
           ])
           onClose()

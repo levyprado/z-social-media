@@ -7,7 +7,7 @@ import { Link, useLoaderData, useParams } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import useInfiniteScroll from '../hooks/use-infinite-scroll'
-import { useReplies } from '../queries'
+import { usePostReplies } from '../queries'
 import CreatePost from './create-post'
 import Post from './post'
 import { PostMetrics } from './post-metrics'
@@ -40,7 +40,7 @@ export default function PostDetail() {
     isFetchingNextPage,
     isError: repliesError,
     error,
-  } = useReplies(postId)
+  } = usePostReplies(postId)
 
   const observerRef = useInfiniteScroll({
     hasNextPage,

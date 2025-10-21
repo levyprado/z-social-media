@@ -1,168 +1,107 @@
-import { client } from '@/lib/api'
 import { POSTS_PER_PAGE } from '@/shared/constants'
-import type {
-  CreatePostInput,
-  ErrorResponse,
-  Post,
-  PostWithParent,
-  PostWithParents,
-  SuccessResponse,
-} from '@/shared/types'
 import {
   infiniteQueryOptions,
   queryOptions,
   useInfiniteQuery,
+  useQuery,
 } from '@tanstack/react-query'
+import {
+  fetchFeedPosts,
+  fetchPostById,
+  fetchPostReplies,
+  fetchUserPosts,
+  fetchUserPostsWithReplies,
+} from './api'
 
-export type GetPostsResponse = SuccessResponse<PostWithParent[]> | ErrorResponse
-
-export const getFeedPosts = async (offset = 0) => {
-  const res = await client.posts.$get({
-    query: { offset: offset.toString() },
-  })
-
-  const data = (await res.json()) as GetPostsResponse
-  if (!data.success) {
-    throw new Error(data.error)
-  }
-
-  return data.data
+const postKeys = {
+  all: ['posts'],
+  feed: () => [...postKeys.all, 'feed'],
+  detail: (postId: string) => [...postKeys.all, 'detail', postId],
+  replies: (postId: string) => [...postKeys.all, 'replies', postId],
+  byUser: (userId: string) => [...postKeys.all, 'user', userId],
+  byUserWithReplies: (userId: string) => [
+    ...postKeys.all,
+    'user',
+    userId,
+    'with-replies',
+  ],
 }
 
-export const feedPostsInfiniteQueryOptions = infiniteQueryOptions({
-  queryKey: ['posts'],
-  queryFn: async ({ pageParam }) => getFeedPosts(pageParam),
+// Feed Query
+export const feedPostsQueryOptions = infiniteQueryOptions({
+  queryKey: postKeys.feed(),
+  queryFn: async ({ pageParam }) => fetchFeedPosts(pageParam),
   initialPageParam: 0,
   getNextPageParam: (lastPage, _allPages, lastPageParam) => {
-    if (lastPage.length < POSTS_PER_PAGE) {
-      return undefined
-    }
+    if (lastPage.length < POSTS_PER_PAGE) return undefined
     return lastPageParam + POSTS_PER_PAGE
   },
   staleTime: 1000 * 60, // 1 minute
 })
 
-export const useFeedPosts = () =>
-  useInfiniteQuery(feedPostsInfiniteQueryOptions)
-
-export const createPost = async (input: CreatePostInput) => {
-  const res = await client.posts.$post({
-    form: input,
-  })
-
-  const data = await res.json()
-  return data
+export const useFeedPosts = () => {
+  return useInfiniteQuery(feedPostsQueryOptions)
 }
 
-type GetPostResponse = SuccessResponse<PostWithParents> | ErrorResponse
-
-export const getPost = async (postId: string) => {
-  const res = await client.posts[':postId'].$get({
-    param: { postId },
-  })
-
-  const data = (await res.json()) as GetPostResponse
-  return data
-}
-
-export const postQueryOptions = (postId: string) =>
+// Post Detail Query
+export const postDetailQueryOptions = (postId: string) =>
   queryOptions({
-    queryKey: ['post', postId],
-    queryFn: () => getPost(postId),
+    queryKey: postKeys.detail(postId),
+    queryFn: () => fetchPostById(postId),
     staleTime: 1000 * 60 * 2, // 2 minutes
   })
 
-type GetRepliesResponse = SuccessResponse<Post[]> | ErrorResponse
-
-export const getReplies = async (postId: string, offset = 0) => {
-  const res = await client.posts[':postId'].replies.$get({
-    param: { postId },
-    query: { offset: offset.toString() },
-  })
-
-  const data = (await res.json()) as GetRepliesResponse
-  if (!data.success) {
-    throw new Error(data.error)
-  }
-
-  return data.data
+export const usePostDetail = (postId: string) => {
+  return useQuery(postDetailQueryOptions(postId))
 }
 
-export const repliesInfiniteQueryOptions = (postId: string) =>
+// Post Replies
+export const postRepliesQueryOptions = (postId: string) =>
   infiniteQueryOptions({
-    queryKey: ['replies', postId],
-    queryFn: ({ pageParam }) => getReplies(postId, pageParam),
+    queryKey: postKeys.replies(postId),
+    queryFn: ({ pageParam }) => fetchPostReplies(postId, pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {
-      if (lastPage.length < POSTS_PER_PAGE) {
-        return undefined
-      }
+      if (lastPage.length < POSTS_PER_PAGE) return undefined
       return lastPageParam + POSTS_PER_PAGE
     },
     staleTime: 1000 * 60 * 1, // 1 minute
   })
 
-export const useReplies = (postId: string) =>
-  useInfiniteQuery(repliesInfiniteQueryOptions(postId))
-
-export const getUserPosts = async (userId: string, offset = 0) => {
-  const res = await client.posts.user[':userId'].$get({
-    param: { userId },
-    query: { offset: offset.toString() },
-  })
-
-  const data = (await res.json()) as GetPostsResponse
-  if (!data.success) {
-    throw new Error(data.error)
-  }
-
-  return data.data
+export const usePostReplies = (postId: string) => {
+  return useInfiniteQuery(postRepliesQueryOptions(postId))
 }
 
-export const userPostsInfiniteQueryOptions = (userId: string) =>
+// User Posts Query
+export const userPostsQueryOptions = (userId: string) =>
   infiniteQueryOptions({
-    queryKey: ['posts', userId],
-    queryFn: ({ pageParam }) => getUserPosts(userId, pageParam),
+    queryKey: postKeys.byUser(userId),
+    queryFn: ({ pageParam }) => fetchUserPosts(userId, pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {
-      if (lastPage.length < POSTS_PER_PAGE) {
-        return undefined
-      }
+      if (lastPage.length < POSTS_PER_PAGE) return undefined
       return lastPageParam + POSTS_PER_PAGE
     },
     staleTime: 1000 * 60 * 1, // 1 minute
   })
 
-export const useUserPosts = (userId: string) =>
-  useInfiniteQuery(userPostsInfiniteQueryOptions(userId))
-
-export const getUserPostsWithReplies = async (userId: string, offset = 0) => {
-  const res = await client.posts.user[':userId']['with-replies'].$get({
-    param: { userId },
-    query: { offset: offset.toString() },
-  })
-
-  const data = (await res.json()) as GetPostsResponse
-  if (!data.success) {
-    throw new Error(data.error)
-  }
-
-  return data.data
+export const useUserPosts = (userId: string) => {
+  return useInfiniteQuery(userPostsQueryOptions(userId))
 }
 
-export const userPostsWithRepliesInfiniteQueryOptions = (userId: string) =>
+// User Posts with Replies
+export const userPostsWithRepliesQueryOptions = (userId: string) =>
   infiniteQueryOptions({
-    queryKey: ['posts', userId, 'with-replies'],
-    queryFn: ({ pageParam }) => getUserPostsWithReplies(userId, pageParam),
+    queryKey: postKeys.byUserWithReplies(userId),
+    queryFn: ({ pageParam }) => fetchUserPostsWithReplies(userId, pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {
-      if (lastPage.length < POSTS_PER_PAGE) {
-        return undefined
-      }
+      if (lastPage.length < POSTS_PER_PAGE) return undefined
       return lastPageParam + POSTS_PER_PAGE
     },
     staleTime: 1000 * 60 * 1, // 1 minute
   })
 
-export const useUserPostsWithReplies = (userId: string) =>
-  useInfiniteQuery(userPostsWithRepliesInfiniteQueryOptions(userId))
+export const useUserPostsWithReplies = (userId: string) => {
+  return useInfiniteQuery(userPostsWithRepliesQueryOptions(userId))
+}

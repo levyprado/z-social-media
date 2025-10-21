@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import PostDetail from '@/features/post/components/post-detail'
 import {
-  postQueryOptions,
-  repliesInfiniteQueryOptions,
+  postDetailQueryOptions,
+  postRepliesQueryOptions,
 } from '@/features/post/queries'
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 
@@ -12,10 +12,12 @@ export const Route = createFileRoute('/_authenticated/post/$postId')({
   loader: async ({ params, context: { queryClient } }) => {
     const { postId } = params
 
-    const res = await queryClient.ensureQueryData(postQueryOptions(postId))
+    const res = await queryClient.ensureQueryData(
+      postDetailQueryOptions(postId),
+    )
     if (!res.success) throw notFound()
 
-    queryClient.prefetchInfiniteQuery(repliesInfiniteQueryOptions(postId))
+    queryClient.prefetchInfiniteQuery(postRepliesQueryOptions(postId))
 
     return res.data
   },
