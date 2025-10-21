@@ -6,6 +6,7 @@ import type {
   UseInfiniteQueryResult,
 } from '@tanstack/react-query'
 import useInfiniteScroll from '../hooks/use-infinite-scroll'
+import PostSkeleton from './post-skeleton'
 
 type PostListProps = {
   query: UseInfiniteQueryResult<InfiniteData<TPost[]>>
@@ -31,11 +32,7 @@ export default function PostList({ query }: PostListProps) {
   const posts = data?.pages.flatMap((page) => page) ?? []
 
   if (isLoading) {
-    return (
-      <div className='mt-16 flex items-center justify-center'>
-        <Spinner />
-      </div>
-    )
+    return <PostSkeleton />
   }
 
   return (
