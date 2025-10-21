@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { authClient } from '@/features/auth/auth-client'
-import { authUserQueryOptions } from '@/features/auth/queries'
+import { currentUserQueryOptions } from '@/features/auth/queries'
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate, useRouteContext } from '@tanstack/react-router'
 import {
@@ -32,7 +32,7 @@ export default function UserAccountButton() {
           setIsLoading(true)
         },
         onSuccess: () => {
-          queryClient.setQueryData(authUserQueryOptions.queryKey, null)
+          queryClient.setQueryData(currentUserQueryOptions.queryKey, null)
           navigate({ to: '/login' })
         },
         onResponse: () => {

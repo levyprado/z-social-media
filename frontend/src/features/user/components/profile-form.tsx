@@ -4,11 +4,14 @@ import Avatar from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import { authClient } from '@/features/auth/auth-client'
-import { authUserQueryOptions } from '@/features/auth/queries'
+import {
+  currentUserQueryOptions,
+  useCurrentUser,
+} from '@/features/auth/queries'
 import { userPostsQueryOptions } from '@/features/post/queries'
 import { userEditSchema } from '@/shared/types'
 import { useForm } from '@tanstack/react-form'
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { userByUsernameQueryOptions } from '../queries'
@@ -19,7 +22,7 @@ type ProfileFormProps = {
 }
 
 export default function ProfileForm({ onClose }: ProfileFormProps) {
-  const userQuery = useSuspenseQuery(authUserQueryOptions)
+  const userQuery = useCurrentUser()
   const user = userQuery.data!
   const queryClient = useQueryClient()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -41,7 +44,7 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
               queryKey: userByUsernameQueryOptions(user.username!).queryKey,
             }),
             queryClient.invalidateQueries({
-              queryKey: authUserQueryOptions.queryKey,
+              queryKey: currentUserQueryOptions.queryKey,
             }),
             queryClient.invalidateQueries({
               queryKey: userPostsQueryOptions(user.id).queryKey,

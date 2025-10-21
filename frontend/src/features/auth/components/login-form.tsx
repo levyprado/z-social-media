@@ -10,7 +10,7 @@ import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { authClient } from '../auth-client'
 import useSocialAuth from '../hooks/use-social-auth'
-import { authUserQueryOptions } from '../queries'
+import { currentUserQueryOptions } from '../queries'
 
 export default function LoginForm() {
   const {
@@ -33,7 +33,7 @@ export default function LoginForm() {
       await authClient.signIn.username(data, {
         onSuccess: () => {
           queryClient.removeQueries({
-            queryKey: authUserQueryOptions.queryKey,
+            queryKey: currentUserQueryOptions.queryKey,
           })
           navigate({ to: '/' })
         },
