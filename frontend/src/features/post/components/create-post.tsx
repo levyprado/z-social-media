@@ -9,7 +9,11 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Link, useRouteContext } from '@tanstack/react-router'
 import { ImageIcon, Loader2Icon } from 'lucide-react'
 import { createPost } from '../api'
-import { feedPostsQueryOptions, postRepliesQueryOptions } from '../queries'
+import {
+  feedPostsQueryOptions,
+  postDetailQueryOptions,
+  postRepliesQueryOptions,
+} from '../queries'
 
 type CreatePostProps = {
   parentPostUsername?: string
@@ -44,6 +48,9 @@ export default function CreatePost({
       if (parentPostId) {
         queryClient.invalidateQueries({
           queryKey: postRepliesQueryOptions(parentPostId).queryKey,
+        })
+        queryClient.invalidateQueries({
+          queryKey: postDetailQueryOptions(parentPostId).queryKey,
         })
       }
       queryClient.invalidateQueries({

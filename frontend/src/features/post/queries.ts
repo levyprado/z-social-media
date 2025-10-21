@@ -3,7 +3,7 @@ import {
   infiniteQueryOptions,
   queryOptions,
   useInfiniteQuery,
-  useQuery,
+  useSuspenseQuery,
 } from '@tanstack/react-query'
 import {
   fetchFeedPosts,
@@ -52,7 +52,7 @@ export const postDetailQueryOptions = (postId: string) =>
   })
 
 export const usePostDetail = (postId: string) => {
-  return useQuery(postDetailQueryOptions(postId))
+  return useSuspenseQuery(postDetailQueryOptions(postId))
 }
 
 // Post Replies

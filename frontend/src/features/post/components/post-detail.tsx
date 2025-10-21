@@ -3,20 +3,19 @@ import Avatar from '@/components/ui/avatar'
 import { Spinner } from '@/components/ui/spinner'
 import { PAGE_HEADER_HEIGHT } from '@/lib/constants'
 import { formatPostDetailDate } from '@/lib/utils'
-import { Link, useLoaderData, useParams } from '@tanstack/react-router'
+import { Link, useParams } from '@tanstack/react-router'
 import { EllipsisIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import useInfiniteScroll from '../hooks/use-infinite-scroll'
-import { usePostReplies } from '../queries'
+import { usePostDetail, usePostReplies } from '../queries'
 import CreatePost from './create-post'
 import Post from './post'
 import { PostMetrics } from './post-metrics'
 
 export default function PostDetail() {
   const { postId } = useParams({ from: '/_authenticated/post/$postId' })
-  const { post, parentPosts } = useLoaderData({
-    from: '/_authenticated/post/$postId',
-  })
+  const { data: postData } = usePostDetail(postId)
+  const { post, parentPosts } = postData
   const postRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -33,7 +32,7 @@ export default function PostDetail() {
   }, [parentPosts.length])
 
   const {
-    data,
+    data: repliesData,
     isLoading: isLoadingReplies,
     fetchNextPage,
     hasNextPage,
@@ -48,7 +47,7 @@ export default function PostDetail() {
     fetchNextPage,
   })
 
-  const replies = data?.pages.flatMap((page) => page) ?? []
+  const replies = repliesData?.pages.flatMap((page) => page) ?? []
 
   return (
     <section>

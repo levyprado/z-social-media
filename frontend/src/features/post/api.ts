@@ -7,6 +7,7 @@ import type {
   PostWithParents,
   SuccessResponse,
 } from '@/shared/types'
+import { notFound } from '@tanstack/react-router'
 
 type PostsResponse = SuccessResponse<Post[]> | ErrorResponse
 type PostsWithParentResponse = SuccessResponse<PostWithParent[]> | ErrorResponse
@@ -43,7 +44,15 @@ export const fetchPostById = async (postId: string) => {
   })
 
   const data = (await res.json()) as PostDetailResponse
-  return data
+
+  if (!data.success) {
+    if (data.error === 'Invalid post ID' || data.error === 'Post not found') {
+      throw notFound()
+    }
+    throw new Error(data.error)
+  }
+
+  return data.data
 }
 
 // Post replies

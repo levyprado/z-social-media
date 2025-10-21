@@ -6,20 +6,14 @@ import {
   postDetailQueryOptions,
   postRepliesQueryOptions,
 } from '@/features/post/queries'
-import { createFileRoute, Link, notFound } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/post/$postId')({
   loader: async ({ params, context: { queryClient } }) => {
     const { postId } = params
 
-    const res = await queryClient.ensureQueryData(
-      postDetailQueryOptions(postId),
-    )
-    if (!res.success) throw notFound()
-
+    await queryClient.ensureQueryData(postDetailQueryOptions(postId))
     queryClient.prefetchInfiniteQuery(postRepliesQueryOptions(postId))
-
-    return res.data
   },
   component: RouteComponent,
   pendingComponent: PendingComponent,
