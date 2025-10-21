@@ -4,27 +4,38 @@ import type {
   SuccessResponse,
   UserProfile,
 } from '@/shared/types'
-import { queryOptions } from '@tanstack/react-query'
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
 import { notFound } from '@tanstack/react-router'
 
-export const userByUsernameQueryOptions = (username: string) =>
-  queryOptions({
-    queryKey: ['users', username],
-    queryFn: () => getUserByUsername(username),
-    staleTime: 1000 * 60 * 10, // 10 minutes
-  })
-
-export type GetUserResponse =
+export type UserProfileResponse =
   | SuccessResponse<{ user: UserProfile }>
   | ErrorResponse
 
-export const getUserByUsername = async (username: string) => {
+const userKeys = {
+  all: ['users'],
+  byUsername: (username: string) => [...userKeys.all, username],
+}
+
+export const fetchUserByUsername = async (username: string) => {
   const res = await client.user[':username'].$get({
     param: { username },
   })
-  const data = (await res.json()) as GetUserResponse
+
+  const data = (await res.json()) as UserProfileResponse
   if (!data.success) {
     throw notFound()
   }
+
   return data.data.user
+}
+
+export const userByUsernameQueryOptions = (username: string) =>
+  queryOptions({
+    queryKey: userKeys.byUsername(username),
+    queryFn: () => fetchUserByUsername(username),
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  })
+
+export const useUserByUsername = (username: string) => {
+  return useSuspenseQuery(userByUsernameQueryOptions(username))
 }

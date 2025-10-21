@@ -1,7 +1,6 @@
 import PostList from '@/features/post/components/post-list'
 import { useUserPostsWithReplies } from '@/features/post/queries'
-import { userByUsernameQueryOptions } from '@/features/user/queries'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useUserByUsername } from '@/features/user/queries'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
@@ -12,7 +11,7 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { username } = Route.useParams()
-  const { data: user } = useSuspenseQuery(userByUsernameQueryOptions(username))
+  const { data: user } = useUserByUsername(username)
 
   const query = useUserPostsWithReplies(user.id)
 

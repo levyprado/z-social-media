@@ -1,8 +1,7 @@
 import PageHeader from '@/components/page-header'
 import ProfileDetails from '@/features/user/components/profile-details'
 import ProfileTabs from '@/features/user/components/profile-tabs'
-import { userByUsernameQueryOptions } from '@/features/user/queries'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useUserByUsername } from '@/features/user/queries'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
@@ -13,7 +12,7 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { username } = Route.useParams()
-  const { data: user } = useSuspenseQuery(userByUsernameQueryOptions(username))
+  const { data: user } = useUserByUsername(username)
 
   return (
     <>

@@ -1,10 +1,9 @@
 import Avatar from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { formatMonthYear } from '@/lib/utils'
-import { useSuspenseQuery } from '@tanstack/react-query'
 import { useParams, useRouteContext } from '@tanstack/react-router'
 import { CalendarDaysIcon, ExternalLinkIcon } from 'lucide-react'
-import { userByUsernameQueryOptions } from '../queries'
+import { useUserByUsername } from '../queries'
 import EditProfileDialog from './edit-profile-dialog'
 import FollowStats from './follow-stats'
 import UserBanner from './user-banner'
@@ -12,9 +11,7 @@ import UserBanner from './user-banner'
 export default function ProfileDetails() {
   const { username } = useParams({ from: '/_authenticated/user/$username' })
   const { user: authUser } = useRouteContext({ from: '/_authenticated' })
-  const { data: profileUser } = useSuspenseQuery(
-    userByUsernameQueryOptions(username),
-  )
+  const { data: profileUser } = useUserByUsername(username)
   const isOwnProfile = authUser.id === profileUser.id
 
   return (
