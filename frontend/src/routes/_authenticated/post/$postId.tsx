@@ -1,7 +1,7 @@
 import PageHeader from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import { Spinner } from '@/components/ui/spinner'
 import PostDetail from '@/features/post/components/post-detail'
+import PostDetailSkeleton from '@/features/post/components/post-detail-skeleton'
 import {
   postDetailQueryOptions,
   postRepliesQueryOptions,
@@ -35,9 +35,7 @@ function PendingComponent() {
     <div>
       <PageHeader title='Post' />
 
-      <div className='mt-16 flex items-center justify-center'>
-        <Spinner />
-      </div>
+      <PostDetailSkeleton />
     </div>
   )
 }

@@ -139,7 +139,7 @@
     scrollbar-color: var(--border) transparent;
   }
   html {
-    @apply scroll-smooth antialiased;
+    @apply antialiased;
     scrollbar-gutter: stable;
   }
   html[data-base-ui-scroll-locked] {
