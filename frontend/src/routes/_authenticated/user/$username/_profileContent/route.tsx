@@ -1,4 +1,5 @@
 import PageHeader from '@/components/page-header'
+import ProfileContentSkeleton from '@/features/user/components/profile-content-skeleton'
 import ProfileDetails from '@/features/user/components/profile-details'
 import ProfileTabs from '@/features/user/components/profile-tabs'
 import { useUserByUsername } from '@/features/user/queries'
@@ -8,6 +9,7 @@ export const Route = createFileRoute(
   '/_authenticated/user/$username/_profileContent',
 )({
   component: RouteComponent,
+  pendingComponent: ProfileContentSkeleton,
 })
 
 function RouteComponent() {

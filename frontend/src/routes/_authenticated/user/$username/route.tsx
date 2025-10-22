@@ -1,21 +1,15 @@
 import PageHeader from '@/components/page-header'
 import { Button } from '@/components/ui/button'
-import { Spinner } from '@/components/ui/spinner'
 import { userByUsernameQueryOptions } from '@/features/user/queries'
 import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
 import { User2Icon } from 'lucide-react'
 
 export const Route = createFileRoute('/_authenticated/user/$username')({
-  loader: async ({ context: { queryClient }, params: { username } }) => {
-    await queryClient.ensureQueryData(userByUsernameQueryOptions(username))
+  loader: ({ context: { queryClient }, params: { username } }) => {
+    queryClient.ensureQueryData(userByUsernameQueryOptions(username))
   },
   component: RouteComponent,
   notFoundComponent: NotFoundComponent,
-  pendingComponent: () => (
-    <div className='mt-32 flex items-center justify-center'>
-      <Spinner />
-    </div>
-  ),
 })
 
 function RouteComponent() {
