@@ -1,6 +1,5 @@
 import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
-import { Spinner } from '@/components/ui/spinner'
 import { PAGE_HEADER_HEIGHT } from '@/lib/constants'
 import { formatPostDetailDate } from '@/lib/utils'
 import { Link, useParams } from '@tanstack/react-router'
@@ -11,6 +10,7 @@ import { usePostDetail, usePostReplies } from '../queries'
 import CreatePost from './create-post'
 import Post from './post'
 import { PostMetrics } from './post-metrics'
+import PostSkeleton from './post-skeleton'
 
 export default function PostDetail() {
   const { postId } = useParams({ from: '/_authenticated/post/$postId' })
@@ -115,11 +115,7 @@ export default function PostDetail() {
 
       {/* Replies */}
       <div className='divide-border flex flex-col divide-y'>
-        {isLoadingReplies && (
-          <div className='flex items-center justify-center py-10'>
-            <Spinner />
-          </div>
-        )}
+        {isLoadingReplies && <PostSkeleton />}
 
         {replies.map((reply) => (
           <Post key={reply.id} post={reply} />
@@ -127,9 +123,7 @@ export default function PostDetail() {
 
         {hasNextPage && (
           <div ref={observerRef}>
-            <div className='flex items-center justify-center py-12'>
-              {isFetchingNextPage && <Spinner />}
-            </div>
+            {isFetchingNextPage && <PostSkeleton count={1} />}
           </div>
         )}
       </div>

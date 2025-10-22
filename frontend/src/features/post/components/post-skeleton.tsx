@@ -1,9 +1,13 @@
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function PostSkeleton() {
+type PostSkeletonProps = {
+  count?: number
+}
+
+export default function PostSkeleton({ count = 6 }: PostSkeletonProps) {
   return (
     <>
-      {[...Array(6).keys()].map((i) => (
+      {[...Array(count).keys()].map((i) => (
         <div key={i} className='flex gap-2 px-4 py-3'>
           <Skeleton className='size-10 rounded-full' />
           <div className='flex w-full flex-col gap-4'>

@@ -1,4 +1,3 @@
-import { Spinner } from '@/components/ui/spinner'
 import Post from '@/features/post/components/post'
 import type { Post as TPost } from '@/shared/types'
 import type {
@@ -51,9 +50,7 @@ export default function PostList({ query }: PostListProps) {
 
       {hasNextPage && (
         <div ref={observerRef}>
-          <div className='flex items-center justify-center py-12'>
-            {isFetchingNextPage && <Spinner />}
-          </div>
+          {isFetchingNextPage && <PostSkeleton count={1} />}
         </div>
       )}
     </>
