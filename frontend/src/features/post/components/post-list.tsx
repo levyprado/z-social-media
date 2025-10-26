@@ -49,7 +49,7 @@ export default function PostList({ query }: PostListProps) {
       )}
 
       {hasNextPage && (
-        <div ref={observerRef}>
+        <div ref={observerRef} className='py-1'>
           {isFetchingNextPage && <PostSkeleton count={1} />}
         </div>
       )}

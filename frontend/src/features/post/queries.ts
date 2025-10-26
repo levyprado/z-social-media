@@ -33,7 +33,7 @@ const postKeys = {
 // Feed Query
 export const feedPostsQueryOptions = infiniteQueryOptions({
   queryKey: postKeys.feed(),
-  queryFn: async ({ pageParam }) => fetchFeedPosts(pageParam),
+  queryFn: ({ pageParam }) => fetchFeedPosts(pageParam),
   initialPageParam: 0,
   getNextPageParam: (lastPage, _allPages, lastPageParam) => {
     if (lastPage.length < POSTS_PER_PAGE) return undefined
