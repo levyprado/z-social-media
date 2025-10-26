@@ -21,16 +21,11 @@ const postKeys = {
   replies: (postId: string) => [...postKeys.all, 'replies', postId],
   byUser: (userId: string) => [...postKeys.all, 'user', userId],
   byUserWithReplies: (userId: string) => [
-    ...postKeys.all,
-    'user',
-    userId,
+    ...postKeys.byUser(userId),
     'with-replies',
   ],
   byUserLiked: (userId: string) => [
-    ...postKeys.all,
-    'user',
-    userId,
-    'with-replies',
+    ...postKeys.byUserWithReplies(userId),
     'liked',
   ],
 }
