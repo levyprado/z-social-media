@@ -1,10 +1,24 @@
-import type { ErrorResponse, SuccessResponse } from '@/shared/types'
-import { and, eq, sql } from 'drizzle-orm'
+import { POSTS_PER_PAGE } from '@/shared/constants'
+import {
+  postsPaginationSchema,
+  type ErrorResponse,
+  type SuccessResponse,
+} from '@/shared/types'
+import { and, desc, eq, SQL, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
+import { validator } from 'hono/validator'
 import db from 'server/db'
+import { user } from 'server/db/schema/auth'
 import { likes } from 'server/db/schema/likes'
-import { posts } from 'server/db/schema/posts'
+import { parentPost, parentPostUser, posts } from 'server/db/schema/posts'
+import {
+  parentPostSelectFields,
+  parentPostUserSelectFields,
+  postSelectFields,
+  userSelectFields,
+} from 'server/lib/post-helpers'
 import { loggedIn } from 'server/middleware/logged-in'
+import { flattenError } from 'zod'
 
 const likesRouter = new Hono()
   .use('*', loggedIn)
@@ -99,5 +113,70 @@ const likesRouter = new Hono()
       )
     }
   })
+  .get(
+    '/:userId',
+    validator('query', (value, c) => {
+      const parsed = postsPaginationSchema.safeParse(value)
+
+      if (!parsed.success) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Invalid query parameters',
+            details: flattenError(parsed.error),
+          },
+          400,
+        )
+      }
+
+      return parsed.data
+    }),
+    async (c) => {
+      const { userId } = c.req.param()
+      const { offset } = c.req.valid('query')
+
+      try {
+        const likedPosts = await db
+          .select({
+            ...postSelectFields,
+            user: userSelectFields,
+            parentPost: {
+              ...parentPostSelectFields,
+              user: parentPostUserSelectFields as unknown as SQL<{
+                id: string
+                name: string
+                username: string
+                image: string | null
+                createdAt: string
+              } | null>,
+            },
+          })
+          .from(likes)
+          .leftJoin(posts, eq(posts.id, likes.postId))
+          .leftJoin(user, eq(user.id, likes.userId))
+          .leftJoin(parentPost, eq(posts.parentPostId, parentPost.id))
+          .leftJoin(parentPostUser, eq(parentPost.userId, parentPostUser.id))
+          .where(eq(likes.userId, userId))
+          .orderBy(desc(likes.createdAt))
+          .limit(POSTS_PER_PAGE)
+          .offset(offset)
+
+        return c.json<SuccessResponse<typeof likedPosts>>({
+          success: true,
+          message: 'Liked posts fetched successfully',
+          data: likedPosts,
+        })
+      } catch (error) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Something went wrong',
+            details: error instanceof Error ? error.message : null,
+          },
+          500,
+        )
+      }
+    },
+  )
 
 export default likesRouter

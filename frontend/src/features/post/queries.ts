@@ -9,6 +9,7 @@ import {
   fetchFeedPosts,
   fetchPostById,
   fetchPostReplies,
+  fetchUserLikedPosts,
   fetchUserPosts,
   fetchUserPostsWithReplies,
 } from './api'
@@ -24,6 +25,13 @@ const postKeys = {
     'user',
     userId,
     'with-replies',
+  ],
+  byUserLiked: (userId: string) => [
+    ...postKeys.all,
+    'user',
+    userId,
+    'with-replies',
+    'liked',
   ],
 }
 
@@ -104,4 +112,21 @@ export const userPostsWithRepliesQueryOptions = (userId: string) =>
 
 export const useUserPostsWithReplies = (userId: string) => {
   return useInfiniteQuery(userPostsWithRepliesQueryOptions(userId))
+}
+
+// User liked posts
+export const userLikedPostsQueryOptions = (userId: string) =>
+  infiniteQueryOptions({
+    queryKey: postKeys.byUserLiked(userId),
+    queryFn: ({ pageParam }) => fetchUserLikedPosts(userId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (lastPage.length < POSTS_PER_PAGE) return undefined
+      return lastPageParam + POSTS_PER_PAGE
+    },
+    staleTime: 1000 * 60 * 1, // 1 minute
+  })
+
+export const useUserLikedPosts = (userId: string) => {
+  return useInfiniteQuery(userLikedPostsQueryOptions(userId))
 }

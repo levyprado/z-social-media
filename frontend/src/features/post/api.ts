@@ -99,3 +99,18 @@ export const fetchUserPostsWithReplies = async (userId: string, offset = 0) => {
 
   return data.data
 }
+
+// User liked posts (include replies)
+export const fetchUserLikedPosts = async (userId: string, offset = 0) => {
+  const res = await client.likes[':userId'].$get({
+    param: { userId },
+    query: { offset: offset.toString() },
+  })
+
+  const data = (await res.json()) as PostsWithParentResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
