@@ -1,7 +1,9 @@
 import { POSTS_PER_PAGE } from '@/shared/constants'
 import {
   createPostSchema,
+  postParamSchema,
   postsPaginationSchema,
+  userParamSchema,
   type ErrorResponse,
   type SuccessResponse,
 } from '@/shared/types'
@@ -138,83 +140,117 @@ const postsRouter = new Hono()
       }
     },
   )
-  .get('/:postId', async (c) => {
-    const { postId } = c.req.param()
-    const postIdValue = Number(postId)
-
-    if (isNaN(postIdValue)) {
-      return c.json<ErrorResponse>(
-        {
-          success: false,
-          error: 'Invalid post ID',
-        },
-        400,
-      )
-    }
-
-    try {
-      const [post] = await db
-        .select({
-          ...postSelectFields,
-          user: userSelectFields,
-        })
-        .from(posts)
-        .leftJoin(user, eq(posts.userId, user.id))
-        .where(eq(posts.id, postIdValue))
-        .limit(1)
-
-      if (!post) {
+  .get(
+    '/:postId',
+    validator('param', (value, c) => {
+      const parsed = postParamSchema.safeParse(value)
+      if (!parsed.success) {
         return c.json<ErrorResponse>(
           {
             success: false,
-            error: 'Post not found',
+            error: 'Invalid postId param',
+            details: flattenError(parsed.error),
           },
-          404,
+          400,
+        )
+      }
+      return parsed.data
+    }),
+    async (c) => {
+      const { postId } = c.req.valid('param')
+      const postIdValue = Number(postId)
+
+      if (isNaN(postIdValue)) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Invalid post ID',
+          },
+          400,
         )
       }
 
-      const parentPosts = []
-      let currentParentId = post.parentPostId
-      let depth = 0
-
-      while (currentParentId && depth < MAX_PARENT_DEPTH) {
-        const [parentPost] = await db
+      try {
+        const [post] = await db
           .select({
             ...postSelectFields,
             user: userSelectFields,
           })
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
-          .where(eq(posts.id, currentParentId))
+          .where(eq(posts.id, postIdValue))
           .limit(1)
 
-        if (!parentPost) break
+        if (!post) {
+          return c.json<ErrorResponse>(
+            {
+              success: false,
+              error: 'Post not found',
+            },
+            404,
+          )
+        }
 
-        parentPosts.unshift(parentPost)
-        currentParentId = parentPost.parentPostId
-        depth++
+        const parentPosts = []
+        let currentParentId = post.parentPostId
+        let depth = 0
+
+        while (currentParentId && depth < MAX_PARENT_DEPTH) {
+          const [parentPost] = await db
+            .select({
+              ...postSelectFields,
+              user: userSelectFields,
+            })
+            .from(posts)
+            .leftJoin(user, eq(posts.userId, user.id))
+            .where(eq(posts.id, currentParentId))
+            .limit(1)
+
+          if (!parentPost) break
+
+          parentPosts.unshift(parentPost)
+          currentParentId = parentPost.parentPostId
+          depth++
+        }
+
+        return c.json<
+          SuccessResponse<{
+            post: typeof post
+            parentPosts: typeof parentPosts
+          }>
+        >({
+          success: true,
+          message: 'Post fetched successfully',
+          data: { post, parentPosts },
+        })
+      } catch (error) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Something went wrong',
+            details: error instanceof Error ? error.message : null,
+          },
+          500,
+        )
       }
-
-      return c.json<
-        SuccessResponse<{ post: typeof post; parentPosts: typeof parentPosts }>
-      >({
-        success: true,
-        message: 'Post fetched successfully',
-        data: { post, parentPosts },
-      })
-    } catch (error) {
-      return c.json<ErrorResponse>(
-        {
-          success: false,
-          error: 'Something went wrong',
-          details: error instanceof Error ? error.message : null,
-        },
-        500,
-      )
-    }
-  })
+    },
+  )
   .get(
     '/:postId/replies',
+    validator('param', (value, c) => {
+      const parsed = postParamSchema.safeParse(value)
+      if (!parsed.success) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Invalid postId param',
+            details: flattenError(parsed.error),
+          },
+          400,
+        )
+      }
+      return parsed.data
+    }),
     validator('query', (value, c) => {
       const parsed = postsPaginationSchema.safeParse(value)
 
@@ -232,7 +268,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     async (c) => {
-      const { postId } = c.req.param()
+      const { postId } = c.req.valid('param')
       const postIdValue = Number(postId)
 
       if (isNaN(postIdValue)) {
@@ -279,6 +315,20 @@ const postsRouter = new Hono()
   )
   .get(
     '/user/:userId',
+    validator('param', (value, c) => {
+      const parsed = userParamSchema.safeParse(value)
+      if (!parsed.success) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Invalid userId param',
+            details: flattenError(parsed.error),
+          },
+          400,
+        )
+      }
+      return parsed.data
+    }),
     validator('query', (value, c) => {
       const parsed = postsPaginationSchema.safeParse(value)
 
@@ -296,7 +346,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     async (c) => {
-      const { userId } = c.req.param()
+      const { userId } = c.req.valid('param')
       const { offset } = c.req.valid('query')
 
       try {
@@ -334,6 +384,20 @@ const postsRouter = new Hono()
   )
   .get(
     '/user/:userId/with-replies',
+    validator('param', (value, c) => {
+      const parsed = userParamSchema.safeParse(value)
+      if (!parsed.success) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Invalid userId param',
+            details: flattenError(parsed.error),
+          },
+          400,
+        )
+      }
+      return parsed.data
+    }),
     validator('query', (value, c) => {
       const parsed = postsPaginationSchema.safeParse(value)
 
@@ -351,7 +415,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     async (c) => {
-      const { userId } = c.req.param()
+      const { userId } = c.req.valid('param')
       const { offset } = c.req.valid('query')
 
       try {

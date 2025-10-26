@@ -90,6 +90,18 @@ export const postsPaginationSchema = z.object({
   offset: z.coerce.number().optional().default(0),
 })
 
+export const userParamSchema = z.object({
+  userId: z.string().nonempty(),
+})
+
+export const postParamSchema = z.object({
+  postId: z.string().nonempty(),
+})
+
+export const usernameParamSchema = z.object({
+  username: z.string().nonempty(),
+})
+
 export const userEditSchema = SignupSchema.pick({ name: true }).extend({
   bio: z.string().max(150, 'Bio must be 150 characters or less'),
   website: z.union([
