@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { auth } from './auth'
+import likesRouter from './routes/likes'
 import postsRouter from './routes/posts'
 import userRouter from './routes/user'
 
@@ -14,7 +15,10 @@ const app = new Hono().basePath('/api')
 app.on(['POST', 'GET'], '/auth/*', (c) => auth.handler(c.req.raw))
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const routes = app.route('/user', userRouter).route('/posts', postsRouter)
+const routes = app
+  .route('/user', userRouter)
+  .route('/posts', postsRouter)
+  .route('/likes', likesRouter)
 
 export default app
 export type AppType = typeof routes
