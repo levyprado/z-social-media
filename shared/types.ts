@@ -62,6 +62,7 @@ export type Post = {
   userId: string
   parentPostId: number | null
   replyCount: number
+  likeCount: number
   createdAt: string
   user: UserProfile
 }

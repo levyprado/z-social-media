@@ -97,7 +97,7 @@ export default function PostDetail() {
             isDetail
             replyCount={post.replyCount}
             repostCount={0}
-            likeCount={0}
+            likeCount={post.likeCount}
           />
         </div>
       </article>

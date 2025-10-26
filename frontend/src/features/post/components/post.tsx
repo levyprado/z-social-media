@@ -92,7 +92,7 @@ export default function Post({ post, isParentPost }: PostProps) {
           <PostMetrics
             replyCount={post.replyCount}
             repostCount={0}
-            likeCount={0}
+            likeCount={post.likeCount}
           />
         </div>
       </div>

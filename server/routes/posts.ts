@@ -99,6 +99,7 @@ const postsRouter = new Hono()
             userId: posts.userId,
             parentPostId: posts.parentPostId,
             replyCount: posts.replyCount,
+            likeCount: posts.likeCount,
             createdAt: posts.createdAt,
             user: {
               id: user.id,
@@ -113,6 +114,7 @@ const postsRouter = new Hono()
               userId: parentPost.userId,
               parentPostId: parentPost.parentPostId,
               replyCount: parentPost.replyCount,
+              likeCount: parentPost.likeCount,
               createdAt: parentPost.createdAt,
               user: {
                 id: parentPostUser.id,
@@ -176,6 +178,7 @@ const postsRouter = new Hono()
           userId: posts.userId,
           parentPostId: posts.parentPostId,
           replyCount: posts.replyCount,
+          likeCount: posts.likeCount,
           createdAt: posts.createdAt,
           user: {
             id: user.id,
@@ -212,6 +215,7 @@ const postsRouter = new Hono()
             userId: posts.userId,
             parentPostId: posts.parentPostId,
             replyCount: posts.replyCount,
+            likeCount: posts.likeCount,
             createdAt: posts.createdAt,
             user: {
               id: user.id,
@@ -293,6 +297,7 @@ const postsRouter = new Hono()
             userId: posts.userId,
             parentPostId: posts.parentPostId,
             replyCount: posts.replyCount,
+            likeCount: posts.likeCount,
             createdAt: posts.createdAt,
             user: {
               id: user.id,
@@ -356,6 +361,7 @@ const postsRouter = new Hono()
             userId: posts.userId,
             parentPostId: posts.parentPostId,
             replyCount: posts.replyCount,
+            likeCount: posts.likeCount,
             createdAt: posts.createdAt,
             user: {
               id: user.id,
@@ -422,6 +428,7 @@ const postsRouter = new Hono()
             userId: posts.userId,
             parentPostId: posts.parentPostId,
             replyCount: posts.replyCount,
+            likeCount: posts.likeCount,
             createdAt: posts.createdAt,
             user: {
               id: user.id,
@@ -436,6 +443,7 @@ const postsRouter = new Hono()
               userId: parentPost.userId,
               parentPostId: parentPost.parentPostId,
               replyCount: parentPost.replyCount,
+              likeCount: parentPost.likeCount,
               createdAt: parentPost.createdAt,
               user: {
                 id: parentPostUser.id,
