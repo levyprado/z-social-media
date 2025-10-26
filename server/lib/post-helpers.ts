@@ -1,4 +1,6 @@
+import { sql } from 'drizzle-orm'
 import { user } from 'server/db/schema/auth'
+import { likes } from 'server/db/schema/likes'
 import { parentPost, parentPostUser, posts } from 'server/db/schema/posts'
 
 export const postSelectFields = {
@@ -6,6 +8,7 @@ export const postSelectFields = {
   content: posts.content,
   userId: posts.userId,
   parentPostId: posts.parentPostId,
+  isLiked: sql<boolean>`${likes.userId} is not null`.as('isLiked'),
   replyCount: posts.replyCount,
   likeCount: posts.likeCount,
   createdAt: posts.createdAt,

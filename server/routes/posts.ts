@@ -12,6 +12,7 @@ import { Hono } from 'hono'
 import { validator } from 'hono/validator'
 import db from 'server/db'
 import { user } from 'server/db/schema/auth'
+import { likes } from 'server/db/schema/likes'
 import { parentPost, parentPostUser, posts } from 'server/db/schema/posts'
 import { MAX_PARENT_DEPTH } from 'server/lib/constants'
 import {
@@ -98,6 +99,7 @@ const postsRouter = new Hono()
     }),
     async (c) => {
       const { offset } = c.req.valid('query')
+      const currentUser = c.get('user')
 
       try {
         const feedPosts = await db
@@ -119,6 +121,10 @@ const postsRouter = new Hono()
           .leftJoin(user, eq(posts.userId, user.id))
           .leftJoin(parentPost, eq(posts.parentPostId, parentPost.id))
           .leftJoin(parentPostUser, eq(parentPost.userId, parentPostUser.id))
+          .leftJoin(
+            likes,
+            and(eq(likes.postId, posts.id), eq(likes.userId, currentUser.id)),
+          )
           .orderBy(desc(posts.createdAt))
           .limit(POSTS_PER_PAGE)
           .offset(offset)
@@ -157,6 +163,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     async (c) => {
+      const currentUser = c.get('user')
       const { postId } = c.req.valid('param')
       const postIdValue = Number(postId)
 
@@ -178,6 +185,10 @@ const postsRouter = new Hono()
           })
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
+          .leftJoin(
+            likes,
+            and(eq(likes.postId, posts.id), eq(likes.userId, currentUser.id)),
+          )
           .where(eq(posts.id, postIdValue))
           .limit(1)
 
@@ -203,6 +214,10 @@ const postsRouter = new Hono()
             })
             .from(posts)
             .leftJoin(user, eq(posts.userId, user.id))
+            .leftJoin(
+              likes,
+              and(eq(likes.postId, posts.id), eq(likes.userId, currentUser.id)),
+            )
             .where(eq(posts.id, currentParentId))
             .limit(1)
 
@@ -268,6 +283,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     async (c) => {
+      const currentUser = c.get('user')
       const { postId } = c.req.valid('param')
       const postIdValue = Number(postId)
 
@@ -291,6 +307,10 @@ const postsRouter = new Hono()
           })
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
+          .leftJoin(
+            likes,
+            and(eq(likes.postId, posts.id), eq(likes.userId, currentUser.id)),
+          )
           .where(eq(posts.parentPostId, postIdValue))
           .orderBy(desc(posts.createdAt))
           .limit(POSTS_PER_PAGE)
@@ -346,6 +366,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     async (c) => {
+      const currentUser = c.get('user')
       const { userId } = c.req.valid('param')
       const { offset } = c.req.valid('query')
 
@@ -358,6 +379,10 @@ const postsRouter = new Hono()
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
           .where(and(eq(posts.userId, userId), isNull(posts.parentPostId)))
+          .leftJoin(
+            likes,
+            and(eq(likes.postId, posts.id), eq(likes.userId, currentUser.id)),
+          )
           .orderBy(desc(posts.createdAt))
           .limit(POSTS_PER_PAGE)
           .offset(offset)
@@ -415,6 +440,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     async (c) => {
+      const currentUser = c.get('user')
       const { userId } = c.req.valid('param')
       const { offset } = c.req.valid('query')
 
@@ -438,6 +464,10 @@ const postsRouter = new Hono()
           .leftJoin(user, eq(posts.userId, user.id))
           .leftJoin(parentPost, eq(posts.parentPostId, parentPost.id))
           .leftJoin(parentPostUser, eq(parentPost.userId, parentPostUser.id))
+          .leftJoin(
+            likes,
+            and(eq(likes.postId, posts.id), eq(likes.userId, currentUser.id)),
+          )
           .where(eq(posts.userId, userId))
           .orderBy(desc(posts.createdAt))
           .limit(POSTS_PER_PAGE)

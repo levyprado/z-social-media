@@ -98,6 +98,7 @@ export default function PostDetail() {
             replyCount={post.replyCount}
             repostCount={0}
             likeCount={post.likeCount}
+            isLiked={post.isLiked}
           />
         </div>
       </article>

@@ -93,6 +93,7 @@ export default function Post({ post, isParentPost }: PostProps) {
             replyCount={post.replyCount}
             repostCount={0}
             likeCount={post.likeCount}
+            isLiked={post.isLiked}
           />
         </div>
       </div>

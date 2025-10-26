@@ -61,6 +61,7 @@ export type Post = {
   content: string
   userId: string
   parentPostId: number | null
+  isLiked: boolean
   replyCount: number
   likeCount: number
   createdAt: string

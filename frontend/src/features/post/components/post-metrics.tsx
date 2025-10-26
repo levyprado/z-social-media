@@ -1,4 +1,5 @@
 import IconButton from '@/components/icon-button'
+import { cn } from '@/lib/utils'
 import {
   HeartIcon,
   MessageCircleIcon,
@@ -10,6 +11,7 @@ type PostMetricsProps = {
   replyCount: number
   repostCount: number
   likeCount: number
+  isLiked: boolean
   isDetail?: boolean
 }
 
@@ -17,6 +19,7 @@ export function PostMetrics({
   replyCount,
   repostCount,
   likeCount,
+  isLiked,
   isDetail = false,
 }: PostMetricsProps) {
   return (
@@ -35,6 +38,7 @@ export function PostMetrics({
         size={isDetail ? 'md' : 'sm'}
         icon={HeartIcon}
         count={likeCount}
+        className={cn(isLiked && 'text-primary')}
       />
 
       {/* Share button */}
