@@ -12,6 +12,12 @@ import db from 'server/db'
 import { user } from 'server/db/schema/auth'
 import { parentPost, parentPostUser, posts } from 'server/db/schema/posts'
 import { MAX_PARENT_DEPTH } from 'server/lib/constants'
+import {
+  parentPostSelectFields,
+  parentPostUserSelectFields,
+  postSelectFields,
+  userSelectFields,
+} from 'server/lib/post-helpers'
 import { loggedIn } from 'server/middleware/logged-in'
 import { flattenError } from 'zod'
 
@@ -94,35 +100,11 @@ const postsRouter = new Hono()
       try {
         const feedPosts = await db
           .select({
-            id: posts.id,
-            content: posts.content,
-            userId: posts.userId,
-            parentPostId: posts.parentPostId,
-            replyCount: posts.replyCount,
-            likeCount: posts.likeCount,
-            createdAt: posts.createdAt,
-            user: {
-              id: user.id,
-              name: user.name,
-              username: user.username,
-              image: user.image,
-              createdAt: user.createdAt,
-            },
+            ...postSelectFields,
+            user: userSelectFields,
             parentPost: {
-              id: parentPost.id,
-              content: parentPost.content,
-              userId: parentPost.userId,
-              parentPostId: parentPost.parentPostId,
-              replyCount: parentPost.replyCount,
-              likeCount: parentPost.likeCount,
-              createdAt: parentPost.createdAt,
-              user: {
-                id: parentPostUser.id,
-                name: parentPostUser.name,
-                username: parentPostUser.username,
-                image: parentPostUser.image,
-                createdAt: parentPostUser.createdAt,
-              } as unknown as SQL<{
+              ...parentPostSelectFields,
+              user: parentPostUserSelectFields as unknown as SQL<{
                 id: string
                 name: string
                 username: string
@@ -173,20 +155,8 @@ const postsRouter = new Hono()
     try {
       const [post] = await db
         .select({
-          id: posts.id,
-          content: posts.content,
-          userId: posts.userId,
-          parentPostId: posts.parentPostId,
-          replyCount: posts.replyCount,
-          likeCount: posts.likeCount,
-          createdAt: posts.createdAt,
-          user: {
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            image: user.image,
-            createdAt: user.createdAt,
-          },
+          ...postSelectFields,
+          user: userSelectFields,
         })
         .from(posts)
         .leftJoin(user, eq(posts.userId, user.id))
@@ -210,20 +180,8 @@ const postsRouter = new Hono()
       while (currentParentId && depth < MAX_PARENT_DEPTH) {
         const [parentPost] = await db
           .select({
-            id: posts.id,
-            content: posts.content,
-            userId: posts.userId,
-            parentPostId: posts.parentPostId,
-            replyCount: posts.replyCount,
-            likeCount: posts.likeCount,
-            createdAt: posts.createdAt,
-            user: {
-              id: user.id,
-              name: user.name,
-              username: user.username,
-              image: user.image,
-              createdAt: user.createdAt,
-            },
+            ...postSelectFields,
+            user: userSelectFields,
           })
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
@@ -292,20 +250,8 @@ const postsRouter = new Hono()
       try {
         const replies = await db
           .select({
-            id: posts.id,
-            content: posts.content,
-            userId: posts.userId,
-            parentPostId: posts.parentPostId,
-            replyCount: posts.replyCount,
-            likeCount: posts.likeCount,
-            createdAt: posts.createdAt,
-            user: {
-              id: user.id,
-              name: user.name,
-              username: user.username,
-              image: user.image,
-              createdAt: user.createdAt,
-            },
+            ...postSelectFields,
+            user: userSelectFields,
           })
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
@@ -356,20 +302,8 @@ const postsRouter = new Hono()
       try {
         const userPosts = await db
           .select({
-            id: posts.id,
-            content: posts.content,
-            userId: posts.userId,
-            parentPostId: posts.parentPostId,
-            replyCount: posts.replyCount,
-            likeCount: posts.likeCount,
-            createdAt: posts.createdAt,
-            user: {
-              id: user.id,
-              name: user.name,
-              username: user.username,
-              image: user.image,
-              createdAt: user.createdAt,
-            },
+            ...postSelectFields,
+            user: userSelectFields,
           })
           .from(posts)
           .leftJoin(user, eq(posts.userId, user.id))
@@ -423,35 +357,11 @@ const postsRouter = new Hono()
       try {
         const userPostsWithReplies = await db
           .select({
-            id: posts.id,
-            content: posts.content,
-            userId: posts.userId,
-            parentPostId: posts.parentPostId,
-            replyCount: posts.replyCount,
-            likeCount: posts.likeCount,
-            createdAt: posts.createdAt,
-            user: {
-              id: user.id,
-              name: user.name,
-              username: user.username,
-              image: user.image,
-              createdAt: user.createdAt,
-            },
+            ...postSelectFields,
+            user: userSelectFields,
             parentPost: {
-              id: parentPost.id,
-              content: parentPost.content,
-              userId: parentPost.userId,
-              parentPostId: parentPost.parentPostId,
-              replyCount: parentPost.replyCount,
-              likeCount: parentPost.likeCount,
-              createdAt: parentPost.createdAt,
-              user: {
-                id: parentPostUser.id,
-                name: parentPostUser.name,
-                username: parentPostUser.username,
-                image: parentPostUser.image,
-                createdAt: parentPostUser.createdAt,
-              } as unknown as SQL<{
+              ...parentPostSelectFields,
+              user: parentPostUserSelectFields as unknown as SQL<{
                 id: string
                 name: string
                 username: string
