@@ -36,6 +36,14 @@ export default function PostList({ query }: PostListProps) {
 
   return (
     <>
+      {posts.length === 0 && (
+        <div className='flex items-center justify-center py-10'>
+          <span className='text-muted-foreground'>
+            Nothing to show here yet...
+          </span>
+        </div>
+      )}
+
       <div className='divide-border flex flex-col divide-y'>
         {posts.map((post) => (
           <Post key={post.id} post={post} />
