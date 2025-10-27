@@ -1,13 +1,9 @@
 import IconButton from '@/components/icon-button'
-import { cn } from '@/lib/utils'
-import {
-  HeartIcon,
-  MessageCircleIcon,
-  RepeatIcon,
-  ShareIcon,
-} from 'lucide-react'
+import { MessageCircleIcon, RepeatIcon, ShareIcon } from 'lucide-react'
+import LikeButton from './like-button'
 
 type PostMetricsProps = {
+  postId: number
   replyCount: number
   repostCount: number
   likeCount: number
@@ -16,6 +12,7 @@ type PostMetricsProps = {
 }
 
 export function PostMetrics({
+  postId,
   replyCount,
   repostCount,
   likeCount,
@@ -34,11 +31,11 @@ export function PostMetrics({
         icon={RepeatIcon}
         count={repostCount}
       />
-      <IconButton
-        size={isDetail ? 'md' : 'sm'}
-        icon={HeartIcon}
+      <LikeButton
+        postId={postId}
         count={likeCount}
-        className={cn(isLiked && 'text-primary')}
+        isLiked={isLiked}
+        size={isDetail ? 'md' : 'sm'}
       />
 
       {/* Share button */}

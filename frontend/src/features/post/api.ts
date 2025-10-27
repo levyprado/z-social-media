@@ -12,6 +12,9 @@ import { notFound } from '@tanstack/react-router'
 type PostsResponse = SuccessResponse<Post[]> | ErrorResponse
 type PostsWithParentResponse = SuccessResponse<PostWithParent[]> | ErrorResponse
 type PostDetailResponse = SuccessResponse<PostWithParents> | ErrorResponse
+type ToggleLikeResponse =
+  | SuccessResponse<{ liked: boolean; likeCount: number }>
+  | ErrorResponse
 
 // Create post
 export const createPost = async (input: CreatePostInput) => {
@@ -108,6 +111,20 @@ export const fetchUserLikedPosts = async (userId: string, offset = 0) => {
   })
 
   const data = (await res.json()) as PostsWithParentResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
+
+// Toggle like
+export const toggleLike = async (postId: number) => {
+  const res = await client.likes[':postId'].$post({
+    param: { postId: postId.toString() },
+  })
+
+  const data = (await res.json()) as ToggleLikeResponse
   if (!data.success) {
     throw new Error(data.error)
   }

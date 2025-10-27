@@ -14,7 +14,7 @@ import {
   fetchUserPostsWithReplies,
 } from './api'
 
-const postKeys = {
+export const postKeys = {
   all: ['posts'],
   feed: () => [...postKeys.all, 'feed'],
   detail: (postId: string) => [...postKeys.all, 'detail', postId],
