@@ -90,7 +90,7 @@ export default function Post({ post, isParentPost }: PostProps) {
         {/* Post metrics */}
         <div className='mt-2'>
           <PostMetrics
-            postId={post.id}
+            post={post}
             replyCount={post.replyCount}
             repostCount={0}
             likeCount={post.likeCount}

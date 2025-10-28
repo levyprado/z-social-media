@@ -94,7 +94,7 @@ export default function PostDetail() {
         {/* Metrics */}
         <div className='border-y px-1 py-3'>
           <PostMetrics
-            postId={Number(postId)}
+            post={post}
             isDetail
             replyCount={post.replyCount}
             repostCount={0}

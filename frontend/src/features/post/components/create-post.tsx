@@ -3,6 +3,7 @@ import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { cn } from '@/lib/utils'
 import { createPostSchema } from '@/shared/types'
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
@@ -18,11 +19,15 @@ import {
 type CreatePostProps = {
   parentPostUsername?: string
   parentPostId?: string
+  onSuccess?: () => void
+  className?: string
 }
 
 export default function CreatePost({
   parentPostUsername,
   parentPostId,
+  onSuccess = () => {},
+  className,
 }: CreatePostProps) {
   const { user } = useRouteContext({ from: '/_authenticated' })
   const queryClient = useQueryClient()
@@ -56,11 +61,12 @@ export default function CreatePost({
       queryClient.invalidateQueries({
         queryKey: feedPostsQueryOptions.queryKey,
       })
+      onSuccess()
     },
   })
 
   return (
-    <div className='flex flex-col gap-2.5 border-b p-3'>
+    <div className={cn('flex flex-col gap-2.5 border-b p-3', className)}>
       {parentPostUsername && (
         <div className='text-muted-foreground mr-2 text-sm'>
           Replying to{' '}

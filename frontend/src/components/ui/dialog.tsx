@@ -32,6 +32,7 @@ function DialogOverlay({
 }: React.ComponentProps<typeof BaseDialog.Backdrop>) {
   return (
     <BaseDialog.Backdrop
+      onClick={(e) => e.stopPropagation()}
       data-slot='dialog-overlay'
       className={cn(
         'fixed inset-0 z-40 bg-black/50 transition-all duration-200 [&[data-ending-style]]:opacity-0 [&[data-starting-style]]:opacity-0',

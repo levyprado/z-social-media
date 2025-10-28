@@ -1,9 +1,11 @@
 import IconButton from '@/components/icon-button'
-import { MessageCircleIcon, RepeatIcon, ShareIcon } from 'lucide-react'
+import type { Post } from '@/shared/types'
+import { RepeatIcon, ShareIcon } from 'lucide-react'
 import LikeButton from './like-button'
+import ReplyButton from './reply-button'
 
 type PostMetricsProps = {
-  postId: number
+  post: Post & { parentPost?: Post | null }
   replyCount: number
   repostCount: number
   likeCount: number
@@ -12,7 +14,7 @@ type PostMetricsProps = {
 }
 
 export function PostMetrics({
-  postId,
+  post,
   replyCount,
   repostCount,
   likeCount,
@@ -21,10 +23,10 @@ export function PostMetrics({
 }: PostMetricsProps) {
   return (
     <div className='flex justify-between'>
-      <IconButton
-        size={isDetail ? 'md' : 'sm'}
-        icon={MessageCircleIcon}
+      <ReplyButton
+        post={post}
         count={replyCount}
+        size={isDetail ? 'md' : 'sm'}
       />
       <IconButton
         size={isDetail ? 'md' : 'sm'}
@@ -32,7 +34,7 @@ export function PostMetrics({
         count={repostCount}
       />
       <LikeButton
-        postId={postId}
+        postId={post.id}
         count={likeCount}
         isLiked={isLiked}
         size={isDetail ? 'md' : 'sm'}
