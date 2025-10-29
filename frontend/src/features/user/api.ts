@@ -12,6 +12,7 @@ type UserProfileResponse =
 type ToggleFollowResponse =
   | SuccessResponse<{ followed: boolean; followerCount: number }>
   | ErrorResponse
+type UserListResponse = SuccessResponse<UserProfile[]> | ErrorResponse
 
 export const fetchUserByUsername = async (username: string) => {
   const res = await client.user[':username'].$get({
@@ -32,6 +33,32 @@ export const toggleFollow = async (userId: string) => {
   })
 
   const data = (await res.json()) as ToggleFollowResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
+
+export const fetchUserFollowers = async (userId: string) => {
+  const res = await client.user[':userId'].followers.$get({
+    param: { userId },
+  })
+
+  const data = (await res.json()) as UserListResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}
+
+export const fetchUserFollowing = async (userId: string) => {
+  const res = await client.user[':userId'].following.$get({
+    param: { userId },
+  })
+
+  const data = (await res.json()) as UserListResponse
   if (!data.success) {
     throw new Error(data.error)
   }

@@ -8,7 +8,7 @@ export default function FollowStats() {
   return (
     <div className='flex items-center gap-4'>
       <Link
-        to='/user/$username/following'
+        to='/user/$username/followers'
         params={{ username }}
         className='flex items-center gap-1 text-sm hover:underline'
       >
@@ -18,7 +18,7 @@ export default function FollowStats() {
         </span>
       </Link>
       <Link
-        to='/user/$username/followers'
+        to='/user/$username/following'
         params={{ username }}
         className='flex items-center gap-1 text-sm hover:underline'
       >

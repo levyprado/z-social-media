@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { useCurrentUser } from '@/features/auth/queries'
 import { Loader2Icon } from 'lucide-react'
 import { useToggleFollow } from '../mutations'
 
@@ -12,6 +13,10 @@ export default function FollowButton({
   isFollowed,
 }: FollowButtonProps) {
   const mutation = useToggleFollow(userId)
+  const { data: currentUser } = useCurrentUser()
+  if (!currentUser) return
+
+  if (userId === currentUser.id) return null
 
   return (
     <Button
