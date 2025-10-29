@@ -1,10 +1,10 @@
 import Avatar from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { formatMonthYear } from '@/lib/utils'
 import { useParams, useRouteContext } from '@tanstack/react-router'
 import { CalendarDaysIcon, ExternalLinkIcon } from 'lucide-react'
 import { useUserByUsername } from '../queries'
 import EditProfileDialog from './edit-profile-dialog'
+import FollowButton from './follow-button'
 import FollowStats from './follow-stats'
 import ProfileBanner from './profile-banner'
 
@@ -27,7 +27,14 @@ export default function ProfileDetails() {
           />
 
           <div>
-            {isOwnProfile ? <EditProfileDialog /> : <Button>Follow</Button>}
+            {isOwnProfile ? (
+              <EditProfileDialog />
+            ) : (
+              <FollowButton
+                userId={profileUser.id}
+                isFollowed={profileUser.isFollowed}
+              />
+            )}
           </div>
         </div>
 

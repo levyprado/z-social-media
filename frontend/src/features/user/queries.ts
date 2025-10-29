@@ -1,32 +1,9 @@
-import { client } from '@/lib/api'
-import type {
-  ErrorResponse,
-  SuccessResponse,
-  UserProfile,
-} from '@/shared/types'
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
-import { notFound } from '@tanstack/react-router'
+import { fetchUserByUsername } from './api'
 
-export type UserProfileResponse =
-  | SuccessResponse<{ user: UserProfile }>
-  | ErrorResponse
-
-const userKeys = {
+export const userKeys = {
   all: ['users'],
   byUsername: (username: string) => [...userKeys.all, username],
-}
-
-export const fetchUserByUsername = async (username: string) => {
-  const res = await client.user[':username'].$get({
-    param: { username },
-  })
-
-  const data = (await res.json()) as UserProfileResponse
-  if (!data.success) {
-    throw notFound()
-  }
-
-  return data.data.user
 }
 
 export const userByUsernameQueryOptions = (username: string) =>

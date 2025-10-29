@@ -13,7 +13,9 @@ export default function FollowStats() {
         className='flex items-center gap-1 text-sm hover:underline'
       >
         <span className='font-bold'>{user.followerCount}</span>
-        <span className='text-muted-foreground'>Followers</span>
+        <span className='text-muted-foreground'>
+          {user.followerCount === 1 ? 'Follower' : 'Followers'}
+        </span>
       </Link>
       <Link
         to='/user/$username/followers'

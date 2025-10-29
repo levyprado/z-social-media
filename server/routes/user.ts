@@ -3,14 +3,16 @@ import {
   type ErrorResponse,
   type SuccessResponse,
 } from '@/shared/types'
-import { eq } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { validator } from 'hono/validator'
 import db from 'server/db'
 import { user as usersTable } from 'server/db/schema/auth'
+import { follows } from 'server/db/schema/follows'
+import { loggedIn } from 'server/middleware/logged-in'
 import { flattenError } from 'zod'
 
-const userRouter = new Hono().get(
+const userRouter = new Hono().use('*', loggedIn).get(
   '/:username',
   validator('param', (value, c) => {
     const parsed = usernameParamSchema.safeParse(value)
@@ -28,6 +30,7 @@ const userRouter = new Hono().get(
   }),
   async (c) => {
     const { username } = c.req.valid('param')
+    const currentUser = c.get('user')
 
     try {
       const [user] = await db
@@ -38,11 +41,21 @@ const userRouter = new Hono().get(
           image: usersTable.image,
           bio: usersTable.bio,
           website: usersTable.website,
+          isFollowed: sql<boolean>`${follows.followerId} is not null`.as(
+            'isFollowed',
+          ),
           followerCount: usersTable.followerCount,
           followingCount: usersTable.followingCount,
           createdAt: usersTable.createdAt,
         })
         .from(usersTable)
+        .leftJoin(
+          follows,
+          and(
+            eq(follows.followerId, currentUser.id),
+            eq(follows.followingId, usersTable.id),
+          ),
+        )
         .where(eq(usersTable.username, username))
 
       if (!user) {
