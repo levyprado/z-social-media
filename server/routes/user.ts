@@ -38,6 +38,8 @@ const userRouter = new Hono().get(
           image: usersTable.image,
           bio: usersTable.bio,
           website: usersTable.website,
+          followerCount: usersTable.followerCount,
+          followingCount: usersTable.followingCount,
           createdAt: usersTable.createdAt,
         })
         .from(usersTable)

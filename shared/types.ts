@@ -22,6 +22,8 @@ export type UserProfile = {
   image: string | null
   bio: string | null
   website: string | null
+  followerCount: number
+  followingCount: number
   createdAt: string
 }
 
