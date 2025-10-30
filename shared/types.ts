@@ -90,7 +90,7 @@ export const createPostSchema = z.object({
 
 export type CreatePostInput = z.infer<typeof createPostSchema>
 
-export const postsPaginationSchema = z.object({
+export const paginationSchema = z.object({
   offset: z.coerce.number().optional().default(0),
 })
 

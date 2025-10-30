@@ -1,7 +1,7 @@
 import { POSTS_PER_PAGE } from '@/shared/constants'
 import {
+  paginationSchema,
   postParamSchema,
-  postsPaginationSchema,
   userParamSchema,
   type ErrorResponse,
   type SuccessResponse,
@@ -149,7 +149,7 @@ const likesRouter = new Hono()
       return parsed.data
     }),
     validator('query', (value, c) => {
-      const parsed = postsPaginationSchema.safeParse(value)
+      const parsed = paginationSchema.safeParse(value)
       if (!parsed.success) {
         return c.json<ErrorResponse>(
           {

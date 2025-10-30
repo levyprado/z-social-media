@@ -1,8 +1,8 @@
 import { POSTS_PER_PAGE } from '@/shared/constants'
 import {
   createPostSchema,
+  paginationSchema,
   postParamSchema,
-  postsPaginationSchema,
   userParamSchema,
   type ErrorResponse,
   type SuccessResponse,
@@ -87,7 +87,7 @@ const postsRouter = new Hono()
   .get(
     '/',
     validator('query', (value, c) => {
-      const parsed = postsPaginationSchema.safeParse(value)
+      const parsed = paginationSchema.safeParse(value)
       if (!parsed.success) {
         return c.json<ErrorResponse>({
           success: false,
@@ -267,7 +267,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     validator('query', (value, c) => {
-      const parsed = postsPaginationSchema.safeParse(value)
+      const parsed = paginationSchema.safeParse(value)
 
       if (!parsed.success) {
         return c.json<ErrorResponse>(
@@ -350,7 +350,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     validator('query', (value, c) => {
-      const parsed = postsPaginationSchema.safeParse(value)
+      const parsed = paginationSchema.safeParse(value)
 
       if (!parsed.success) {
         return c.json<ErrorResponse>(
@@ -424,7 +424,7 @@ const postsRouter = new Hono()
       return parsed.data
     }),
     validator('query', (value, c) => {
-      const parsed = postsPaginationSchema.safeParse(value)
+      const parsed = paginationSchema.safeParse(value)
 
       if (!parsed.success) {
         return c.json<ErrorResponse>(
