@@ -36,7 +36,8 @@ export const getNavbarItems = (username: string): NavItem[] => [
   {
     icon: HeartIcon,
     label: 'Liked',
-    link: '/',
+    link: '/user/$username/likes',
+    params: { username },
   },
   {
     icon: User2Icon,
