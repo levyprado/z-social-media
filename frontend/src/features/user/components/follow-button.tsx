@@ -20,7 +20,10 @@ export default function FollowButton({
 
   return (
     <Button
-      onClick={() => mutation.mutate()}
+      onClick={(e) => {
+        e.preventDefault()
+        mutation.mutate()
+      }}
       disabled={mutation.isPending}
       variant={isFollowed ? 'secondary' : 'default'}
     >
