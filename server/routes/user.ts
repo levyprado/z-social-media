@@ -1,4 +1,6 @@
+import { USERS_PER_PAGE } from '@/shared/constants'
 import {
+  paginationSchema,
   usernameParamSchema,
   userParamSchema,
   type ErrorResponse,
@@ -104,9 +106,21 @@ const userRouter = new Hono()
       }
       return parsed.data
     }),
+    validator('query', (value, c) => {
+      const parsed = paginationSchema.safeParse(value)
+      if (!parsed.success) {
+        return c.json<ErrorResponse>({
+          success: false,
+          error: 'Invalid query parameters',
+          details: flattenError(parsed.error),
+        })
+      }
+      return parsed.data
+    }),
     async (c) => {
       const currentUser = c.get('user')
       const { userId } = c.req.valid('param')
+      const { offset } = c.req.valid('query')
 
       try {
         const followers = await db
@@ -124,6 +138,8 @@ const userRouter = new Hono()
             ),
           )
           .where(eq(follows.followingId, userId))
+          .limit(USERS_PER_PAGE)
+          .offset(offset)
 
         return c.json<SuccessResponse<typeof followers>>({
           success: true,
@@ -158,9 +174,21 @@ const userRouter = new Hono()
       }
       return parsed.data
     }),
+    validator('query', (value, c) => {
+      const parsed = paginationSchema.safeParse(value)
+      if (!parsed.success) {
+        return c.json<ErrorResponse>({
+          success: false,
+          error: 'Invalid query parameters',
+          details: flattenError(parsed.error),
+        })
+      }
+      return parsed.data
+    }),
     async (c) => {
       const currentUser = c.get('user')
       const { userId } = c.req.valid('param')
+      const { offset } = c.req.valid('query')
 
       try {
         const following = await db
@@ -178,6 +206,8 @@ const userRouter = new Hono()
             ),
           )
           .where(eq(follows.followerId, userId))
+          .limit(USERS_PER_PAGE)
+          .offset(offset)
 
         return c.json<SuccessResponse<typeof following>>({
           success: true,

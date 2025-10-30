@@ -1,4 +1,10 @@
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
+import { USERS_PER_PAGE } from '@/shared/constants'
+import {
+  infiniteQueryOptions,
+  queryOptions,
+  useSuspenseInfiniteQuery,
+  useSuspenseQuery,
+} from '@tanstack/react-query'
 import {
   fetchUserByUsername,
   fetchUserFollowers,
@@ -24,23 +30,33 @@ export const useUserByUsername = (username: string) => {
 }
 
 export const userFollowersQueryOptions = (userId: string) =>
-  queryOptions({
+  infiniteQueryOptions({
     queryKey: userKeys.followers(userId),
-    queryFn: () => fetchUserFollowers(userId),
+    queryFn: ({ pageParam }) => fetchUserFollowers(userId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (lastPage.length < USERS_PER_PAGE) return undefined
+      return lastPageParam + USERS_PER_PAGE
+    },
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
 export const useUserFollowers = (userId: string) => {
-  return useSuspenseQuery(userFollowersQueryOptions(userId))
+  return useSuspenseInfiniteQuery(userFollowersQueryOptions(userId))
 }
 
 export const userFollowingQueryOptions = (userId: string) =>
-  queryOptions({
+  infiniteQueryOptions({
     queryKey: userKeys.following(userId),
-    queryFn: () => fetchUserFollowing(userId),
+    queryFn: ({ pageParam }) => fetchUserFollowing(userId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (lastPage.length < USERS_PER_PAGE) return undefined
+      return lastPageParam + USERS_PER_PAGE
+    },
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
 export const useUserFollowing = (userId: string) => {
-  return useSuspenseQuery(userFollowingQueryOptions(userId))
+  return useSuspenseInfiniteQuery(userFollowingQueryOptions(userId))
 }

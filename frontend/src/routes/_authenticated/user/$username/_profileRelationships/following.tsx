@@ -13,11 +13,11 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { username } = Route.useParams()
   const { data: user } = useUserByUsername(username)
-  const { data: following } = useUserFollowing(user.id)
+  const query = useUserFollowing(user.id)
 
   return (
     <>
-      <UserList users={following} />
+      <UserList query={query} />
     </>
   )
 }

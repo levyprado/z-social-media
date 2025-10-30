@@ -40,9 +40,10 @@ export const toggleFollow = async (userId: string) => {
   return data.data
 }
 
-export const fetchUserFollowers = async (userId: string) => {
+export const fetchUserFollowers = async (userId: string, offset: number) => {
   const res = await client.user[':userId'].followers.$get({
     param: { userId },
+    query: { offset: offset.toString() },
   })
 
   const data = (await res.json()) as UserListResponse
@@ -53,9 +54,10 @@ export const fetchUserFollowers = async (userId: string) => {
   return data.data
 }
 
-export const fetchUserFollowing = async (userId: string) => {
+export const fetchUserFollowing = async (userId: string, offset: number) => {
   const res = await client.user[':userId'].following.$get({
     param: { userId },
+    query: { offset: offset.toString() },
   })
 
   const data = (await res.json()) as UserListResponse
