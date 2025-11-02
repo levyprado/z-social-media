@@ -131,3 +131,17 @@ export const toggleLike = async (postId: number) => {
 
   return data.data
 }
+
+// User following feed posts
+export const fetchFollowingFeedPosts = async (offset = 0) => {
+  const res = await client.posts.following.$get({
+    query: { offset: offset.toString() },
+  })
+
+  const data = (await res.json()) as PostsWithParentResponse
+  if (!data.success) {
+    throw new Error(data.error)
+  }
+
+  return data.data
+}

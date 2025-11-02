@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query'
 import {
   fetchFeedPosts,
+  fetchFollowingFeedPosts,
   fetchPostById,
   fetchPostReplies,
   fetchUserLikedPosts,
@@ -17,6 +18,7 @@ import {
 export const postKeys = {
   all: ['posts'],
   feed: () => [...postKeys.all, 'feed'],
+  feedFollowing: () => [...postKeys.all, 'feed', 'following'],
   detail: (postId: string) => [...postKeys.all, 'detail', postId],
   replies: (postId: string) => [...postKeys.all, 'replies', postId],
   byUser: (userId: string) => [...postKeys.all, 'user', userId],
@@ -124,4 +126,20 @@ export const userLikedPostsQueryOptions = (userId: string) =>
 
 export const useUserLikedPosts = (userId: string) => {
   return useInfiniteQuery(userLikedPostsQueryOptions(userId))
+}
+
+// User following feed posts
+export const followingFeedPostsQueryOptions = infiniteQueryOptions({
+  queryKey: postKeys.feedFollowing(),
+  queryFn: ({ pageParam }) => fetchFollowingFeedPosts(pageParam),
+  initialPageParam: 0,
+  getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+    if (lastPage.length < POSTS_PER_PAGE) return undefined
+    return lastPageParam + POSTS_PER_PAGE
+  },
+  staleTime: 1000 * 60 * 1, // 1 minute
+})
+
+export const useFollowingFeedPosts = () => {
+  return useInfiniteQuery(followingFeedPostsQueryOptions)
 }

@@ -12,6 +12,7 @@ import { Hono } from 'hono'
 import { validator } from 'hono/validator'
 import db from 'server/db'
 import { user } from 'server/db/schema/auth'
+import { follows } from 'server/db/schema/follows'
 import { likes } from 'server/db/schema/likes'
 import { parentPost, parentPostUser, posts } from 'server/db/schema/posts'
 import { MAX_PARENT_DEPTH } from 'server/lib/constants'
@@ -133,6 +134,70 @@ const postsRouter = new Hono()
           success: true,
           message: 'Feed posts fetched successfully',
           data: feedPosts,
+        })
+      } catch (error) {
+        return c.json<ErrorResponse>(
+          {
+            success: false,
+            error: 'Something went wrong',
+            details: error instanceof Error ? error.message : null,
+          },
+          500,
+        )
+      }
+    },
+  )
+  .get(
+    '/following',
+    validator('query', (value, c) => {
+      const parsed = paginationSchema.safeParse(value)
+      if (!parsed.success) {
+        return c.json<ErrorResponse>({
+          success: false,
+          error: 'Invalid query parameters',
+          details: flattenError(parsed.error),
+        })
+      }
+      return parsed.data
+    }),
+    async (c) => {
+      const currentUser = c.get('user')
+      const { offset } = c.req.valid('query')
+
+      try {
+        const followingFeedPosts = await db
+          .select({
+            ...postSelectFields,
+            user: userSelectFields,
+            parentPost: {
+              ...parentPostSelectFields,
+              user: parentPostUserSelectFields as unknown as SQL<{
+                id: string
+                name: string
+                username: string
+                image: string | null
+                createdAt: string
+              } | null>,
+            },
+          })
+          .from(posts)
+          .innerJoin(follows, eq(posts.userId, follows.followingId))
+          .leftJoin(user, eq(posts.userId, user.id))
+          .leftJoin(parentPost, eq(posts.parentPostId, parentPost.id))
+          .leftJoin(parentPostUser, eq(parentPost.userId, parentPostUser.id))
+          .leftJoin(
+            likes,
+            and(eq(likes.postId, posts.id), eq(likes.userId, currentUser.id)),
+          )
+          .where(eq(follows.followerId, currentUser.id))
+          .orderBy(desc(posts.createdAt))
+          .limit(POSTS_PER_PAGE)
+          .offset(offset)
+
+        return c.json<SuccessResponse>({
+          success: true,
+          message: 'Following feed posts fetched successfully',
+          data: followingFeedPosts,
         })
       } catch (error) {
         return c.json<ErrorResponse>(
