@@ -1,8 +1,9 @@
 import IconButton from '@/components/icon-button'
 import type { Post } from '@/shared/types'
-import { RepeatIcon, ShareIcon } from 'lucide-react'
+import { RepeatIcon } from 'lucide-react'
 import LikeButton from './like-button'
 import ReplyButton from './reply-button'
+import ShareButton from './share-button'
 
 type PostMetricsProps = {
   post: Post & { parentPost?: Post | null }
@@ -40,8 +41,9 @@ export function PostMetrics({
         size={isDetail ? 'md' : 'sm'}
       />
 
-      {/* Share button */}
-      <IconButton size={isDetail ? 'md' : 'sm'} icon={ShareIcon} />
+      <div className='relative mr-4'>
+        <ShareButton size={isDetail ? 'md' : 'sm'} postId={post.id} />
+      </div>
     </div>
   )
 }

@@ -1,9 +1,7 @@
-import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
 import { PAGE_HEADER_HEIGHT } from '@/lib/constants'
 import { formatPostDetailDate } from '@/lib/utils'
 import { Link, useParams } from '@tanstack/react-router'
-import { EllipsisIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import useInfiniteScroll from '../hooks/use-infinite-scroll'
 import { usePostDetail, usePostReplies } from '../queries'
@@ -65,7 +63,7 @@ export default function PostDetail() {
           >
             <Avatar img={post.user.image} />
           </Link>
-          <div className='flex w-full min-w-0 items-baseline justify-between'>
+          <div className='flex w-full min-w-0'>
             <Link
               to='/user/$username'
               params={{ username: post.user.username }}
@@ -78,8 +76,6 @@ export default function PostDetail() {
                 @{post.user.username}
               </span>
             </Link>
-
-            <IconButton size='md' icon={EllipsisIcon} />
           </div>
         </div>
         {/* Content */}

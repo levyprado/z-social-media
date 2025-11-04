@@ -1,10 +1,8 @@
-import IconButton from '@/components/icon-button'
 import Avatar from '@/components/ui/avatar'
 import { PostMetrics } from '@/features/post/components/post-metrics'
 import { formatPostDate } from '@/lib/utils'
 import type { Post } from '@/shared/types'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { EllipsisIcon } from 'lucide-react'
 import ParentPost from './parent-post'
 
 type PostProps = {
@@ -48,7 +46,7 @@ export default function Post({ post, isParentPost }: PostProps) {
       </div>
 
       <div className='flex w-full min-w-0 flex-col gap-1 pb-3'>
-        <div className='flex items-start justify-between gap-2'>
+        <div className='flex items-start'>
           {/* User data */}
           <div className='flex min-w-0 flex-col sm:flex-row'>
             <Link
@@ -74,9 +72,6 @@ export default function Post({ post, isParentPost }: PostProps) {
               </span>
             </div>
           </div>
-
-          {/* Actions button */}
-          <IconButton icon={EllipsisIcon} />
         </div>
 
         {/* Post content */}
