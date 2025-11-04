@@ -6,6 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { CopyIcon, ShareIcon } from 'lucide-react'
+import { toast } from 'sonner'
 
 type ShareButtonProps = {
   postId: number
@@ -18,9 +19,10 @@ export default function ShareButton({ size, postId }: ShareButtonProps) {
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(postUrl)
+      toast.success('Post link copied to clipboard')
     } catch (error) {
       console.error(error)
-      // Throw toast Error
+      toast.error('An error occurred')
     }
   }
 
@@ -34,7 +36,7 @@ export default function ShareButton({ size, postId }: ShareButtonProps) {
       await navigator.share(shareData)
     } catch (error) {
       console.error(error)
-      // Throw toast Error
+      toast.error('An error occurred')
     }
   }
 

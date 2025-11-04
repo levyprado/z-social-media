@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@/components/theme-provider'
 import { Button } from '@/components/ui/button'
+import { Toaster } from '@/components/ui/sonner'
 import { type QueryClient } from '@tanstack/react-query'
 import {
   Link,
@@ -21,6 +22,14 @@ function RootComponent() {
     <>
       <ThemeProvider>
         <Outlet />
+        <Toaster
+          richColors
+          position='bottom-center'
+          visibleToasts={1}
+          toastOptions={{
+            className: 'font-sans',
+          }}
+        />
       </ThemeProvider>
     </>
   )
