@@ -5,7 +5,7 @@ import { Link, useParams } from '@tanstack/react-router'
 import { useEffect, useRef } from 'react'
 import useInfiniteScroll from '../hooks/use-infinite-scroll'
 import { usePostDetail, usePostReplies } from '../queries'
-import CreatePost from './create-post'
+import CreatePostForm from './create-post-form'
 import Post from './post'
 import { PostMetrics } from './post-metrics'
 import PostSkeleton from './post-skeleton'
@@ -100,7 +100,7 @@ export default function PostDetail() {
         </div>
       </article>
 
-      <CreatePost
+      <CreatePostForm
         parentPostUsername={post.user.username}
         parentPostId={String(post.id)}
       />

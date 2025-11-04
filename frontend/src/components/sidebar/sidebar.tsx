@@ -1,6 +1,7 @@
 import { getNavbarItems } from '@/lib/constants'
 import { Link, useRouteContext } from '@tanstack/react-router'
 import ThemeToggle from '../theme-toggle'
+import CreatePostDialog from './create-post-dialog'
 import NavItem from './nav-item'
 import UserAccountButton from './user-account-button'
 
@@ -18,12 +19,13 @@ export default function Sidebar() {
         <span className='text-primary text-4xl font-black'>Z</span>
       </Link>
 
-      <div>
+      <div className='flex flex-col'>
         <nav className='flex flex-col md:w-full'>
           {navbarItems.map((item) => (
             <NavItem key={item.label} item={item} />
           ))}
         </nav>
+        <CreatePostDialog />
         <ThemeToggle />
       </div>
 

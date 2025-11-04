@@ -16,19 +16,19 @@ import {
   postRepliesQueryOptions,
 } from '../queries'
 
-type CreatePostProps = {
+type CreatePostFormProps = {
   parentPostUsername?: string
   parentPostId?: string
   onSuccess?: () => void
   className?: string
 }
 
-export default function CreatePost({
+export default function CreatePostForm({
   parentPostUsername,
   parentPostId,
   onSuccess = () => {},
   className,
-}: CreatePostProps) {
+}: CreatePostFormProps) {
   const { user } = useRouteContext({ from: '/_authenticated' })
   const queryClient = useQueryClient()
 

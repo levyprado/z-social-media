@@ -1,5 +1,5 @@
 import FeedTabs from '@/components/feed-tabs'
-import CreatePost from '@/features/post/components/create-post'
+import CreatePostForm from '@/features/post/components/create-post-form'
 import FeedList from '@/features/post/components/feed-list'
 import {
   feedPostsQueryOptions,
@@ -19,7 +19,7 @@ function RouteComponent() {
   return (
     <div>
       <FeedTabs />
-      <CreatePost />
+      <CreatePostForm />
       <FeedList />
     </div>
   )

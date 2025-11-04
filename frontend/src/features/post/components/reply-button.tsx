@@ -9,7 +9,7 @@ import {
 import type { Post } from '@/shared/types'
 import { MessageCircleIcon } from 'lucide-react'
 import { useState } from 'react'
-import CreatePost from './create-post'
+import CreatePostForm from './create-post-form'
 import PostPreview from './post-preview'
 
 type ReplyButtonProps = {
@@ -47,12 +47,12 @@ export default function ReplyButton({ post, count, size }: ReplyButtonProps) {
         </DialogHeader>
 
         <PostPreview post={post} />
-        <CreatePost
+        <CreatePostForm
           parentPostId={post.id.toString()}
           onSuccess={() => {
             setOpen(false)
           }}
-          className='border-0'
+          className='border-none'
         />
       </DialogContent>
     </Dialog>
