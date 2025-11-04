@@ -20,6 +20,7 @@ type CreatePostFormProps = {
   parentPostUsername?: string
   parentPostId?: string
   onSuccess?: () => void
+  onAvatarClick?: () => void
   className?: string
 }
 
@@ -27,6 +28,7 @@ export default function CreatePostForm({
   parentPostUsername,
   parentPostId,
   onSuccess = () => {},
+  onAvatarClick,
   className,
 }: CreatePostFormProps) {
   const { user } = useRouteContext({ from: '/_authenticated' })
@@ -86,6 +88,7 @@ export default function CreatePostForm({
           params={{
             username: user.username!,
           }}
+          onClick={onAvatarClick}
           className='transition-[filter] hover:brightness-[.85]'
         >
           <Avatar img={user.image} />

@@ -10,10 +10,10 @@ import { PlusCircleIcon } from 'lucide-react'
 import { useState } from 'react'
 
 export default function CreatePostDialog() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className='group cursor-pointer py-2'>
         <div className='group-hover:bg-hover rounded-full p-3 transition-[background-color] ease-out group-hover:transition-none md:flex md:gap-5 [&_svg]:size-6 md:[&_svg]:size-7'>
           <PlusCircleIcon className='size-6 md:size-7' />
@@ -28,7 +28,10 @@ export default function CreatePostDialog() {
         </DialogHeader>
         <CreatePostForm
           onSuccess={() => {
-            setIsOpen(false)
+            setOpen(false)
+          }}
+          onAvatarClick={() => {
+            setOpen(false)
           }}
           className='border-none'
         />
