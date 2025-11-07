@@ -26,7 +26,7 @@ export default function ParentPost({ onClick, post }: ParentPostProps) {
           </span>
         </div>
       </div>
-      <p className='whitespace-pre-wrap text-sm'>{post.content}</p>
+      <p className='whitespace-pre-wrap break-words text-sm'>{post.content}</p>
     </div>
   )
 }

@@ -80,7 +80,7 @@ export default function PostDetail() {
         </div>
         {/* Content */}
         <div>
-          <p className='whitespace-pre-wrap pt-3'>{post.content}</p>
+          <p className='whitespace-pre-wrap break-words pt-3'>{post.content}</p>
           <div className='py-4'>
             <time dateTime={post.createdAt} className='text-muted-foreground'>
               {formatPostDetailDate(post.createdAt)}

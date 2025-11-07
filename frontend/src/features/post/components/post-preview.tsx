@@ -40,7 +40,9 @@ export default function PostPreview({ post }: PostPreviewProps) {
             </div>
           </div>
 
-          <div className='whitespace-pre-wrap text-sm'>{post.content}</div>
+          <div className='whitespace-pre-wrap break-words text-sm'>
+            {post.content}
+          </div>
 
           {post.parentPost && (
             <ParentPost onClick={() => {}} post={post.parentPost} />

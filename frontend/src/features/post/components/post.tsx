@@ -75,7 +75,9 @@ export default function Post({ post, isParentPost }: PostProps) {
         </div>
 
         {/* Post content */}
-        <div className='whitespace-pre-wrap text-sm'>{post.content}</div>
+        <div className='whitespace-pre-wrap break-words text-sm'>
+          {post.content}
+        </div>
 
         {/* Replying to */}
         {post.parentPost && (
