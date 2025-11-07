@@ -1,8 +1,7 @@
-import IconButton from '@/components/icon-button'
 import type { Post } from '@/shared/types'
-import { RepeatIcon } from 'lucide-react'
 import LikeButton from './like-button'
 import ReplyButton from './reply-button'
+import RepostButton from './repost-button'
 import ShareButton from './share-button'
 
 type PostMetricsProps = {
@@ -29,11 +28,7 @@ export function PostMetrics({
         count={replyCount}
         size={isDetail ? 'md' : 'sm'}
       />
-      <IconButton
-        size={isDetail ? 'md' : 'sm'}
-        icon={RepeatIcon}
-        count={repostCount}
-      />
+      <RepostButton count={repostCount} size={isDetail ? 'md' : 'sm'} />
       <LikeButton
         postId={post.id}
         count={likeCount}
