@@ -39,8 +39,8 @@ export default function ReplyButton({ post, count, size }: ReplyButtonProps) {
           e.stopPropagation()
         }}
       >
-        <DialogHeader>
-          <DialogTitle>
+        <DialogHeader className='min-w-0'>
+          <DialogTitle className='truncate'>
             Replying to{' '}
             <span className='text-primary'>@{post.user.username}</span>
           </DialogTitle>
