@@ -1,3 +1,4 @@
+import Aside from '@/components/aside'
 import Sidebar from '@/components/sidebar/sidebar'
 import { currentUserQueryOptions } from '@/features/auth/queries'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
@@ -22,6 +23,7 @@ function RouteComponent() {
       <main className='min-w-0 max-w-[600px] grow'>
         <Outlet />
       </main>
+      <Aside />
     </div>
   )
 }
