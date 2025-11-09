@@ -10,7 +10,7 @@ type PostPreviewProps = {
 
 export default function PostPreview({ post }: PostPreviewProps) {
   return (
-    <div className='mt-4 flex gap-3 px-3'>
+    <div className='mt-4 flex gap-3 overflow-hidden px-3'>
       <div className='flex flex-col items-center'>
         <Link
           to='/user/$username'
