@@ -8,7 +8,7 @@ const feedTabs = [
 ]
 
 export default function FeedTabs() {
-  const [isSticky, setIsSticky] = useState(false)
+  const [isSticky, setIsSticky] = useState(true)
   const lastScrollY = useRef(0)
   const { tab: currentTab, setFeedTab } = useFeedTab()
 
