@@ -55,7 +55,7 @@ export default function ReplyButton({ post, count, size }: ReplyButtonProps) {
           onAvatarClick={() => {
             setOpen(false)
           }}
-          className='border-none'
+          className='border-none pt-1'
         />
       </DialogContent>
     </Dialog>

@@ -20,7 +20,7 @@ export default function PostPreview({ post }: PostPreviewProps) {
           <Avatar img={post.user.image} />
         </Link>
 
-        <div className='bg-muted -mb-5 mt-1.5 w-0.5 grow rounded-full' />
+        <div className='bg-muted mt-1.5 w-0.5 grow rounded-full' />
       </div>
 
       <div className='flex w-full min-w-0 flex-col gap-1'>
