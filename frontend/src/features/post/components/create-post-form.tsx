@@ -9,6 +9,7 @@ import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, useRouteContext } from '@tanstack/react-router'
 import { ImageIcon, Loader2Icon } from 'lucide-react'
+import { toast } from 'sonner'
 import { createPost } from '../api'
 import {
   feedPostsQueryOptions,
@@ -124,7 +125,10 @@ export default function CreatePostForm({
           />
           <div className='flex items-center justify-between gap-4'>
             <div className='flex shrink-0 gap-2'>
-              <IconButton icon={ImageIcon} />
+              <IconButton
+                icon={ImageIcon}
+                onClick={() => toast.info('Image upload feature in progress')}
+              />
             </div>
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
