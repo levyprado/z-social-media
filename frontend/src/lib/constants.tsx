@@ -1,12 +1,5 @@
 import type { LinkProps } from '@tanstack/react-router'
-import {
-  HeartIcon,
-  HomeIcon,
-  MailIcon,
-  SearchIcon,
-  User2Icon,
-  type LucideIcon,
-} from 'lucide-react'
+import { HeartIcon, HomeIcon, User2Icon, type LucideIcon } from 'lucide-react'
 
 export const PAGE_HEADER_HEIGHT = 56
 
@@ -23,16 +16,16 @@ export const getNavbarItems = (username: string): NavItem[] => [
     label: 'Home',
     link: '/',
   },
-  {
-    icon: SearchIcon,
-    label: 'Explore',
-    link: '/',
-  },
-  {
-    icon: MailIcon,
-    label: 'Messages',
-    link: '/',
-  },
+  // {
+  //   icon: SearchIcon,
+  //   label: 'Explore',
+  //   link: '/explore',
+  // },
+  // {
+  //   icon: MailIcon,
+  //   label: 'Messages',
+  //   link: '/messages',
+  // },
   {
     icon: HeartIcon,
     label: 'Liked',
