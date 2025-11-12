@@ -54,7 +54,7 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [username()],
-  trustedOrigins: ['http://localhost:5173'],
+  trustedOrigins: [process.env.FRONTEND_URL as string],
   user: {
     additionalFields: {
       bio: {
