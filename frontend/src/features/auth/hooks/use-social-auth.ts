@@ -12,7 +12,7 @@ export default function useSocialAuth(provider: Provider) {
     setErrorMessage(null)
     await authClient.signIn.social({
       provider,
-      callbackURL: 'http://localhost:5173',
+      callbackURL: window.location.origin,
       fetchOptions: {
         onError: (ctx) => {
           setIsLoading(false)
