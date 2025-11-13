@@ -12,12 +12,13 @@ declare module 'hono' {
   }
 }
 
-const app = new Hono().basePath('/api')
+const app = new Hono()
 
-app.on(['POST', 'GET'], '/auth/*', (c) => auth.handler(c.req.raw))
+app.on(['POST', 'GET'], '/api/auth/*', (c) => auth.handler(c.req.raw))
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app
+  .basePath('/api')
   .route('/user', userRouter)
   .route('/posts', postsRouter)
   .route('/likes', likesRouter)
