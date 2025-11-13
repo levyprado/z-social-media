@@ -20,17 +20,18 @@ https://github.com/user-attachments/assets/740fa932-0152-44a0-a76e-98af9ecd6b16
 Z is a modern social media application designed for high performance and type safety. The project demonstrates solid full-stack architecture built with Bun, Hono, and React. It features robust authentication, sophisticated data handling for complex structures (like reply threads), and efficient data fetching techniques, all contributing to a seamless user experience.
 
 ### Home Feed
-![https://github.com/user-attachments/assets/e12d20b1-ca90-406a-a823-c99fa23e0ace](screenshots/home-light.png)
-![https://github.com/user-attachments/assets/5d5e1ea8-9479-470b-b7e0-3596ef313eeb](screenshots/home-dark.png)
+![Home Feed Light Mode](https://github.com/user-attachments/assets/e12d20b1-ca90-406a-a823-c99fa23e0ace)
+![Home Feed Dark Mode](https://github.com/user-attachments/assets/5d5e1ea8-9479-470b-b7e0-3596ef313eeb)
 
 ### Profile Page
-![https://github.com/user-attachments/assets/76a67088-e719-4dbc-81cc-838eb782e665](screenshots/profile.png)
+![User Profile](https://github.com/user-attachments/assets/76a67088-e719-4dbc-81cc-838eb782e665)
 
 ### Post Detail & Reply Threads
-![https://github.com/user-attachments/assets/df7497d8-2cf1-4459-b237-a375fdd0aa2a](screenshots/post-detail.png)
+![Post Detail with Threads](https://github.com/user-attachments/assets/df7497d8-2cf1-4459-b237-a375fdd0aa2a)
+
 
 ### Create Post Dialog
-![https://github.com/user-attachments/assets/e0803795-1516-4c92-a556-49220dc3e84f](screenshots/create-post.png)
+![Create Post](https://github.com/user-attachments/assets/e0803795-1516-4c92-a556-49220dc3e84f)
 
 ---
 
@@ -65,6 +66,7 @@ Z is a modern social media application designed for high performance and type sa
   - Loading skeletons everywhere
   - Human-readable timestamps
 
+---
 
 ---
 
