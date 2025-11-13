@@ -1,3 +1,7 @@
+import db from '@/db'
+import { user as usersTable } from '@/db/schema/auth'
+import { follows } from '@/db/schema/follows'
+import { loggedIn } from '@/middleware/logged-in'
 import {
   userParamSchema,
   type ErrorResponse,
@@ -6,10 +10,6 @@ import {
 import { and, eq, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { validator } from 'hono/validator'
-import db from 'server/db'
-import { user as usersTable } from 'server/db/schema/auth'
-import { follows } from 'server/db/schema/follows'
-import { loggedIn } from 'server/middleware/logged-in'
 import { flattenError } from 'zod'
 
 const followsRouter = new Hono().use('*', loggedIn).post(

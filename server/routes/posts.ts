@@ -1,3 +1,16 @@
+import db from '@/db'
+import { user } from '@/db/schema/auth'
+import { follows } from '@/db/schema/follows'
+import { likes } from '@/db/schema/likes'
+import { parentPost, parentPostUser, posts } from '@/db/schema/posts'
+import { MAX_PARENT_DEPTH } from '@/lib/constants'
+import {
+  parentPostSelectFields,
+  parentPostUserSelectFields,
+  postSelectFields,
+  userSelectFields,
+} from '@/lib/post-helpers'
+import { loggedIn } from '@/middleware/logged-in'
 import { POSTS_PER_PAGE } from '@/shared/constants'
 import {
   createPostSchema,
@@ -10,19 +23,6 @@ import {
 import { and, desc, eq, isNull, SQL, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { validator } from 'hono/validator'
-import db from 'server/db'
-import { user } from 'server/db/schema/auth'
-import { follows } from 'server/db/schema/follows'
-import { likes } from 'server/db/schema/likes'
-import { parentPost, parentPostUser, posts } from 'server/db/schema/posts'
-import { MAX_PARENT_DEPTH } from 'server/lib/constants'
-import {
-  parentPostSelectFields,
-  parentPostUserSelectFields,
-  postSelectFields,
-  userSelectFields,
-} from 'server/lib/post-helpers'
-import { loggedIn } from 'server/middleware/logged-in'
 import { flattenError } from 'zod'
 
 const postsRouter = new Hono()

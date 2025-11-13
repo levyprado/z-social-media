@@ -1,3 +1,8 @@
+import db from '@/db'
+import { user, user as usersTable } from '@/db/schema/auth'
+import { follows } from '@/db/schema/follows'
+import { userSelectFields } from '@/lib/post-helpers'
+import { loggedIn } from '@/middleware/logged-in'
 import { USERS_PER_PAGE } from '@/shared/constants'
 import {
   paginationSchema,
@@ -10,11 +15,6 @@ import { and, eq, sql } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
 import { Hono } from 'hono'
 import { validator } from 'hono/validator'
-import db from 'server/db'
-import { user, user as usersTable } from 'server/db/schema/auth'
-import { follows } from 'server/db/schema/follows'
-import { userSelectFields } from 'server/lib/post-helpers'
-import { loggedIn } from 'server/middleware/logged-in'
 import { flattenError } from 'zod'
 
 const currentUserFollows = alias(follows, 'currentUserFollows')
