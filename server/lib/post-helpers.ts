@@ -1,7 +1,7 @@
+import { user } from '@/db/schema/auth'
+import { likes } from '@/db/schema/likes'
+import { parentPost, parentPostUser, posts } from '@/db/schema/posts'
 import { sql } from 'drizzle-orm'
-import { user } from 'server/db/schema/auth'
-import { likes } from 'server/db/schema/likes'
-import { parentPost, parentPostUser, posts } from 'server/db/schema/posts'
 
 export const postSelectFields = {
   id: posts.id,

@@ -1,6 +1,6 @@
+import { auth } from '@/auth'
 import type { ErrorResponse } from '@/shared/types'
 import { createMiddleware } from 'hono/factory'
-import { auth } from 'server/auth'
 
 export const loggedIn = createMiddleware(async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers })
