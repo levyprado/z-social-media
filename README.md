@@ -3,8 +3,8 @@
 > **Live Demo:** [https://z-social-media-production.up.railway.app](https://z-social-media-production.up.railway.app)
 
 ## Showcase Videos
-![Desktop Video](https://github.com/user-attachments/assets/bff71514-9ddc-4cd9-b27c-a5991eb4f73f)
-![Mobile Video](https://github.com/user-attachments/assets/740fa932-0152-44a0-a76e-98af9ecd6b16)
+https://github.com/user-attachments/assets/bff71514-9ddc-4cd9-b27c-a5991eb4f73f
+https://github.com/user-attachments/assets/740fa932-0152-44a0-a76e-98af9ecd6b16
 
 <div align="center">
 
