@@ -1,23 +1,34 @@
-import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import {
+  boolean,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+} from 'drizzle-orm/pg-core'
 
-export const user = pgTable('user', {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-  emailVerified: boolean('email_verified').default(false).notNull(),
-  image: text('image'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  username: text('username').unique(),
-  displayUsername: text('display_username'),
-  bio: text('bio'),
-  website: text('website'),
-  followerCount: integer('follower_count').default(0).notNull(),
-  followingCount: integer('following_count').default(0).notNull(),
-})
+export const user = pgTable(
+  'user',
+  {
+    id: text('id').primaryKey(),
+    name: text('name').notNull(),
+    email: text('email').notNull(),
+    emailVerified: boolean('email_verified').default(false).notNull(),
+    image: text('image'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    username: text('username'),
+    displayUsername: text('display_username'),
+    bio: text('bio'),
+    website: text('website'),
+    followerCount: integer('follower_count').default(0).notNull(),
+    followingCount: integer('following_count').default(0).notNull(),
+  },
+  (table) => [unique().on(table.email), unique().on(table.username)],
+)
 
 export const session = pgTable('session', {
   id: text('id').primaryKey(),
