@@ -2,7 +2,7 @@
   "name": "z-app_new",
   "scripts": {
     "dev": "bun run --hot server/index.ts",
-    "start": "bun run server/index.ts",
+    "start": "bun server/index.ts",
     "build": "cd frontend && bun install && bun run build"
   },
   "dependencies": {
