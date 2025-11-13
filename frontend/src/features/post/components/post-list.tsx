@@ -35,20 +35,14 @@ export default function PostList({ query }: PostListProps) {
   }
 
   return (
-    <>
-      {posts.length === 0 && (
+    <div className='divide-border flex flex-col divide-y'>
+      {posts.length === 0 && !isError && (
         <div className='flex items-center justify-center py-10'>
           <span className='text-muted-foreground'>
             Nothing to show here yet...
           </span>
         </div>
       )}
-
-      <div className='divide-border flex flex-col divide-y'>
-        {posts.map((post) => (
-          <Post key={post.id} post={post} />
-        ))}
-      </div>
 
       {isError && (
         <div className='text-destructive p-4 text-center text-sm'>
@@ -61,6 +55,10 @@ export default function PostList({ query }: PostListProps) {
           {isFetchingNextPage && <PostSkeleton count={1} />}
         </div>
       )}
-    </>
+
+      {posts.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
+    </div>
   )
 }
