@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { serveStatic } from 'hono/bun'
 import { auth } from './auth'
 import followsRouter from './routes/follows'
 import likesRouter from './routes/likes'
@@ -21,6 +22,9 @@ const routes = app
   .route('/posts', postsRouter)
   .route('/likes', likesRouter)
   .route('/follows', followsRouter)
+
+app.use('*', serveStatic({ root: './frontend/dist' }))
+app.get('*', serveStatic({ path: './frontend/dist/index.html' }))
 
 export default app
 export type AppType = typeof routes
