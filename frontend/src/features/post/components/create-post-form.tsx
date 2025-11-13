@@ -11,11 +11,7 @@ import { Link, useRouteContext } from '@tanstack/react-router'
 import { ImageIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { createPost } from '../api'
-import {
-  feedPostsQueryOptions,
-  postDetailQueryOptions,
-  postRepliesQueryOptions,
-} from '../queries'
+import { postKeys } from '../queries'
 
 type CreatePostFormProps = {
   parentPostUsername?: string
@@ -53,17 +49,7 @@ export default function CreatePostForm({
       }
 
       formApi.reset()
-      if (parentPostId) {
-        queryClient.invalidateQueries({
-          queryKey: postRepliesQueryOptions(parentPostId).queryKey,
-        })
-        queryClient.invalidateQueries({
-          queryKey: postDetailQueryOptions(parentPostId).queryKey,
-        })
-      }
-      queryClient.invalidateQueries({
-        queryKey: feedPostsQueryOptions.queryKey,
-      })
+      queryClient.invalidateQueries({ queryKey: postKeys.all })
       onSuccess()
     },
   })
