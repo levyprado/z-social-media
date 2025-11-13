@@ -19,7 +19,6 @@ export const userSelectFields = {
   name: user.name,
   username: user.username,
   image: user.image,
-  createdAt: user.createdAt,
 }
 
 export const parentPostSelectFields = {
@@ -37,5 +36,4 @@ export const parentPostUserSelectFields = {
   name: parentPostUser.name,
   username: parentPostUser.username,
   image: parentPostUser.image,
-  createdAt: parentPostUser.createdAt,
 }
